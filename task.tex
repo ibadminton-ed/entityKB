@@ -1,8 +1,13 @@
 	
-	\section{Problem Formulation}
-	We first introduce the notations used in this paper. A knowledge graph is formalized as $KG = (E,V,R,A,T)$, where $E,V,R,A,T$ are the sets of entities, values, relations, attributes and triples respectively. KG consists of knowledge triples described as $(s, p, o)$, in which $s \in E$, $p \in R$ and $o \in E$ or $p \in A$ and $o \in V$.
-	
-	The task of entity alignment aims to link entities and their counterparts among multiple KGs. Suppose there are two knowledge graphs $KG_1 = (E_1,V_1,R_1,A_1,T_1)$ and $KG_2 = (E_2,V_2,R_2,A_2,T_2)$, and $\mathbb{L} = \{(e_i^1 , e_i^2 )|e_i^1 \in E_1, e_i^2 \in E_2, i\in\{1,...,n\}\}$ is a set of pre-aligned entity pairs between $KG_1$ and $KG_2$. The task of entity alignment is to automatically discover new entity alignments based on known alignment seeds.
+%	\section{Problem Formulation}
+%	We first introduce the notations used in this paper. A knowledge graph is formalized as $KG = (E,V,R,A,T)$, where $E,V,R,A,T$ are the
+%sets of entities, values, relations, attributes and triples respectively. KG consists of knowledge triples described as $(s, p, o)$, in
+%which $s \in E$, $p \in R$ and $o \in E$ or $p \in A$ and $o \in V$.
+%	
+%	The task of entity alignment aims to link entities and their counterparts among multiple KGs. Suppose there are two knowledge graphs
+%$KG_1 = (E_1,V_1,R_1,A_1,T_1)$ and $KG_2 = (E_2,V_2,R_2,A_2,T_2)$, and $\mathbb{L} = \{(e_i^1 , e_i^2 )|e_i^1 \in E_1, e_i^2 \in E_2,
+%i\in\{1,...,n\}\}$ is a set of pre-aligned entity pairs between $KG_1$ and $KG_2$. The task of entity alignment is to automatically
+%discover new entity alignments based on known alignment seeds.
 	
 	\section{Preliminary}
 	
@@ -26,4 +31,3 @@
 	For R-GCN, multiple layers can be stacked to capture more neighboring characteristics across several relational steps.
 	
 	To solve the issue about the rapid growth in number of parameters with the number of relations when applying this propagation model, ~\cite{Schlichtkrull2017Modeling} provide two methods for regularizing the weights of R-GCN layers: basis- and block-diagonal-decomposition. In our entity alignment model, we choose the basis decomposition which will be introduced in detail in Section~\ref{section:rgcn}.
-

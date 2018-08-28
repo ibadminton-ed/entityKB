@@ -13,11 +13,30 @@
 \usepackage{booktabs} %add
 \usepackage{multirow} %add
 \usepackage{subfigure} %add
+\usepackage{xspace}
+\usepackage{graphicx}
+\usepackage{color}
+\usepackage[english]{babel}
+
+
 \frenchspacing  %Required
 \setlength{\pdfpagewidth}{8.5in}  %Required
 \setlength{\pdfpageheight}{11in}  %Required
 
 \pdfinfo{
-	/Title (Aligning Entities for Heterogeneous Knowledge Graphs with Relational Graph Convolutional Networks)
+	/Title (Aligning Entities for Heterogeneous Knowledge Graphs: A Relational Graph Convolutional Network Based Approach)
 	/Author (AAAI Press Staff)}
 \setcounter{secnumdepth}{2}
+
+
+\DeclareMathOperator*{\argmin}{arg\,min}
+\definecolor{Gray}{gray}{0.9}
+
+\newcommand\FIXME[1]{\textcolor{red}{FIX:}\textcolor{red}{#1}}
+
+\newcommand\KBs{\texttt{KBs}\xspace}
+\newcommand\KGs{\texttt{KGs}\xspace}
+\newcommand\KG{\texttt{KG}\xspace}
+\newcommand\KB{\texttt{KB}\xspace}
+\newcommand\GCN{\texttt{GCN}\xspace}
+\newcommand\GCNs{\texttt{GCNs}\xspace}
