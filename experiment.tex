@@ -6,18 +6,18 @@
 	
 	\subsection{Datasets}
 	We evaluate our proposed models and all baselines on two Chinese KGs, Wiki and Baidu.
-	% is chiefly aimed at Chinese Wikipedia and BaiduBaike. 
+	% is chiefly aimed at Chinese Wikipedia and BaiduBaike.
 	
-	\noindent \textbf{Wiki:} %Wikipedia offers a complete copy of data files to users, including entries, templates, image description and basic meta pages of the current version. A weekly update of Chinese Wikipedia is available on\footnote{https://dumps.wikimedia.org/zhwiki}. 
-	We use the Chinese version of the Wikipedia dump\footnote{https://dumps.wikimedia.org/zhwiki} released on June 2, 2015 
+	\noindent \textbf{Wiki:} %Wikipedia offers a complete copy of data files to users, including entries, templates, image description and basic meta pages of the current version. A weekly update of Chinese Wikipedia is available on\footnote{https://dumps.wikimedia.org/zhwiki}.
+	We use the Chinese version of the Wikipedia dump\footnote{https://dumps.wikimedia.org/zhwiki} released on June 2, 2015
 	and extract more than 1million entities and 3 million $\langle$subject, predicate, object$\rangle$ triples from the Infobox on each page to form the KG.
 	
-	\noindent \textbf{Baidu:} We build a KG based on one of the largest online Chinese encyclopedia, BaiduBaike, 
-	by extracting $\langle$subject, predicate, object$\rangle$ triples from the Infobox on each page. 
-	The resulting KG consists of 11.55 million entities and 39.2 million structured triples. 
+	\noindent \textbf{Baidu:} We build a KG based on one of the largest online Chinese encyclopedia, BaiduBaike,
+	by extracting $\langle$subject, predicate, object$\rangle$ triples from the Infobox on each page.
+	The resulting KG consists of 11.55 million entities and 39.2 million structured triples.
 	
-	Based on the two KGs, we manually aligned 16,969 entity pairs as the gold standards of entity alignment, and built a new dataset, called WBD, for entity alignment in Chinese KGs. 
-	%dataset WBD for . Since both of the two KGs mentioned above are constructed from data that we crawled from web encyclopedias, there are no ready-made aligned entity pairs. Therefore, we manually aligned a portion of entities as the seed data. 
+	Based on the two KGs, we manually aligned 16,969 entity pairs as the gold standards of entity alignment, and built a new dataset, called WBD, for entity alignment in Chinese KGs.
+	%dataset WBD for . Since both of the two KGs mentioned above are constructed from data that we crawled from web encyclopedias, there are no ready-made aligned entity pairs. Therefore, we manually aligned a portion of entities as the seed data.
 	\begin{table}
 		\centering
 		\begin{tabular}{llll}
@@ -43,13 +43,13 @@
 	
 	\noindent \textbf{GCNs:} We also build a GCN-based model as our baseline which utilize GCNs~\cite{Kipf2016Semi} to embed the structure information of two KGs and also takes our predefined node features as input node feature matrix. In our experiments, we stack two layers of GCN.
 	
-	\noindent \textbf{Variants of our model:} Our full model is two-layered Highway RGCN (HRGCN). We also build a no-highway variant, two-layered RGCN. We build another variant HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to our model. 
+	\noindent \textbf{Variants of our model:} Our full model is two-layered Highway RGCN (HRGCN). We also build a no-highway variant, two-layered RGCN. We build another variant HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to our model.
 	
 	\subsection{Experimental Setup}
-	For all the compared approaches, we use 50\% of the gold standards for training and 50\% of them for testing. We use Hits@k as the evaluation metrics to assess the performance of all the approaches. Hits@k measures the proportion of correctly aligned entities ranked in the top k. 
+	For all the compared approaches, we use 50\% of the gold standards for training and 50\% of them for testing. We use Hits@k as the evaluation metrics to assess the performance of all the approaches. Hits@k measures the proportion of correctly aligned entities ranked in the top k.
 	For GCN layers, we set 64 hidden units. To avoid overfitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
 	For all variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition. We apply L2 regularization with $\lambda=5e-4$ to avoid overfitting.
-	For both GCNs and all variants of our model, we trained with Adam~\cite{Kingma2014Adam} for a maximum of 200 epochs using a learning rate of 0.01. All models are initialized using Glorot initialization~\cite{Glorot2010Understanding}. 
+	For both GCNs and all variants of our model, we trained with Adam~\cite{Kingma2014Adam} for a maximum of 200 epochs using a learning rate of 0.01. All models are initialized using Glorot initialization~\cite{Glorot2010Understanding}.
 	
 	As mentioned in Section~\ref{wordvector}, we utilize pre-trained 100-dimensional word vectors. By counting the frequency of attributes appearing in each KG in WBD dataset, we select 63 high-frequency attributes from each KG to construct 63-dimensional attribute vectors.
 	
@@ -58,7 +58,7 @@
 	We summarize the performances of all models on the WBD dataset in Table~\ref{f1}.
 	%	The results of all the compared models on our WBD dataset are shown in Table~\ref{f1} and Figure~\ref{PR}. Table~\ref{f1} reports the $\mathrm{F}_1$ scores of all models and Figure~\ref{PR} shows the precision-recall curves.
 	
-	As shown in Table~\ref{f1}, we can see that ITransE$'$ outperforms JE regarding all the Hits@k measures and outperforms GCN for Hits@1. This indicates that ITransE is an outstanding model for entity alignment and it also shows that TransE can effectively embed the structure information of KGs which plays an important role in entity alignment. However, GCN-based model performs better than ITransE in Hits@10 and Hits@50. As aforementioned, GCNs leverage convolutional layers to characterize an entity through careful investigations about its neighbors, including both neighboring entities and attribute values, which can provide more fine-grained and accurate modeling and representation for the target entity. 
+	As shown in Table~\ref{f1}, we can see that ITransE$'$ outperforms JE regarding all the Hits@k measures and outperforms GCN for Hits@1. This indicates that ITransE is an outstanding model for entity alignment and it also shows that TransE can effectively embed the structure information of KGs which plays an important role in entity alignment. However, GCN-based model performs better than ITransE in Hits@10 and Hits@50. As aforementioned, GCNs leverage convolutional layers to characterize an entity through careful investigations about its neighbors, including both neighboring entities and attribute values, which can provide more fine-grained and accurate modeling and representation for the target entity.
 	\begin{table}
 		\centering
 		\begin{tabular}{cccc}
@@ -77,10 +77,10 @@
 		\label{f1}
 	\end{table}
 	Comparing with GCN, the RGCN-based model further boosts the performance by 11.6\%, 12.9\% and 12.7\% for Hits@1, Hits@10 and Hits@50. It shows that introducing highly multi-relational information to GCN framework can achieve significant improvements on KG embedding.
-	 
+	
 	Among all models, when enhanced with layer-wise highway gates, our HRGCN model performs the best, significantly improving upon RGCN by 30.3\%, 22.5\% and 14.8\% for Hits@1, Hits@10 and Hits@50. This indicates that highway gates play a significant role in our model.
 	
-	When comparing our full model HRGCN with HRGCN (w/o $X$), we find that removing the predefined input feature matrix $X$ leads to a drop of 44.0\% for Hits@1, 41.0\% for Hits@10 and 33.6\% for Hits@50. This confirms that initializing entity representations using pre-trained word embeddings and normalized value vectors is very helpful in aligning entities from different KGs. 
+	When comparing our full model HRGCN with HRGCN (w/o $X$), we find that removing the predefined input feature matrix $X$ leads to a drop of 44.0\% for Hits@1, 41.0\% for Hits@10 and 33.6\% for Hits@50. This confirms that initializing entity representations using pre-trained word embeddings and normalized value vectors is very helpful in aligning entities from different KGs.
 	
 	
 	%(1) The JE model outperforms the TextSim model and MLP model by 7.6\% and 4.1\%, respectively. This indicates that TransE can effectively embed the structure information of KGs which plays an important role in entity alignment. And it also suggests that the semantic information about the surface forms of entities or values can only play a supporting role, we can't rely on it completely to get the desired result.
@@ -89,7 +89,7 @@
 	\paragraph{Analysis}
 	\begin{figure}
 		\begin{center}
-			\includegraphics[width=1\linewidth]{graph4.pdf}
+			\includegraphics[width=1\linewidth]{figures/graph4.pdf}
 			\caption{Hits@1 of ITransE, GCN and HRGCN on the five subsets. 0$\sim$3 denotes the subset in which the number of neighbors differs from 0 to 3 for each entity pair, and similar for the remaining subsets.}
 			\label{subset}
 		\end{center}
@@ -113,39 +113,39 @@
 		\end{tabular}
 		\caption{The statistics of example entity pairs, which our HRGCN model correctly aligns but ITransE fails.}
 		\label{example}
-	\end{table*} 
+	\end{table*}
 	%An extra advantage of GCN is that we can stack multiple convolution layers to capture more global and larger contextual and neighboring characteristics
 	
-	We further provide a detailed analysis about the experimental results. 
+	We further provide a detailed analysis about the experimental results.
 	
-	We divide the test set into five subsets according to the difference between the number of neighbors of each entity pair, and compare the performance (in Hits@1) of ITransE, GCN and HRGCN on the five subsets. 
-	%Figure~\ref{subset} shows the $\mathrm{F}_1$ scores of on the five subsets. 
+	We divide the test set into five subsets according to the difference between the number of neighbors of each entity pair, and compare the performance (in Hits@1) of ITransE, GCN and HRGCN on the five subsets.
+	%Figure~\ref{subset} shows the $\mathrm{F}_1$ scores of on the five subsets.
 	
 	As shown in Figure~\ref{subset}, we can see that when the number of neighbors differs by no more than 3, all three models perform well,
-	but when the difference between the entity pairs' neighborhoods becomes more prominent, 
-	our HRGCN model tends to deliver more clear improvement. 
-	%, the three models all perform well and the scores are not far-off. However, when the difference in the number of neighbors gradually increases, the gap between JE and the other two models also grows. 
+	but when the difference between the entity pairs' neighborhoods becomes more prominent,
+	our HRGCN model tends to deliver more clear improvement.
+	%, the three models all perform well and the scores are not far-off. However, when the difference in the number of neighbors gradually increases, the gap between JE and the other two models also grows.
 
 	\begin{figure}
 		\begin{center}
-			\includegraphics[width=1\linewidth]{graph3.pdf}
+			\includegraphics[width=1\linewidth]{figures/graph3.pdf}
 			\caption{The effect of adding more RGCN layers in terms of Hits@1 over the test set of WBD with and without the highway gates.}
 			\label{highway}
 		\end{center}
 	\end{figure}
-	We randomly choose some examples that our HRGCN model can correctly align but ITransE fails in Table~\ref{example}, as well as their neighbor information, i.e., number of neighbors, number of values, number of potentially overlapped neighbors or values for each pair. 
-	We can find that although several entities have dozens of neighbors in their corresponding KGs, but their similar or overlapped neighbors are quite few, showing again that 
-	%the number of similar neighbors of these entity pairs is no more than 6 which is very small compared to the number of their neighbors. This indicates that 
-	the available clues for entity alignment are sparse and ITransE may not perform well in this circumstance, while our HRGCN model can still identify useful structure information from those limited clues. 
+	We randomly choose some examples that our HRGCN model can correctly align but ITransE fails in Table~\ref{example}, as well as their neighbor information, i.e., number of neighbors, number of values, number of potentially overlapped neighbors or values for each pair.
+	We can find that although several entities have dozens of neighbors in their corresponding KGs, but their similar or overlapped neighbors are quite few, showing again that
+	%the number of similar neighbors of these entity pairs is no more than 6 which is very small compared to the number of their neighbors. This indicates that
+	the available clues for entity alignment are sparse and ITransE may not perform well in this circumstance, while our HRGCN model can still identify useful structure information from those limited clues.
 	
-	%Overall, GCNs appear to be more beneficial for structure embedding than TransE, especially when the neighborhoods are very different. 
-	We can also observe from Table~\ref{example} that values play an important role in entity alignment. 
+	%Overall, GCNs appear to be more beneficial for structure embedding than TransE, especially when the neighborhoods are very different.
+	We can also observe from Table~\ref{example} that values play an important role in entity alignment.
 	For instance, in the entity pair about \textit{Hubei Province}, nearly half of the neighbors for each entity are values, and among all 5 similar neighbors, 3 of them are are actually values,
 	which provide crucial supporting evidence for the final prediction. Unfortunately, ITransE does not utilize those information, thus is unable to collect sufficient evidence.
-	%	While the crucial information obtained from values can not be used by JE since the model dose not consider the specific values. 
+	%	While the crucial information obtained from values can not be used by JE since the model dose not consider the specific values.
 
 	
-	In Figure~\ref{subset}, we can see that our HRGCN wins GCN in every subset. 
+	In Figure~\ref{subset}, we can see that our HRGCN wins GCN in every subset.
 	This is mainly because introducing highly multi-relational information to GCN with highway gates can help our model better embed the relational structure information and focus on the most discriminative aspects from the target entity's neighbors, thus lead to more accurate representations.
 	%Figure~\ref{fig:heatmap} shows the heat maps about \textit{Centaur}'s neighbors similarities in two KGs, learned by GATs and GCNs-two, respectively.We can observe that GATs can effectively identify the potentially more similar neighbors from two KGs, which will act as discriminative evidence to support the alignment, while GCNs-two fails to distinguish those similar/discriminative neighbors from other non-relevant nodes.
 		

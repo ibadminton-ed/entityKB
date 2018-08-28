@@ -8,7 +8,7 @@
 	
 	\begin{figure}
 		\begin{center}
-			\includegraphics[width=0.8\linewidth]{graph2.pdf}
+			\includegraphics[width=0.8\linewidth]{figures/graph2.pdf}
 			\caption{Overall architecture of our HRGCN entity alignment model.}
 			\label{all}
 		\end{center}
@@ -19,11 +19,11 @@
 	We combine node semantic information with value information to construct input node feature vectors. The specific construction method is as follows.
 	
 	\noindent \textbf{Semantic Information:}
-	\label{wordvector} 
+	\label{wordvector}
 	We believe that the entities and their counterparts in multiple KGs should be semantically similar. Therefore we leverage the pre-trained word embeddings to introduce the semantic information about the surface forms of entities.
 	We use word2vec software of Tomas Mikolov and his colleagues\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings. In our experiments, the window size is 5 and threshold for downsampling the frequent words is 20. Sentences in Baidu baike are used as training data and 155,837 100-dimensional word vectors are generated.
 	
-	\noindent \textbf{Value Information:} 
+	\noindent \textbf{Value Information:}
 	For attribute values, we distinguish four kinds of abstract range types, i.e., Integer, Double, Date and String (as default). In this paper, we only consider the first three types, i.e., Integer, Double and Date. We overlook String type values by reason of their complexity and heterogeneity in different KGs.
 	
 	We construct normalized attribute vector for each entity. Specifically, the dimension of attribute vector is equal to the number of distinct attributes of which the value types belong to Integer, Double and Date in the KG. The elements in an entity’s attribute vector equal to the normalized values of the corresponding attributes. If an entity does not have an attribute, the element corresponding to this attribute in the vector is then set to 0.
@@ -32,7 +32,7 @@
 	
 	\subsection{RGCN}
 	\label{section:rgcn}
-	The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in R-GCNs~\cite{Schlichtkrull2017Modeling}. 
+	The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in R-GCNs~\cite{Schlichtkrull2017Modeling}.
 	The second part is the list of adjacency matrixs $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 	In each layer $l$, the input is $X^{(l-1)} = \{x^{(l-1)}_1,x^{(l-1)}_2,...,x^{(l-1)}_{N} |x^{(l-1)}_{i} \in \mathbb{R}^{d^{(l-1)}}\}$. The forward propagation is formulated as:
 	\begin{equation}
@@ -61,7 +61,7 @@
 	&T(x^{(l)})=\sigma(W_T^{(l)}x^{(l)}+b_T^{(l)}) \\
 	&x^{(l+1)}=x^{(l+1)} \cdot T(x^{(l)})+x^{(l)} \cdot (1-T(x^{(l)}))
 	\end{split}
-	\end{equation} 
+	\end{equation}
 	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l)} \times d^{(l-1)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
 	
 	\subsection{Alignment Prediction}
@@ -70,6 +70,6 @@
 	A set of pre-aligned entity pairs $\mathbb{L}$ and the set of negative pairs $\mathbb{L'}$  constructed by corrupting $(p, q)$, i.e. replacing $p$ or $q$ with a randomly chosen entity in $G_1$ or $G_2$ are used for training. To maximize the distance between positive and negative instances, we use the margin-based loss function:
 	\begin{equation}
 	L=\sum\limits_{(p,q)\in \mathbb{L}}\sum\limits_{(p',q')\in \mathbb{L'}}\mathrm{max}\{0,d(p_i,q_i)-d(p'_i,q'_i)+\gamma\}
-	\end{equation} 
+	\end{equation}
 	$\gamma > 0$ is a margin hyper-parameter separating positive and negative entity alignments.
 	
