@@ -1,34 +1,43 @@
 
-	\section{Approach}
+	\section{Our Approach}
 	\label{section:app}
-	In this section, we present detailed description of our entity alignment model. Without loss of generality, we introduce our approach based on two heterogeneous knowledge graphs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively.
-	%We separately put the two graphs into two RGCN which share parameters. We utilize the pre-aligned entity pairs to train our models and then discover new equivalent entities. Figure~\ref{attention} demonstrates the overall architecture of our model.
-	We put $G_1$ and $G_2$ together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover new equivalent entities. Figure~\ref{all} demonstrates the overall architecture of our model.
+	In this section, we describe our entity alignment model. Without loss of generality, we introduce our approach
+based on two heterogeneous knowledge graphs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where
+$E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively.
+	We put $G_1$ and $G_2$ together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover new
+equivalent entities. Figure~\ref{all} demonstrates the overall architecture of our model.
 	
 	
-	\begin{figure}
+	\begin{figure}[t!]
 		\begin{center}
 			\includegraphics[width=0.8\linewidth]{figures/graph2.pdf}
-			\caption{Overall architecture of our HRGCN entity alignment model.}
+			\caption{Overall architecture of our entity alignment model.}
 			\label{all}
 		\end{center}
 	\end{figure}
 	
+    \subsection{Base Model}
+    Our approach is based on the recently proposed relational graph convolutional network (\RGCN)~\cite{Schlichtkrull2017Modeling}. A \RGCN takes as
+    input \FIXME{XX}, and produces \FIXME{xx}. We choose to use a \RGCN because it can model directed graphs like \KGs. Our work improves the
+    featureless approach of \RGCN with pre-defined node feature vectors (\FIXME{Why do you want to do that???}).
+
+
 	\subsection{Node Representations}
 	\label{subsection:Node Representations}
 	We combine node semantic information with value information to construct input node feature vectors. The specific construction method is as follows.
+    \FIXME{Explain what is node semantic information here...}
 	
-	\noindent \textbf{Semantic Information:}
+	\cparagraph{Semantic information}
 	\label{wordvector}
-	We believe that the entities and their counterparts in multiple KGs should be semantically similar. Therefore we leverage the pre-trained word embeddings to introduce the semantic information about the surface forms of entities.
+	We believe that the entities and their counterparts in multiple \KGs should be semantically similar. Therefore we leverage the pre-trained word embeddings to introduce the semantic information about the surface forms of entities.
 	We use word2vec software of Tomas Mikolov and his colleagues\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings. In our experiments, the window size is 5 and threshold for downsampling the frequent words is 20. Sentences in Baidu baike are used as training data and 155,837 100-dimensional word vectors are generated.
 	
-	\noindent \textbf{Value Information:}
-	For attribute values, we distinguish four kinds of abstract range types, i.e., Integer, Double, Date and String (as default). In this paper, we only consider the first three types, i.e., Integer, Double and Date. We overlook String type values by reason of their complexity and heterogeneity in different KGs.
+	\cparagraph{Value information}
+	For attribute values, we distinguish four kinds of abstract range types, i.e., Integer, Double, Date and String (as default). In this paper, we only consider the first three types, i.e., Integer, Double and Date. We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 	
 	We construct normalized attribute vector for each entity. Specifically, the dimension of attribute vector is equal to the number of distinct attributes of which the value types belong to Integer, Double and Date in the KG. The elements in an entity’s attribute vector equal to the normalized values of the corresponding attributes. If an entity does not have an attribute, the element corresponding to this attribute in the vector is then set to 0.
 	
-	We concatenate pre-trained word vectors with attribute vectors as the input feature vectors of entities (nodes) in KGs.
+	We concatenate pre-trained word vectors with attribute vectors as the input feature vectors of entities (nodes) in \KGs.
 	
 	\subsection{RGCN}
 	\label{section:rgcn}
@@ -65,7 +74,7 @@
 	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l)} \times d^{(l-1)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
 	
 	\subsection{Alignment Prediction}
-	After HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both KGs. We measure the similarity between $e_1$ in $G_1$ and $e_2$ in $G_2$ by the distance between their hidden representations: $d(e_1,e_2)=|\bar{x_{e_1}}-\bar{x_{e_2}}|$, where $|\cdot|$ indicates the $l_1$ norm. The distance for equivalent entities is expected to be smaller than non-equivalent ones. In our experiments, for a entity $e_1$ in $G_1$, we computes the distances between $e_1$ and all the entities in $G_2$.
+	After HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We measure the similarity between $e_1$ in $G_1$ and $e_2$ in $G_2$ by the distance between their hidden representations: $d(e_1,e_2)=|\bar{x_{e_1}}-\bar{x_{e_2}}|$, where $|\cdot|$ indicates the $l_1$ norm. The distance for equivalent entities is expected to be smaller than non-equivalent ones. In our experiments, for a entity $e_1$ in $G_1$, we computes the distances between $e_1$ and all the entities in $G_2$.
 	
 	A set of pre-aligned entity pairs $\mathbb{L}$ and the set of negative pairs $\mathbb{L'}$  constructed by corrupting $(p, q)$, i.e. replacing $p$ or $q$ with a randomly chosen entity in $G_1$ or $G_2$ are used for training. To maximize the distance between positive and negative instances, we use the margin-based loss function:
 	\begin{equation}

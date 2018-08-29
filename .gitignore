@@ -28,4 +28,6 @@ sample-*.pdf
 *.bcf
 *.run.xml
 main.synctex
-main.synctex
+main.pdf
+
+main.pdf

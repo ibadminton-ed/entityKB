@@ -1,16 +1,15 @@
 \section{Motivation}
 As a motivation example, consider Figure~\ref{Wuhan} which depicts two heterogeneous \KGs extracted from the \FIXME{xx} and \FIXME{xx}
-datasets. In the diagram, an entity is marked by a circle while an attribute or relation is listed along the edge of a \KG.
+datasets. In the diagram, an entity is marked by a circle while an attribute or relation is listed on the edge.
 
-As can be seen from the diagram, although the two \KGs have different graph structures, they contain an entity in common, \emph{Wuhan}.
-Therefore, a successful entity alignment strategy would link the \emph{Wuhan} entity from both \KGs. However, the state-of-the art entity
-alignment methods~\cite{} built upon TransE all fail to align this entity because of two reasons: (i) they are misled by some of the
-redundant entities and attributes which do not appear on both \KGs and (ii) \FIXME{they do not utilize attributes like xx}. This is a
-problem when using translation-based embeddings.
+Although the two \KGs have different graph structures, they both contain a common entity of \emph{Wuhan}. Therefore, a successful entity
+alignment strategy needs to link \emph{Wuhan} from both \KGs. However, the state-of-the art entity alignment methods~\cite{} built upon
+TransE all fail to align this entity because of two reasons: (i) they are misled by some of the redundant entities and attributes that only
+appear in one of \KGs and (ii) \FIXME{they do not utilize attributes like xx}. This is a problem when using translation-based embedding.
 
-If we look closely into the \KGs, we find that the \emph{Wuhan} entity can be aligned using the two entities marked with \FIXME{circles
-with dot lines} together with attribute \FIXME{XX}. If we can recognize and treat other entities and attributes as noise for this task, we
-can then successfully align the entity by only considering the highlighted entities and attribute.
+If we look closely into the \KGs, we find that the \emph{Wuhan} entity can be aligned using the two entities highlighted by \FIXME{dot-line
+circles} together with attribute \FIXME{XX}. In this example, if we can recognize and treat other entities and attributes as noise, we can
+then successfully align the \emph{Wuhan} entity.
 
 This example shows that entity alignment requires one to carefully evaluate the importance of each entity and attribute from heterogeneous
 \KGs. Unfortunately, this information varies across datasets and entities. Because manually obtaining this information for every target
