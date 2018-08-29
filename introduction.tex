@@ -29,8 +29,7 @@ alignment data, such as pre-aligned KG predicates/relations or triples. Since th
 be very different, it is often difficult and expensive to collect such high-quality alignment data. In addition, as shown by the last
 column in the Table~\ref{seed}, most of these models, except JAPE~\cite{sun2017cross}, ignore specific attribute values in the KGs because
 of their complexity and heterogeneity. And actually, JAPE only considers the types of those values for simplicity, and the specific
-attribute values, such as \textit{1.86m} as someone's height, are ignored. We argue that those attribute value information are crucial for
-entity alignment and should be taken into account.
+attribute values, such as \textit{1.86m} as someone's height, are ignored. However, values are actually very significant parts of KGs, especially for low-quality KGs which may contain large-scale values and the approaches that do not consider values will lose this part of information when aligning KGs. We argue that those attribute value information are crucial for entity alignment and should be taken into account. Figure~\ref{Wuhan} (a) gives an example in which the most important clues for entity alignment are the same attribute values of two center entities.
 	\begin{table}
 		\centering
 		\scriptsize
@@ -39,7 +38,7 @@ entity alignment and should be taken into account.
 			\bf Models & \bf entity & \bf relation & \bf triple & \bf use of value \\
 			\midrule
 			JE~\cite{hao2016joint} & ${\surd}$ & & & \\
-			MTransE~\cite{chen2016multilingual} & ${\surd}$ & ${\surd}$ & ${\surd}$ & \\
+			MTransE~\cite{chen2016multilingual} & $ $ & $ $ & ${\surd}$ & \\
 			JAPE~\cite{sun2017cross} & ${\surd}$& ${\surd}$& & ${\surd}$ (type)\\
 			ITransE~\cite{zhu2017iterative} & ${\surd}$ & ${\surd}$& & \\
 			\bottomrule
@@ -48,11 +47,11 @@ entity alignment and should be taken into account.
 		\label{seed}
 	\end{table}
 	
-	Moreover, although TransE can effectively capture the structure information of KGs, it may not perform well when the neighboring relational structures of two entities are significantly different, e.g., the different sizes of their neighbors, the different relations and neighbor entities. And actually, when we judge whether two entities refer to the equivalent identity, we often only pay attention to the more informative and discriminative neighbors of the two entities, especially when the available clues are sparse.
+	Moreover, although TransE can effectively capture the structure information of KGs, it may not perform well when the neighboring relational structures of two entities are significantly different. Since TransE utilizes the relation between the head entity and the tail entity to define the distance between the head entity vector and the tail entity vector, the TransE-based approaches actually tend to require that the neighboring structures of the equivalent entities from different KGs should be as similar as possible. Nevertheless, due to the incompleteness of knowledge graphs, the densities of the neighborhoods of the two entities $e_1$ and $e_2$ that we need to align may be very different or there are few similar relations and neighbors between $e_1$ and $e_2$, which leads to sparse available clues for alignment and will make a large difference between the learned vectors of $e_1$ and $e_2$ by TransE. Figure~\ref{Wuhan} (b) and (c) show examples of two cases where the alignment clues are sparse. But actually, when we judge whether two entities refer to the equivalent identity, we often only pay attention to the more informative and discriminative neighbors of the two entities, especially when the available clues are sparse.
 	\begin{figure}
 		\begin{center}
 			\includegraphics[width=1\linewidth]{figures/graph1.pdf}
-			\caption{Parts of the neighborhoods of \textit{Wuhan} in two KGs.The red circles indicate the equivalent entities and the blue circles represent the intersection of their neighbors.}
+			\caption{The neighborhoods of three pairs of aligned entities from two different KGs. The red circles indicate the aligned center entities. The blue circles represent the similar neighbors. The green rectangles indicate the same attribute values.}
 			\label{Wuhan}
 		\end{center}
 	\end{figure}
