@@ -1,21 +1,31 @@
 
 	
 	\section{Related Work}
-	%Our work mainly involves the relational graph convolutional networks (R-GCNs)~\cite{Schlichtkrull2017Modeling}. The R-GCN model is an extension of graph convolutional networks (GCNs)~\cite{Kipf2016Semi} to large-scale relational data. Then, we will introduce them in detail and provide a systematic review of current work on entity alignment.
-	\subsection{Graph Convolutional Networks}
-	Recently, there is an increasing interest in extending neural networks to deal with arbitrarily structured graphs and there have been many encouraging works. Among them, GCNs~\cite{Duvenaud2015Convolutional,Kipf2016Semi,Kearnes2016Molecular}, a recent class of multilayer neural networks operating on graphs, have been successfully applied to semi-supervised node classification~\cite{Kipf2016Semi}, semantic role labeling~\cite{Marcheggiani2017Encoding}, neural machine translation~\cite{Bastings2017Graph} and so on. %For every node in the graph, GCN encodes relevant information about its neighborhood and it is concerned with the adjacent node features. 
-	\subsection{Relational Graph Convolutional Networks}
-	Since GCNs~\cite{Kipf2016Semi} generally operate on undirected and unlabeled graphs, R-GCNs~\cite{Schlichtkrull2017Modeling} are developed specifically for relational (directed and labeled) multi-graphs to deal with the highly multi-relational data characteristic of realistic knowledge graphs. And this model has been successfully exploited in two standard knowledge base completion tasks: Link prediction and entity classification~\cite{Schlichtkrull2017Modeling}. In this paper, we successfully construct the entity alignment model which utilizes R-GCNs to embed entities of multiple KGs into a unified vector space.
+    Our work builds upon the following foundations, while qualitatively differing from each.
+
+    \FIXME{ZW: I will fix this section next week.} 
+	\cparagraph{Graph Convolutional Networks}
+	Recently, there is an increasing interest in extending neural networks to deal with arbitrarily structured graphs and there have been
+many encouraging works. Among them, GCNs~\cite{Duvenaud2015Convolutional,Kipf2016Semi,Kearnes2016Molecular}, a recent class of multilayer
+neural networks operating on graphs, have been successfully applied to semi-supervised node classification~\cite{Kipf2016Semi}, semantic
+role labeling~\cite{Marcheggiani2017Encoding}, neural machine translation~\cite{Bastings2017Graph} and so on.
+
+
+	\cparagraph{Relational Graph Convolutional Networks}
+	Since GCNs~\cite{Kipf2016Semi} generally operate on undirected and unlabeled graphs, R-GCNs~\cite{Schlichtkrull2017Modeling} are
+developed specifically for relational (directed and labeled) multi-graphs to deal with the highly multi-relational data characteristic of
+realistic knowledge graphs. And this model has been successfully exploited in two standard knowledge base completion tasks: Link prediction
+and entity classification~\cite{Schlichtkrull2017Modeling}. In this paper, we successfully construct the entity alignment model which
+utilizes R-GCNs to embed entities of multiple KGs into a unified vector space.
 	
-	\subsection{Entity Alignment}
-	
+	\cparagraph{Entity Alignment}
 	Here we provide a systematic review of current work on entity alignment.
 	
 	As we mentioned in Section~\ref{section:intro}, the conventional entity alignment approaches are usually time-consuming and laborious since that the traditional works generally rely on external information and require costly manual feature construction. For example, in the work of Wang Xuepeng et al.~\shortcite{Wang2017}, they need to collect various network semantic labels such as category labels, attribute labels and unstructured text keywords of the entity entries to build a number of semantic similarity calculation models.
 	
 	To address these issues, several embedding-based methods have been proposed and achieve promising results.
 	
-	JE~\cite{hao2016joint} jointly learns the embeddings of different KGs in a uniform vector space, following the energy-based framework in TransE, and align entities in KGs by adding the loss of alignment part to the global loss function. In the learning process, JE requires the seed aligned entities share the same embeddings. 
+	JE~\cite{hao2016joint} jointly learns the embeddings of different KGs in a uniform vector space, following the energy-based framework in TransE, and align entities in KGs by adding the loss of alignment part to the global loss function. In the learning process, JE requires the seed aligned entities share the same embeddings.
 	
 	MTransE~\cite{chen2016multilingual} is also a TransE-based model for cross-lingual KG alignment. It embeds entities and relations of each language in a separated embedding space and also provides transitions for each embedding vector to its cross-lingual counterparts in other spaces. For model training, MTransE needs a set of triples to be aligned in advance.
 	
