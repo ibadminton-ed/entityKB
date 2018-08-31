@@ -3,25 +3,29 @@
 	\section{Related Work}
     Our work builds upon the following foundations, while qualitatively differing from each.
 
-    \FIXME{ZW: I will fix this section next week.} 
-	\cparagraph{Graph Convolutional Networks}
-	Recently, there is an increasing interest in extending neural networks to deal with arbitrarily structured graphs and there have been
-many encouraging works. Among them, GCNs~\cite{Duvenaud2015Convolutional,Kipf2016Semi,Kearnes2016Molecular}, a recent class of multilayer
-neural networks operating on graphs, have been successfully applied to semi-supervised node classification~\cite{Kipf2016Semi}, semantic
-role labeling~\cite{Marcheggiani2017Encoding}, neural machine translation~\cite{Bastings2017Graph} and so on.
+
+	\cparagraph{Graph convolutional networks} Recently, \GCNs~\cite{Duvenaud2015Convolutional,Kearnes2016Molecular}
+    have demonstrated promising results in domains that have previously been dominated by kernel-based methods or graph-based regularization.
+    They are shown to be effective in performing NLP tasks like semi-supervised
+    node classification~\cite{Kipf2016Semi}, semantic role labeling~\cite{Marcheggiani2017Encoding}, neural machine
+    translation~\cite{Bastings2017Graph}. Our work builds on these past foundations by extending \GCNs to process relational data.
 
 
-	\cparagraph{Relational Graph Convolutional Networks}
-	Since GCNs~\cite{Kipf2016Semi} generally operate on undirected and unlabeled graphs, R-GCNs~\cite{Schlichtkrull2017Modeling} are
-developed specifically for relational (directed and labeled) multi-graphs to deal with the highly multi-relational data characteristic of
-realistic knowledge graphs. And this model has been successfully exploited in two standard knowledge base completion tasks: Link prediction
-and entity classification~\cite{Schlichtkrull2017Modeling}. In this paper, we successfully construct the entity alignment model which
-utilizes R-GCNs to embed entities of multiple KGs into a unified vector space.
+	\cparagraph{Relational graph convolutional networks}
+	Since \GCNs generally operate on undirected and unlabeled graphs, \RGCNs~\cite{Schlichtkrull2017Modeling} are proposed  for relational
+(directed and labeled) multi-graphs. It has been successfully exploited in two standard knowledge base completion tasks: link prediction
+and entity classification~\cite{Schlichtkrull2017Modeling}. However, this technique has not be used for entity alignment and our work is
+the first to do so.
+
+
 	
-	\cparagraph{Entity Alignment}
-	Here we provide a systematic review of current work on entity alignment.
+	\cparagraph{Entity alignment} As an important NLP task, entity alignment is certainly not a new research topic. Previous approaches of
+entity alignment typically follow a labour-intensive and time-consuming process to tune model features. For example, the work presented in
+~\cite{Wang2017} requires one to collect network semantic labels like category labels, attribute labels and unstructured
+text keywords of the entity entries to build the alignment model.
+
+    \FIXME{ZW: Will perhaps rewrite this later.}
 	
-	As we mentioned in Section~\ref{section:intro}, the conventional entity alignment approaches are usually time-consuming and laborious since that the traditional works generally rely on external information and require costly manual feature construction. For example, in the work of Wang Xuepeng et al.~\shortcite{Wang2017}, they need to collect various network semantic labels such as category labels, attribute labels and unstructured text keywords of the entity entries to build a number of semantic similarity calculation models.
 	
 	To address these issues, several embedding-based methods have been proposed and achieve promising results.
 	
