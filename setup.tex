@@ -4,16 +4,16 @@ structure information compared to \KG embedding-based methods, and whether highw
 information by controlling the balance of how much neighborhood information should be passed to a node in \RGCN.
 
 \subsection{Datasets}
-	We evaluate our on two Chinese \KGs extracted from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia). The two sources contain a rich of information and are widely used to constructed \KGs.
+	We evaluate our using data extracted from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia). The two sources contain a rich of information and are widely used to constructed \KGs.
 	
-	\cparagraph{Wiki}
+	\cparagraph{Raw Wiki dataset}
 	We use the Chinese version of the Wikipedia dump\footnote{https://dumps.wikimedia.org/zhwiki} released on June 2, 2015.
     From the dump, we extract over one million entities and three million $\langle$subject, predicate, object$\rangle$ triples from the infobox (i.e., a fixed-format table that summarizes some unifying aspect of a Wikipedia article) from each page to form the Wiki \KG.
 	
-	\cparagraph{Baidu} From Baidu Baike, we extract 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG. The data were collected from Baidu Baike between \FIXME{February 2018 and July 2018?}.
+	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extract 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG. The data were collected from Baidu Baike between \FIXME{February 2018 and July 2018?}.
 
 	
-	\cparagraph{Gold standards} From the aforementioned two \KGs, we manually aligned 16,969 entity pairs as the gold standards of entity alignment, and built a new dataset, called WBD, for entity alignment in Chinese KGs. \FIXME{ZW: What is WBD used for???}
+	\cparagraph{Evaluation dataset} From the two aforementioned  \KGs, we manually aligned 16,969 randomly chosen entity pairs as the gold standards of entity alignment. We refer this gold standard datasets as WBD which is used to train and evaluate all approaches.
 	
 
 %dataset WBD for . Since both of the two KGs mentioned above are constructed from data that we crawled from web encyclopedias, there are no ready-made aligned entity pairs. Therefore, we manually aligned a portion of entities as the seed data.
