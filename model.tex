@@ -105,9 +105,9 @@ A_r$ is an approximate of spectral convolutions on $A^r$, introduced by ~\cite{K
 
 	
 	\eparagraph{Calculate the weight matrix} For each relation $r$, we construct a weight matrix, $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)}
-\times d^{(l)}}$ for the stacked \RGCNs. As there are often thousands types of relations in \KGs, there will be a large amount of
-parameters to train, and as a result the model is likely to overfit. To avoid overfiting, we employ the basis decomposition, which is
-introduced in ~\cite{Schlichtkrull2017Modeling}, to regularize the weights:
+\times d^{(l)}}$ for the stacked \RGCNs. As there are often thousands of types of relations in \KGs, there typically will be a large amount
+of parameters to train over, which is likely to model overfiting. To minimize the impact of the large parameter size, we employ the basis
+decomposition introduced in~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 	\begin{equation}
 	W_r^{(l)}=\sum\limits_{b=1}^B a_{rb}^{(l)}V_b^{(l)}
 	\end{equation}
