@@ -1,17 +1,16 @@
 \section{Our Approach}
 	\label{section:app}
-	Our entity alignment model can be applied to any two arbitrary (heterogeneous) \KGs. Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where
+	Our entity alignment model can be applied to two arbitrary (heterogeneous) \KGs. Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where
 $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively.
 	We put $G_1$ and $G_2$ together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover new
 equivalent entities. Figure~\ref{all} demonstrates the overall architecture of our model.
 	
 	
 	\begin{figure}[t!]
-		\begin{center}
+		\centering
 			\includegraphics[width=0.8\linewidth]{figures/graph2.pdf}
 			\caption{Overall architecture of our entity alignment model.}
 			\label{all}
-		\end{center}
 	\end{figure}
 	
     \subsection{Base Model}
@@ -19,7 +18,7 @@ equivalent entities. Figure~\ref{all} demonstrates the overall architecture of o
     \RGCN is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data. 
     A \RGCN takes a set of adjacency matrices as input, and produces a new set of node features. 
     Each input adjacency matrix describes the adjacency relationships among all nodes in the graph under each different relation. 
-    We choose to use a \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs. 
+    We choose to use \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs. 
     Our work improves the featureless approach of \RGCN with pre-defined node feature vectors. 
     We believe that in addition to the internal structures, the semantic information of entity names and the attribute information of entities can help \RGCN better embed \KGs. 
     Therefore, we incorporate the aforementioned information into the node features as part of the model inputs.
@@ -33,7 +32,7 @@ equivalent entities. Figure~\ref{all} demonstrates the overall architecture of o
 	\cparagraph{Semantic initialization}
 	\label{wordvector}
 	We believe that the names of entities and their counterparts in multiple \KGs should be semantically similar. Therefore we leverage the pre-trained word embeddings to introduce the semantic information about the names of entities.
-	For Chinese datasets, we use word2vec software of Tomas Mikolov and his colleagues\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings. In our experiments, the window size is 5 and threshold for downsampling the frequent words is 20. Sentences in Baidu baike are used as training data and 155,837 100-dimensional word vectors are generated.
+	For Chinese datasets, we use word2vec software of Tomas Mikolov and his colleagues\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings. In our experiments, the window size is 5 and threshold for downsampling the frequent words is 20. Sentences in Baidu baike are used as training data and 4,200,006 100-dimensional word vectors are generated.
 	
 	\cparagraph{Attribute initialization}
 	For attribute values, we distinguish four kinds of abstract range types, i.e., Integer, Double, Date and String (as default). 
@@ -52,7 +51,7 @@ equivalent entities. Figure~\ref{all} demonstrates the overall architecture of o
 	\label{section:rgcn}
 	Here, we present detailed description of our RGCN entity alignment model.
 	
-	The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in R-GCNs~\cite{Schlichtkrull2017Modeling}.
+	The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
 	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
 	\begin{equation}
@@ -62,15 +61,15 @@ equivalent entities. Figure~\ref{all} demonstrates the overall architecture of o
 	\begin{equation}
 	\hat A_r=\hat D_r^{- \frac{1}{2}}(A_r+I)\hat D_r^{- \frac{1}{2}}
 	\end{equation}
-	, where $(\hat D_r)_{jj}=\sum_k(A_r+I)_{jk}$.
+	where $(\hat D_r)_{jj}=\sum_k(A_r+I)_{jk}$.
 	
-	We get the new embedding matrix $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+!)}}$ by stacking the output $x_i^{(l+1)}$ together.
+	We get the new embedding matrix $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$ by stacking the output $x_i^{(l+1)}$ together.
 	
 	As there are generally thousands of relation types in knowledge graphs, there will be a large amount of parameters to train and the model is likely to overfit. Hence we employ the basis decomposition, which is introduced in ~\cite{Schlichtkrull2017Modeling}, to regularize the weights:
 	\begin{equation}
 	W_r^{(l)}=\sum\limits_{b=1}^B a_{rb}^{(l)}V_b^{(l)}
 	\end{equation}
-	, where $V_b^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ and $a_{rb}^{(l)}$ is the coefficient of matrix $V_b^{(l)}$ for relation $r$.
+	where $V_b^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ and $a_{rb}^{(l)}$ is the coefficient of matrix $V_b^{(l)}$ for relation $r$.
 	
 	
 	\subsubsection{Highway RGCN}
@@ -82,10 +81,10 @@ equivalent entities. Figure~\ref{all} demonstrates the overall architecture of o
 	&x^{(l+1)}=x^{(l+1)} \cdot T(x^{(l)})+x^{(l)} \cdot (1-T(x^{(l)}))
 	\end{split}
 	\end{equation}
-	, where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l)} \times d^{(l-1)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
+	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l)} \times d^{(l-1)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
 	
 	\subsection{Alignment Prediction}
-	After HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We measure the similarity between $e_1$ in $G_1$ and $e_2$ in $G_2$ by the distance between their hidden representations: $d(e_1,e_2)=|\bar{x}_{e_1}-\bar{x}_{e_2}|$, where $|\cdot|$ indicates the $l_1$ norm. The distance for equivalent entities is expected to be smaller than non-equivalent ones. In our experiments, for a entity $e_1$ in $G_1$, we computes the distances between $e_1$ and all the entities in $G_2$. The alignment process can also be reversed, i.e. from $G_2$ to $G_1$. Since, we report the results of both directions of entity alignment in our experiments.
+	After HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We measure the similarity between $e_1$ in $G_1$ and $e_2$ in $G_2$ by the distance between their hidden representations: $d(e_1,e_2)=|\bar{x_{e_1}}-\bar{x_{e_2}}|$, where $|\cdot|$ indicates the $l_1$ norm. The distance for equivalent entities is expected to be smaller than non-equivalent ones. In our experiments, for a entity $e_1$ in $G_1$, we computes the distances between $e_1$ and all the entities in $G_2$. The alignment process can also be reversed, i.e. from $G_2$ to $G_1$. Since, we report the results of both directions of entity alignment in our experiments.
 	
 	A set of pre-aligned entity pairs $\mathbb{L}$ and the set of negative pairs $\mathbb{L'}$  constructed by corrupting $(p, q)$, i.e. replacing $p$ or $q$ with a randomly chosen entity in $G_1$ or $G_2$ are used for training. To maximize the distance between positive and negative instances, we use the margin-based loss function:
 	\begin{equation}
@@ -104,7 +103,7 @@ equivalent entities. Figure~\ref{all} demonstrates the overall architecture of o
 	\begin{equation}
 		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
-	, where $m$ is the dimension of the new node features produced by HRGCNs. 
+	where $m$ is the dimension of the new node features produced by HRGCNs. 
 	In our experiments, we set the output dimensions of two models (one for semantic embedding and the other one for attribute embedding) to be the same. 
 	$\omega$ is a hyper-parameter. $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
 	
