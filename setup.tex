@@ -5,11 +5,11 @@ information by controlling the balance of how much neighborhood information shou
 
 \subsection{Datasets}
 \label{subsection:datasets}
-	In our experiments, we use two real-world datasets: DBP15K which was built by~\cite{sun2017cross} and a Chinese dataset WBD built by ourselves. 
+	In our experiments, we use two real-world datasets: DBP15K which was built by~\cite{sun2017cross} and a Chinese dataset WBD built by ourselves.
 	
-	DBP15K is a cross-lingual dataset built based on English, Chinese, Japanese and French versions of DBpedia. 
-	This dataset has a series of subsets, each of which contains data from two \KGs in different languages and provides 15,000 pre-aligned entity pairs. 
-	We use the French-English subset of DBP15K in our experiments, because it seems to be the most challenging subset for entity alignment. 
+	DBP15K is a cross-lingual dataset built based on English, Chinese, Japanese and French versions of DBpedia.
+	This dataset has a series of subsets, each of which contains data from two \KGs in different languages and provides 15,000 pre-aligned entity pairs.
+	We use the French-English subset of DBP15K in our experiments, because it seems to be the most challenging subset for entity alignment.
 	According to the experimental results of~\cite{sun2017cross}, all previous entity alignment methods perform the worst on this subset. Table~\ref{dbp} shows the statistics of the French-English subset.
 	
 		\begin{table}
@@ -19,7 +19,7 @@ information by controlling the balance of how much neighborhood information shou
 			\toprule
 			&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 			\midrule
-			French & 66,858 & 1,379 & 4,547 & 192,191 & 528,665 \\ 
+			French & 66,858 & 1,379 & 4,547 & 192,191 & 528,665 \\
 			English & 105,889 & 2,209 & 6,422 & 278,590 & 576,543 \\
 			\bottomrule
 		\end{tabular}
@@ -27,19 +27,19 @@ information by controlling the balance of how much neighborhood information shou
 		\label{dbp}
 	\end{table}
 	
-    For the Chinese dataset, we extracted data from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia). 
+    For the Chinese dataset, we extracted data from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia).
     The two sources contain rich information and are widely used to constructed \KGs.
 	
 	\cparagraph{Raw Wiki dataset}
 	We used the Chinese version of the Wikipedia dump\footnote{https://dumps.wikimedia.org/zhwiki} released on June 2, 2015.
     From the dump, we extracted over one million entities and three million $\langle$subject, predicate, object$\rangle$ triples from the infobox (i.e., a fixed-format table that summarizes some unifying aspect of a Wikipedia article) to form the Wiki \KG.
 	
-	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extracted 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG. 
+	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extracted 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG.
 	The data were collected from Baidu Baike between February 2018 and July 2018.
 
 	
-	\cparagraph{Evaluation dataset} From the two aforementioned \KGs, we manually aligned 16,969 randomly chosen entity pairs as the gold standards of entity alignment. 
-	Our strategy to extract evaluation dataset is that we randomly selected an aligned entity pair and then extracted relation and attribute triples for selected entities. 
+	\cparagraph{Evaluation dataset} From the two aforementioned \KGs, we manually aligned 16,969 randomly chosen entity pairs as the gold standards of entity alignment.
+	Our strategy to extract evaluation dataset is that we randomly selected an aligned entity pair and then extracted relation and attribute triples for selected entities.
 	We refer this evaluation dataset as WBD which is used to train and evaluate all approaches. The statistics of WBD are listed in Table~\ref{dataset}.
 	
 
@@ -52,7 +52,7 @@ information by controlling the balance of how much neighborhood information shou
 		\toprule
 		&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 		\midrule
-		Wiki & 25,139 & 1,301 & 8,332 & 87,775 & 211,949 \\ 
+		Wiki & 25,139 & 1,301 & 8,332 & 87,775 & 211,949 \\
 		Baidu & 32,101 & 2,262 & 20,263 & 143,228 & 303,116 \\
 		\bottomrule
 	\end{tabular}
@@ -62,37 +62,41 @@ information by controlling the balance of how much neighborhood information shou
 
 
 	\subsection{Competitive Approaches}
-	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods JE~\cite{hao2016joint} and ITransE~\cite{zhu2017iterative}. For JE, we use our best effort to implement this model as they do not release any source code or software currently.  As listed in Table~\ref{seed}, ITransE requires all relations to be shared between two KGs. Since our WBD dataset was built based on two completely heterogeneous KGs, sharing same relations is unrealistic for our dataset. Thus we build ITransE$'$, a variant of ITransE which does not use same relations between KGs.
-	
-	We also build two GCN-based models as our baselines: GCN and HGCN, which respectively replace the RGCN layers of our RGCN model and HRGCN model with the GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs. 
-	And the two GCN-based model combine the semantic embedding and attribute embedding with $\omega=0.95$ in the combined distance. 
-	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units. 
+	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods JE~\cite{hao2016joint} and
+ITransE~\cite{zhu2017iterative}. As listed in Table~\ref{seed}, ITransE requires all relations to be shared between two KGs. Since our WBD
+dataset was built based on two completely heterogeneous \KGs, sharing same relations is unrealistic for our dataset. Thus we build
+ITransE$'$, a variant of ITransE which does not use same relations between \KGs. 	
+
+
+	We also build two \GCN-based models as our baselines: GCN and HGCN, which respectively replace the RGCN layers of our RGCN model and HRGCN model with the GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs.
+	And the two GCN-based model combine the semantic embedding and attribute embedding with $\omega=0.95$ in the combined distance.
+	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units.
 	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
 	These hyperparameters were found to give the best overall performance in our experiments.
 	
-	Additionally, we divide our model into three variants: two-layered Highway RGCN (HRGCN), two-layered no-highway RGCN and HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to HRGCN. For all variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition. 
-	We set $\omega=0.95$ in the combined distance and apply L2 regularization with $\lambda=5e-4$ to avoid overfitting. 
+	Additionally, we divide our model into three variants: two-layered Highway RGCN (HRGCN), two-layered no-highway RGCN and HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to HRGCN. For all variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition.
+	We set $\omega=0.95$ in the combined distance and apply L2 regularization with $\lambda=5e-4$ to avoid overfitting.
 	
-	On the $DBP15K_{FR-EN}$ dataset, we compare our HRGCN model with JE, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}. 
-	Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition. 
+	On the $DBP15K_{FR-EN}$ dataset, we compare our HRGCN model with JE, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}.
+	Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition.
 	The hyper-parameter $\omega$ in the combined distance is set to 0.9.
 
 
 
 	\subsection{Evaluation Methodology}
 	
-	For WBD dataset, we break the gold standards for two parts with equal-size, and use one for training and the other for testing. 
-	As mentioned in Section~\ref{wordvector}, we utilize pre-trained 100-dimensional Chinese word vectors. 
+	For WBD dataset, we break the gold standards for two parts with equal-size, and use one for training and the other for testing.
+	As mentioned in Section~\ref{wordvector}, we utilize pre-trained 100-dimensional Chinese word vectors.
 	By counting the frequency of attributes appearing in each \KG of the WBD dataset, we select 63 high-frequency attributes from each \KG to construct 63-dimensional attribute vectors.
 	
-	For $DBP15K_{FR-EN}$ dataset, we use the same split of gold standards for training (30\%) and testing (70\%) as in~\cite{sun2017cross}. 
-	For semantic embedding, we first directly utilize Google Translate~\footnote{https://translate.google.cn} to translate French entities and relations into English. 
-	And we use pre-trained English word vectors \emph{glove.840B.300d}~\footnote{http://nlp.stanford.edu/projects/glove/} to construct the input node feature vectors. 
+	For $DBP15K_{FR-EN}$ dataset, we use the same split of gold standards for training (30\%) and testing (70\%) as in~\cite{sun2017cross}.
+	For semantic embedding, we first directly utilize Google Translate~\footnote{https://translate.google.cn} to translate French entities and relations into English.
+	And we use pre-trained English word vectors \emph{glove.840B.300d}~\footnote{http://nlp.stanford.edu/projects/glove/} to construct the input node feature vectors.
 	For attribute embedding, we select 180 high-frequency attributes from each \KG and generate 180-dimensional attribute vectors.
 	
-	We use Hits@k to assess the performance of all the approaches. 
-	This metric is widely used for evaluating entity alignment~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative} by measuring the proportion of correctly aligned entities ranked in the top k. 
+	We use Hits@k to assess the performance of all the approaches.
+	This metric is widely used for evaluating entity alignment~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative} by measuring the proportion of correctly aligned entities ranked in the top k.
 	All the neural network based models are trained using the Adam optimizer~\cite{Kingma2014Adam} for maximum of 200 epochs with a learning rate
-    of 0.01. 
+    of 0.01.
     Furthermore, all the models are initialized using Glorot initialization~\cite{Glorot2010Understanding}.
 	
