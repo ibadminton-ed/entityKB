@@ -86,7 +86,7 @@ the overall architecture of our model.
 
  \eparagraph{Calculate the embedding matrix}
  Our approach stacks two \RGCNs as depicted in Figure~\ref{all}.
- The input for layer $l$ in each of our \RGCNs is a node feature vector, $X^{(l)}$, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ The input for layer $l$ in each of our \RGCNs is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
  |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each element of the node feature vector, $x_i$, is updated using forward propagation, and we stack the output of each \RGCN, $x_i^{(l+1)}$
  , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
 
