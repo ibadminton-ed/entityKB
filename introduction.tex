@@ -31,22 +31,22 @@ column in the Table~\ref{seed}, most of these models, except JAPE~\cite{sun2017c
 of their complexity and heterogeneity. And actually, JAPE only considers the types of those values for simplicity, and the specific
 attribute values, such as \textit{1.86m} as someone's height, are ignored. However, values are actually very significant parts of \KGs, especially for low-quality \KGs which may contain large-scale values and the approaches that do not consider values will lose this part of information when aligning \KGs. We argue that those attribute value information are crucial for entity alignment and should be taken into account. 
 
-	\begin{table}
-		\centering
-		\scriptsize
-		\begin{tabular}{lllll}
-			\toprule
-			\bf Models & \bf entity & \bf relation & \bf triple & \bf use of value \\
-			\midrule
-			JE~\cite{hao2016joint} & ${\surd}$ & & & \\
-			MTransE~\cite{chen2016multilingual} & $ $ & $ $ & ${\surd}$ & \\
-			JAPE~\cite{sun2017cross} & ${\surd}$& ${\surd}$& & ${\surd}$ (type)\\
-			ITransE~\cite{zhu2017iterative} & ${\surd}$ & ${\surd}$& & \\
-			\bottomrule
-		\end{tabular}
-		\caption{The use of seed alignment information in each method.}
-		\label{seed}
-	\end{table}
+\begin{table}
+	\centering
+	\scriptsize
+	\begin{tabular}{lllll}
+		\toprule
+		\bf Models & \bf entity & \bf relation & \bf triple & \bf use of value \\
+		\midrule
+		JE~\cite{hao2016joint} & ${\surd}$ & & & \\
+		MTransE~\cite{chen2016multilingual} & $ $ & $ $ & ${\surd}$ & \\
+		JAPE~\cite{sun2017cross} & ${\surd}$& ${\surd}$& & ${\surd}$ (type)\\
+		ITransE~\cite{zhu2017iterative} & ${\surd}$ & ${\surd}$& & \\
+		\bottomrule
+	\end{tabular}
+	\caption{The use of seed alignment information in each method.}
+	\label{seed}
+\end{table}
 	
 	Moreover, although TransE can effectively capture the structure information of \KGs, it may not perform well when the neighboring relational structures of two entities are significantly different. Since TransE utilizes the relation between the head entity and the tail entity to define the distance between the head entity vector and the tail entity vector, the TransE-based approaches actually tend to require that the neighboring structures of the equivalent entities from different \KGs should be as similar as possible. Nevertheless, due to the incompleteness of knowledge graphs, the densities of the neighborhoods of the two entities $e_1$ and $e_2$ that we need to align may be very different or there are few similar relations and neighbors between $e_1$ and $e_2$, which leads to sparse available clues for alignment and will make a large difference between the learned vectors of $e_1$ and $e_2$ by TransE. But actually, when we judge whether two entities refer to the equivalent identity, we often only pay attention to the more informative and discriminative neighbors of the two entities, especially when the available clues are sparse.
 	\begin{figure}
@@ -66,6 +66,6 @@ attribute values, such as \textit{1.86m} as someone's height, are ignored. Howev
 		
 		\item We show that layer-wise highway gates play a significant role to control the balance of how much neighborhood information should be passed to a node in our HRGCN model.
 		
-		\item We built a large-scale entity alignment dataset in Chinese, containing 57,240 entities, 3,563 relations, 28,595 attributes and 593,483 triples. We manually aligned 16,969 entity pairs as the gold standards of entity alignment.
+		\item We built a large-scale entity alignment dataset in Chinese, containing 57,240 entities, 3,563 relations, 28,595 attributes, 231,003 relation triples and 515,065 attribute triples. We manually aligned 16,969 entity pairs as the gold standards of entity alignment.
 		
 	\end{itemize}
