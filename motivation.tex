@@ -3,17 +3,17 @@ As a motivation example, consider Figure~\ref{Xinjiang} which depicts the hetero
 datasets (see Section~\ref{subsection:datasets}). In the diagram, an entity is marked by a circle and a value is indicated by a rectangle,
 while an attribute or relation is listed on the edge.
 
-The three neighborhoods have some entities (e.g., \emph{Urumqi}) and attributes (e.g., \emph{Area}) in common but their graph structure is different from
-each. Specifically, (1) and (3) contain a common center entity of \emph{Xinjiang} (the surface form of this entity in Wiki is \emph{Xinjiang
-Uygur Autonomous Region}). Therefore, a successful entity alignment strategy needs to link \emph{Xinjiang} from both \KGs. However,
-state-of-the-art entity alignment methods~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative} built upon TransE all fail
-to align this entity because of two reasons: (i) they are misled by some of the redundant entities and attributes that only appear in the
-Baidu dataset and (ii) they do not utilize attributes like \emph{1,660,000$km^2$}. This is a problem when using translation-based
-embedding.
+The three neighborhoods have some entities (e.g., \emph{Urumqi}) and attributes (e.g., \emph{Area}) in common but their graph structure is
+different from each. Specifically, \KGs (1) and (3) contain a common center entity of \emph{Xinjiang} (the surface form of this entity in
+Wiki is \emph{Xinjiang Uygur Autonomous Region}). Therefore, a successful entity alignment strategy needs to link \emph{Xinjiang} from both
+\KGs. However, state-of-the-art entity alignment methods~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative} built upon
+TransE all fail to align this entity because of two reasons: (i) they are misled by some of the redundant entities and attributes that only
+appear in the Baidu dataset and (ii) they do not utilize attributes like \emph{1,660,000$km^2$}. This is a problem when using
+translation-based embedding.
 
-If we look closely into (1) and (3), we find that the \emph{Xinjiang} entity can be aligned using the entity \emph{Urumqi} highlighted by
-the blue circle together with an attribute value \emph{1,660,000$km^2$} highlighted by a green rectangle. In this example, if we can treat
-other entities and attributes as noise, we can successfully align the \emph{Xinjiang} entity.
+If we look closely into \KGs (1) and (3), we find that the \emph{Xinjiang} entity can be aligned using the entity \emph{Urumqi} highlighted
+by the blue circle together with an attribute value \emph{1,660,000$km^2$} highlighted by a green rectangle. In this example, if we can
+treat other entities and attributes as noise, we can successfully align the \emph{Xinjiang} entity.
 
 This example shows that entity alignment requires one to carefully evaluate the importance of each entity and attribute from heterogeneous
 \KGs. Unfortunately, this information varies across datasets and entities. Because manually obtaining this information for every target
