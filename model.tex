@@ -33,82 +33,97 @@ the overall architecture of our model.
 
 	
 	
-	\subsection{R-GCN-based Entity Alignment}
+	\subsection{Our R-GCN-based Entity Alignment Model}
 	\label{section:rgcn}	
+  %  The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
+%	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
+%	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
 
- 	The input to our \RGCN model consists of two parts: (i) a list of adjacency matrices, which describes the adjacency relationships among nodes of a
- \KG, and (ii) a node feature matrix that captures the semantic information such as the entity names and their attributes.
+  	The input to our \RGCN model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
+  names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
+
+  \FIXME{ZW: This section is so confusing. I have tried to rewrite it. Please double check.}
 
 %
 % We utilize predefined node features
 % described in Section~\ref{subsection:Node Representations} to construct $X$ to capture the semantic information. 	The second part is
 
+\subsubsection{i. Node representations}
+	\label{subsection:Node Representations}
+   We use a node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, to encode the semantic information of $N$  nodes in a $d^{(0)}$ dimensional input representation vector.
+   This input directs the \RGCN to draw attention to the entity names and attributes, which are shown to be useful in entity
+   alignment (Section~\ref{sec:motivation}). We stress that this node feature matrix is automatically initialized and updated during training.
 
- \subsubsection{Adjacency relation}
- Like standard \GCNs, node relations are extracted from an adjacency matrix of neighboring nodes in a graph.
- Specifically, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
+	
+	\eparagraph{Semantic information}
+	\label{wordvector}
+	Intuitively, if two entities can be linked together, their names in different \KGs should have similar semantics (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
+    Our work exploits this observation to improve the quality of network features by using re-trained word embeddings to encode the semantic
+    information entity names. This is achieved by applying a word2vec model to generate word embeddings from training entity names.
+    %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
+
+	
+	\eparagraph{Attribute information}
+    In addition to entity names, we also consider entity attributes for node representations.
+	Our current implementation distinguishes four types of attributes, i.e., \emph{Integer}, \emph{Double}, \emph{Date} and \emph{String}
+(as default), but other data types can be added into the model.
+	%In this paper, we only consider the first three types, i.e., Integer, Double and Date.
+%	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
+%	
+	We construct normalized attribute vector for each entity. The dimension of an attribute vector for a given type equals to the number of distinct values of that type.
+	The elements in an entity's attribute vector equal to the normalized values of the corresponding attributes. \FIXME{ZW: This sentence is confusing. Please consider rephrasing.}
+    Because not all entities contain all the attribute types, we pad missing attributes with a value of 0 to form a constant-sized  vector.
+
+ \subsubsection{ii. Adjacency relation}
+ Like standard \GCNs, we extract node relations from an adjacency matrix of neighboring nodes in a graph.
+ In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations of graph $G$.
- To construct an adjacency matrix, we follow a number of steps. We first extract $R_0$ original
- relations from \KGs, then we add reverse relations in order to pass information from the opposite direction, before we insert the self
- loop to retain information of the node itself. \FIXME{ZW: What is a self loop? This is confusing.} These together compose $R=2R_0+1$ relations. 	In each layer $l$, the input is $X^{(l)} =
- \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
- \FIXME{ZW: We need to refer to Figure~\ref{all} when discussing the inputs and layers.}
 
+ To construct an adjacency matrix, $A_r$, for relation $r$ we follow a number of steps. We first extract $R_0$ original
+ relations from \KGs, then we add reverse relations in order to pass information from the opposite direction, before we back-propagate the
+ information to a network node through a self-referencing loop (for retaining the node's information). Applying these steps results in $R=2R_0+1$ relations. 	
+ \FIXME{ZW: We either need a diagram or link this paragraph to Figure~\ref{all}}
 
+ \eparagraph{Calculate the embedding matrix}
+ Our approach stacks two \RGCNs as depicted in Figure~\ref{all}.
+ The input for layer $l$ in each of our \RGCNs is a node feature vector, $X^{(l)}$, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each element of the node feature vector, $x_i$, is updated using forward propagation, and we stack the output of each \RGCN, $x_i^{(l+1)}$
+ , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
+
+   Specifically, the forward propagation of $x_i^{(l+1)}$ of a \RGCN is formulated as:
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)})
 	\end{equation}
-	As a departure from general \GCNs, our approach applies relation-specific transformations to an edge depending on the type and
-direction of the edge. Later in the paper, we show that this strategy can better capture the multi-relational data characteristics of
-real-world \KGs. Here $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ is the weight matrix of relation $r$; $N_i^r$ is the set of
-neighbor indices of node $i$ under relation $r$, according to normalized adjacency matrix $\hat A_r$; and $\hat A_r$ is an approximate of
-spectral convolutions on $A^r$, introduced by ~\cite{Kipf2016Semi}:
+%
+%
+where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$, according to normalized adjacency matrix $\hat A_r$; and $\hat
+A_r$ is an approximate of spectral convolutions on $A^r$, introduced by ~\cite{Kipf2016Semi}:
 	\begin{equation}
 	\hat A_r=\hat D_r^{- \frac{1}{2}}(A_r+I)\hat D_r^{- \frac{1}{2}}
 	\end{equation}
 	where $(\hat D_r)_{jj}=\sum_k(A_r+I)_{jk}$.
+
 	
-	We get the new embedding matrix $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$ by stacking the output $x_i^{(l+1)}$ together.
-	
-	As there are generally thousands of relation types in knowledge graphs, there will be a large amount of parameters to train and the model is likely to overfit. Hence we employ the basis decomposition, which is introduced in ~\cite{Schlichtkrull2017Modeling}, to regularize the weights:
+	\eparagraph{Calculate the weight matrix} For each relation $r$, we construct a weight matrix, $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)}
+\times d^{(l)}}$ for the stacked \RGCNs. As there are often thousands types of relations in \KGs, there will be a large amount of
+parameters to train, and as a result the model is likely to overfit. To avoid overfiting, we employ the basis decomposition, which is
+introduced in ~\cite{Schlichtkrull2017Modeling}, to regularize the weights:
 	\begin{equation}
 	W_r^{(l)}=\sum\limits_{b=1}^B a_{rb}^{(l)}V_b^{(l)}
 	\end{equation}
 	where $V_b^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ and $a_{rb}^{(l)}$ is the coefficient of matrix $V_b^{(l)}$ for relation $r$.
-	\FIXME{We need to shrink this section if it is all about prior work.}
 
-
-
-	\subsubsection{Node representations}
-	\label{subsection:Node Representations}
-   We use a node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, to encode the semantic information of $N$  nodes in a $d^{(0)}$ dimensional input representation vector.
-   This input directs the \RGCN to draw specific attention on the entity name and attributes, which are shown to be useful in entity
-   alignment (Section~\ref{sec:motivation}). The node feature matrix is automatically constructed using the semantics of entity names and attribute information of
-   entities.
+As a departure from general \GCNs, our approach applies relation-specific transformations to an edge depending on its type and direction.
+Later in the paper, we show that this strategy can better capture the multi-relational data characteristics of real-world \KGs. \FIXME{ZW:
+Why do we need this paragraph? I don't know where to put it.}
 
 	
-	\eparagraph{Semantic initialization}
-	\label{wordvector}
-	Intuitively, the names of entities and their counterparts in multiple \KGs should be semantically similar. For example, \FIXME{refer to the motivation example?}
-    Therefore, we leverage the pre-trained word embeddings to encode the semantic information for the names of entities.
-	We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
-
-	
-	\eparagraph{Attribute initialization}
-	For attribute values, we distinguish four kinds of abstract range types, i.e., Integer, Double, Date and String (as default).
-	In this paper, we only consider the first three types, i.e., Integer, Double and Date.
-	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
-	
-	We construct normalized attribute vector for each entity.
-	Specifically, the dimension of attribute vector is equal to the number of distinct attributes of which the value types belong to Integer, Double and Date in the \KG.
-	The elements in an entity’s attribute vector equal to the normalized values of the corresponding attributes.
-	If an entity does not have an attribute, the element corresponding to this attribute in the vector is then set to 0.
 	
 %	Since it is the first attempt, we only consider the numerical part of a value, regardless of the unit, that is, we do not insist on normalizing \emph{1.80m} and \emph{180cm}.
 %	We leave this for future work.
 
 
-	\subsubsection{Highway R-GCNs}
+	\subsubsection{Noise reduction}
 	\label{section:hgcn}
 	While stacking RGCN layers makes our model capable of learning more neighborhood information from several relational steps, it may as
 well bring noise from the exponentially increasing neighbors. To reduce the effect of noise and ensure effective spread of more informative
