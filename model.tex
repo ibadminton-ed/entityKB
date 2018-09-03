@@ -22,8 +22,8 @@ the overall architecture of our model.
 
 
  Our work improves \RGCNs in two ways. Firstly, we introduce highways to reduce the impact of noise.
-    Secondly, we use automatically learned semantic information such as entity names and attributes to improve the quality of the \KG
-    embedding learned by the \RGCN.
+    Secondly, we use automatically learned semantic features such as entity names and attributes to to help the \RGCN to better capture the
+    subtle correlations between two \KGs.
 
 
  %   Our work improves the featureless approach of \RGCN with pre-defined node feature vectors.
@@ -45,11 +45,12 @@ the overall architecture of our model.
 
 
  \subsubsection{Adjacency relation}
- The adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
+ Like standard \GCNs, node relations are extracted from an adjacency matrix of neighboring nodes in a graph.
+ Specifically, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations of graph $G$.
- We extract $R_0$ original
- relations from \KGs, then we add reverse relations in order to pass information from the opposite direction; and add the self
- loop to retain information of the node itself. These together compose $R=2R_0+1$ relations. 	In each layer $l$, the input is $X^{(l)} =
+ To construct an adjacency matrix, we follow a number of steps. We first extract $R_0$ original
+ relations from \KGs, then we add reverse relations in order to pass information from the opposite direction, before we insert the self
+ loop to retain information of the node itself. \FIXME{ZW: What is a self loop? This is confusing.} These together compose $R=2R_0+1$ relations. 	In each layer $l$, the input is $X^{(l)} =
  \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
  \FIXME{ZW: We need to refer to Figure~\ref{all} when discussing the inputs and layers.}
 
@@ -57,7 +58,11 @@ the overall architecture of our model.
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)})
 	\end{equation}
-	Different from general \GCNs, \RGCNs introduce relation-specific transformations which depend on the type and direction of an edge. And this kind of propagation model can better characterize highly multi-relational data characteristic of realistic \KGs. Here $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ is the weight matrix of relation $r$. $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$, according to normalized adjacency matrix $\hat A_r$. $\hat A_r$ is an approximate of spectral convolutions on $A^r$, introduced by ~\cite{Kipf2016Semi}:
+	As a departure from general \GCNs, our approach applies relation-specific transformations to an edge depending on the type and
+direction of the edge. Later in the paper, we show that this strategy can better capture the multi-relational data characteristics of
+real-world \KGs. Here $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ is the weight matrix of relation $r$; $N_i^r$ is the set of
+neighbor indices of node $i$ under relation $r$, according to normalized adjacency matrix $\hat A_r$; and $\hat A_r$ is an approximate of
+spectral convolutions on $A^r$, introduced by ~\cite{Kipf2016Semi}:
 	\begin{equation}
 	\hat A_r=\hat D_r^{- \frac{1}{2}}(A_r+I)\hat D_r^{- \frac{1}{2}}
 	\end{equation}
@@ -70,22 +75,24 @@ the overall architecture of our model.
 	W_r^{(l)}=\sum\limits_{b=1}^B a_{rb}^{(l)}V_b^{(l)}
 	\end{equation}
 	where $V_b^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ and $a_{rb}^{(l)}$ is the coefficient of matrix $V_b^{(l)}$ for relation $r$.
-	
+	\FIXME{We need to shrink this section if it is all about prior work.}
+
+
 
 	\subsubsection{Node representations}
 	\label{subsection:Node Representations}
-   The node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, encodes the semantic information of $N$  nodes in a $d^{(0)}$ dimensional input representation vector.
+   We use a node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, to encode the semantic information of $N$  nodes in a $d^{(0)}$ dimensional input representation vector.
    This input directs the \RGCN to draw specific attention on the entity name and attributes, which are shown to be useful in entity
-   alignment (Section~\ref{sec:motivation}).
+   alignment (Section~\ref{sec:motivation}). The node feature matrix is automatically constructed using the semantics of entity names and attribute information of
+   entities.
 
-
-	There are two methods to initialize a node feature vector.
-	One is to use the semantics of entity names, and the other is to use entities' attribute information, described as follows:
 	
 	\eparagraph{Semantic initialization}
 	\label{wordvector}
-	We believe that the names of entities and their counterparts in multiple \KGs should be semantically similar. Therefore we leverage the pre-trained word embeddings to introduce the semantic information about the names of entities.
-	For Chinese datasets, we use word2vec software of Tomas Mikolov and his colleagues\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings. In our experiments, the window size is 5 and threshold for downsampling the frequent words is 20. Sentences in Baidu baike are used as training data and 4,200,006 100-dimensional word vectors are generated.
+	Intuitively, the names of entities and their counterparts in multiple \KGs should be semantically similar. For example, \FIXME{refer to the motivation example?}
+    Therefore, we leverage the pre-trained word embeddings to encode the semantic information for the names of entities.
+	We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
+
 	
 	\eparagraph{Attribute initialization}
 	For attribute values, we distinguish four kinds of abstract range types, i.e., Integer, Double, Date and String (as default).
@@ -97,8 +104,8 @@ the overall architecture of our model.
 	The elements in an entity’s attribute vector equal to the normalized values of the corresponding attributes.
 	If an entity does not have an attribute, the element corresponding to this attribute in the vector is then set to 0.
 	
-	Since it is the first attempt, we only consider the numerical part of a value, regardless of the unit, that is, we do not insist on normalizing \emph{1.80m} and \emph{180cm}.
-	We leave this for future work.
+%	Since it is the first attempt, we only consider the numerical part of a value, regardless of the unit, that is, we do not insist on normalizing \emph{1.80m} and \emph{180cm}.
+%	We leave this for future work.
 
 
 	\subsubsection{Highway R-GCNs}

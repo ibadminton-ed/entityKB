@@ -36,12 +36,13 @@ information by controlling the balance of how much neighborhood information shou
 	
 	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extracted 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG.
 	The data were collected from Baidu Baike between February 2018 and July 2018.
-
 	
 	\cparagraph{Evaluation dataset} From the two aforementioned \KGs, we manually aligned 16,969 randomly chosen entity pairs as the gold standards of entity alignment.
 	Our strategy to extract evaluation dataset is that we randomly selected an aligned entity pair and then extracted relation and attribute triples for selected entities.
 	We refer this evaluation dataset as WBD which is used to train and evaluate all approaches. The statistics of WBD are listed in Table~\ref{dataset}.
 	
+
+
 
 %dataset WBD for . Since both of the two KGs mentioned above are constructed from data that we crawled from web encyclopedias, there are no ready-made aligned entity pairs. Therefore, we manually aligned a portion of entities as the seed data.
 
@@ -68,14 +69,19 @@ dataset was built based on two completely heterogeneous \KGs, sharing same relat
 ITransE$'$, a variant of ITransE which does not use same relations between \KGs. 	
 
 
+
+
 	We also build two \GCN-based models as our baselines: GCN and HGCN, which respectively replace the RGCN layers of our RGCN model and HRGCN model with the GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs.
 	And the two GCN-based model combine the semantic embedding and attribute embedding with $\omega=0.95$ in the combined distance.
 	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units.
 	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
 	These hyperparameters were found to give the best overall performance in our experiments.
 	
-	Additionally, we divide our model into three variants: two-layered Highway RGCN (HRGCN), two-layered no-highway RGCN and HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to HRGCN. For all variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition.
+	Additionally, we divide our model into three variants: two-layered Highway RGCN (HRGCN), two-layered no-highway RGCN and HRGCN (w/o X)
+which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to HRGCN. For all
+variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition.
 	We set $\omega=0.95$ in the combined distance and apply L2 regularization with $\lambda=5e-4$ to avoid overfitting.
+
 	
 	On the $DBP15K_{FR-EN}$ dataset, we compare our HRGCN model with JE, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}.
 	Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition.
@@ -88,6 +94,9 @@ ITransE$'$, a variant of ITransE which does not use same relations between \KGs.
 	For WBD dataset, we break the gold standards for two parts with equal-size, and use one for training and the other for testing.
 	As mentioned in Section~\ref{wordvector}, we utilize pre-trained 100-dimensional Chinese word vectors.
 	By counting the frequency of attributes appearing in each \KG of the WBD dataset, we select 63 high-frequency attributes from each \KG to construct 63-dimensional attribute vectors.
+     To learn the word vectors to capture the semantics of entity names for the node representation (see Section~\ref{subsection:Node
+    Representations}), we use sentences from  the Baidu dataset. We use a window size of 5 and a threshold of 20 for downsampling the frequent words
+    for the word2vec model.
 	
 	For $DBP15K_{FR-EN}$ dataset, we use the same split of gold standards for training (30\%) and testing (70\%) as in~\cite{sun2017cross}.
 	For semantic embedding, we first directly utilize Google Translate~\footnote{https://translate.google.cn} to translate French entities and relations into English.
