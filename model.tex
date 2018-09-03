@@ -103,7 +103,12 @@ the overall architecture of our model.
 
 	\subsubsection{Highway R-GCNs}
 	\label{section:hgcn}
-	While stacking RGCN layers makes our model capable of learning more neighborhood information from several relational steps, it may as well bring noise from the exponentially increasing neighbors. To reduce the effect of noise and ensure effective spread of more informative and discriminative neighborhood information, we add layer-wise gates similar to highway networks~\cite{Srivastava2015Highway} to our RGCN entity alignment model. ~\cite{Rahimi2018Semi} have successfully introduced highway gates to \GCNs~\cite{Kipf2016Semi} to solve the user geolocation problem. We introduce layer-wise highway gates to our RGCN model to finally get Highway RGCN (HRGCN) model and the output of a HRGCN layer is computed as:
+	While stacking RGCN layers makes our model capable of learning more neighborhood information from several relational steps, it may as
+well bring noise from the exponentially increasing neighbors. To reduce the effect of noise and ensure effective spread of more informative
+and discriminative neighborhood information, we add layer-wise gates similar to highway networks~\cite{Srivastava2015Highway} to our RGCN
+entity alignment model. ~\cite{Rahimi2018Semi} have successfully introduced highway gates to \GCNs~\cite{Kipf2016Semi} to solve the user
+geolocation problem. We introduce layer-wise highway gates to our RGCN model to finally get Highway RGCN (HRGCN) model and the output of a
+HRGCN layer is computed as:
 	\begin{equation}
 	\begin{split}
 	&T(x^{(l)})=\sigma(W_T^{(l)}x^{(l)}+b_T^{(l)}) \\
