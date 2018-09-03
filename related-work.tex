@@ -23,19 +23,9 @@ the first to do so.
 entity alignment typically follow a labour-intensive and time-consuming process to tune model features. For example, the work presented in
 ~\cite{Wang2017} requires one to collect network semantic labels like category labels, attribute labels and unstructured
 text keywords of the entity entries to build the alignment model.
-
-    \FIXME{ZW: Will perhaps rewrite this later.}
 	
 	
-	To address these issues, several embedding-based methods have been proposed and achieve promising results.
-	
-	JE~\cite{hao2016joint} jointly learns the embeddings of different KGs in a uniform vector space, following the energy-based framework in TransE, and align entities in KGs by adding the loss of alignment part to the global loss function. In the learning process, JE requires the seed aligned entities share the same embeddings.
-	
-	MTransE~\cite{chen2016multilingual} is also a TransE-based model for cross-lingual KG alignment. It embeds entities and relations of each language in a separated embedding space and also provides transitions for each embedding vector to its cross-lingual counterparts in other spaces. For model training, MTransE needs a set of triples to be aligned in advance.
-	
-	JAPE~\cite{sun2017cross} is a joint attribute-preserving embedding model, based on TransE, for cross-lingual entity alignment. And JAPE proposed attribute embedding to represent the attribute correlations of KGs which considers the value information, only the type of values. JAPE needs both relations and attributes to be aligned in advance.
-	
-	ITransE~\cite{zhu2017iterative} jointly encodes both entities and relations of multiple KGs into a unified semantic space according to a seed set of aligned entities. ITransE utilizes the newly aligned entities to update joint embeddings to achieve iterative entity alignment. Besides pre-aligned entities, ITransE requires all relations being shared among KGs.
+	To address these issues, several embedding-based methods have been proposed and achieve promising results. JE~\cite{hao2016joint} jointly learns the embeddings of different \KGs in a uniform vector space for entity alignment based on aligned entities. MTransE~\cite{chen2016multilingual} also uses structural information of \KGs for cross-lingual KG alignment with known aligned triples. Also for cross-lingual \KG alignment, JAPE~\cite{sun2017cross} proposed a joint attribute-preserving embedding model based on aligned entities, relations and attributes. Moreover, ITransE~\cite{zhu2017iterative} presented iterative entity alignment via joint knowledge embeddings, requiring all relations being shared among KGs.
 	
 	Since utilizing TransE to embed entities, JE, MTransE, JAPE and ITransE might not perform well under several tough situations and these embedding-based approaches all ignored the specific attribute values as mentioned in Section~\ref{section:intro}. In addition, the seed alignments required by MTransE, JAPE and ITransE are difficult to obtain in practice.
 	
