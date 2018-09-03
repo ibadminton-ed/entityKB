@@ -5,7 +5,7 @@ information by controlling the balance of how much neighborhood information shou
 
 \subsection{Datasets}
 \label{subsection:datasets}
-	In our experiments, we use two real-world datasets: DBP15K which was built by~\cite{sun2017cross} and a Chinese dataset built by ourselves. 
+	In our experiments, we use two real-world datasets: DBP15K which was built by~\cite{sun2017cross} and a Chinese dataset WBD built by ourselves. 
 	
 	DBP15K is a cross-lingual dataset built based on English, Chinese, Japanese and French versions of DBpedia. 
 	This dataset has a series of subsets, each of which contains data from two \KGs in different languages and provides 15,000 pre-aligned entity pairs. 
@@ -15,7 +15,7 @@ information by controlling the balance of how much neighborhood information shou
 		\begin{table}
 		\centering
 		\scriptsize
-		\begin{tabular}{cccccc}
+		\begin{tabular}{c|ccccc}
 			\toprule
 			&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 			\midrule
@@ -48,7 +48,7 @@ information by controlling the balance of how much neighborhood information shou
 	\begin{table}
 	\centering
 	\scriptsize
-	\begin{tabular}{cccccc}
+	\begin{tabular}{c|ccccc}
 		\toprule
 		&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 		\midrule
@@ -62,30 +62,16 @@ information by controlling the balance of how much neighborhood information shou
 
 
 	\subsection{Competitive Approaches}
-	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods~\cite{hao2016joint,zhu2017iterative} and alternative \GCN-based models, described as follows.
-
-	\cparagraph{JE} As shown in Table~\ref{seed}, JE~\cite{hao2016joint} requires the similar seed alignments, pre-aligned entities, as our model, which also performs well among all existing embedding-based models. 
-	We use our best effort to implement this model as they do not release any source code or software currently.
+	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods JE~\cite{hao2016joint} and ITransE~\cite{zhu2017iterative}. For JE, we use our best effort to implement this model as they do not release any source code or software currently.  As listed in~\ref{seed}, ITransE requires all relations to be shared between two KGs. Since our WBD dataset was built based on two completely heterogeneous KGs, sharing same relations is unrealistic for our dataset. Thus we build ITransE$'$, a variant of ITransE which does not use same relations between KGs.
 	
-	\cparagraph{ITransE$'$} ITransE~\cite{zhu2017iterative} is another representative embedding-based methods for entity alignment. 
-	However, ITransE requires all relations to be shared between two KGs. 
-	Since our WBD dataset was built based on two completely heterogeneous KGs, sharing same relations is unrealistic for our dataset. 
-	Thus we build ITransE$'$, a variant of ITransE which does not use same relations between KGs.
-	
-	\cparagraph{GCN and HGCN} We also build two GCN-based models as our baselines. 
-	GCN and HGCN respectively replace the RGCN layers of our RGCN model and HRGCN model with the GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs. 
-	And the two GCN-based model also combine the semantic embedding and attribute embedding. 
+	We also build two GCN-based models as our baselines: GCN and HGCN, which respectively replace the RGCN layers of our RGCN model and HRGCN model with the GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs. 
+	And the two GCN-based model combine the semantic embedding and attribute embedding with $\omega=0.95$ in the combined distance. 
 	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units. 
 	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
-    These hyperparameters were found to give the best overall performance in our experiments.
+	These hyperparameters were found to give the best overall performance in our experiments.
 	
-	\cparagraph{Variants of our model} Our full model is two-layered Highway RGCN (HRGCN). 
-	We also build a no-highway variant, two-layered RGCN. 
-	We build another variant HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to our model.
-	
-	On the WBD dataset, for all variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition. 
-	We apply L2 regularization with $\lambda=5e-4$ to avoid overfitting. 
-	And for GCN, HGCN, RGCN and HRGCN, we set $\omega=0.95$ in the combined distance.
+	Additionally, we divide our model into three variants: two-layered Highway RGCN (HRGCN), two-layered no-highway RGCN and HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node Representations} as the input to HRGCN. For all variants of our model, we use RGCN with 16 hidden units for each layer and $B = 80$ for basis function decomposition. 
+	We set $\omega=0.95$ in the combined distance and apply L2 regularization with $\lambda=5e-4$ to avoid overfitting. 
 	
 	On the $DBP15K_{FR-EN}$ dataset, we compare our HRGCN model with JE, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}. 
 	Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition. 
