@@ -28,11 +28,11 @@ information by controlling the balance of how much neighborhood information shou
 	\end{table}
 	
     For the Chinese dataset, we extracted data from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia). 
-    The two sources contain a rich of information and are widely used to constructed \KGs.
+    The two sources contain rich information and are widely used to constructed \KGs.
 	
 	\cparagraph{Raw Wiki dataset}
 	We used the Chinese version of the Wikipedia dump\footnote{https://dumps.wikimedia.org/zhwiki} released on June 2, 2015.
-    From the dump, we extracted over one million entities and three million $\langle$subject, predicate, object$\rangle$ triples from the infobox (i.e., a fixed-format table that summarizes some unifying aspect of a Wikipedia article) from each page to form the Wiki \KG.
+    From the dump, we extracted over one million entities and three million $\langle$subject, predicate, object$\rangle$ triples from the infobox (i.e., a fixed-format table that summarizes some unifying aspect of a Wikipedia article) to form the Wiki \KG.
 	
 	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extracted 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG. 
 	The data were collected from Baidu Baike between February 2018 and July 2018.
@@ -62,7 +62,7 @@ information by controlling the balance of how much neighborhood information shou
 
 
 	\subsection{Competitive Approaches}
-	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods JE~\cite{hao2016joint} and ITransE~\cite{zhu2017iterative}. For JE, we use our best effort to implement this model as they do not release any source code or software currently.  As listed in~\ref{seed}, ITransE requires all relations to be shared between two KGs. Since our WBD dataset was built based on two completely heterogeneous KGs, sharing same relations is unrealistic for our dataset. Thus we build ITransE$'$, a variant of ITransE which does not use same relations between KGs.
+	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods JE~\cite{hao2016joint} and ITransE~\cite{zhu2017iterative}. For JE, we use our best effort to implement this model as they do not release any source code or software currently.  As listed in Table~\ref{seed}, ITransE requires all relations to be shared between two KGs. Since our WBD dataset was built based on two completely heterogeneous KGs, sharing same relations is unrealistic for our dataset. Thus we build ITransE$'$, a variant of ITransE which does not use same relations between KGs.
 	
 	We also build two GCN-based models as our baselines: GCN and HGCN, which respectively replace the RGCN layers of our RGCN model and HRGCN model with the GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs. 
 	And the two GCN-based model combine the semantic embedding and attribute embedding with $\omega=0.95$ in the combined distance. 
