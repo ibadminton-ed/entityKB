@@ -1,11 +1,11 @@
 
 
 
-	\section{Experiment Results}
+	\section{Experiment Results\label{sec:results}}
 	
 	%when the available clues for alignment are sparse, we have performed comparative evaluation of our model against several baselines.
 	
-	\subsection{Overall Performance}
+	\subsection{Overall Performance\label{overall}}
 		\begin{table}
 		\centering
 		% \small
@@ -20,8 +20,8 @@
 			GCN & 17.1 & 27.3 & 15.7 & 25.9 \\
 			HGCN & 19.5 & 29.6 & 19.4 & 29.5  \\
 			\bf RGCN & 37.3 & 51.5 & 34.8 & 51.6 \\
-			\bf HRGCN (w/o $X$) & 15.0 & 21.7 & 14.5 & 21.5 \\
-			\bf HRGCN & \bf 58.3 & \bf 67.1 & \bf 57.8 & \bf 65.7 \\
+			\bf \HRGCN (w/o $X$) & 15.0 & 21.7 & 14.5 & 21.5 \\
+			\bf \HRGCN & \bf 58.3 & \bf 67.1 & \bf 57.8 & \bf 65.7 \\
 			\bottomrule
 		\end{tabular}
 		\caption{Results comparison of entity alignment on WBD dataset.}
@@ -43,16 +43,16 @@
 			JAPE (SE) & 29.63 & 64.55 & 26.55 & 60.30 \\
 			JAPE (SE+AE) & 32.39 & \bf 66.68 & 32.97 & \bf 65.91 \\
 			\midrule
-			\bf HRGCN (SE) & 33.43& 35.72& 31.22& 34.65\\
-			\bf HRGCN (SE+AE) & \bf 44.82 & 56.68 &\bf 41.08 & 52.95\\
+			\bf \HRGCN (SE) & 33.43& 35.72& 31.22& 34.65\\
+			\bf \HRGCN (SE+AE) & \bf 44.82 & 56.68 &\bf 41.08 & 52.95\\
 			\bottomrule
 		\end{tabular}
 		\caption{Results comparison of entity alignment on $DBP15K_{FR-EN}$ dataset.}
 		\label{cross}
 	\end{table}
 	\cparagraph{Results on WBD dataset}
-    Table~\ref{f1} reports the performance of all models on the WBD dataset. Since the performance of each model is very similar in two alignment directions, we will mainly discuss the results of all models in the direction of Baidu$\rightarrow$Wiki. 
-    
+    Table~\ref{f1} reports the performance of all models on the WBD dataset. Since the performance of each model is very similar in two alignment directions, we will mainly discuss the results of all models in the direction of Baidu$\rightarrow$Wiki.
+
     ITransE$'$ outperforms JE regarding all the Hits@k measures and outperforms GCN for Hits@1 in both alignment directions. This indicates that ITransE is an
 outstanding model for entity alignment and it also shows that TransE can effectively embed the structure information of KGs which plays an
 important role in entity alignment. However, GCN-based model performs better than ITransE in Hits@10. As aforementioned, GCNs
@@ -62,7 +62,7 @@ entities and attribute values, which can provide more fine-grained and accurate 
 
 	Comparing with GCN, the RGCN-based model further boosts the performance by 20.2\% and 24.2\% for Hits@1 and Hits@10. It shows that introducing highly multi-relational information to GCN framework can achieve significant improvements on KG embedding.
 	
-	Among all models, when enhanced with layer-wise highway gates, our HRGCN model performs the best, significantly improving upon RGCN by 21.0\% and 15.6\% for Hits@1 and Hits@10. This indicates that highway gates play a significant role in our model. And HGCN model which adds highway gates to GCN also improves the performance of GCN by 2.4\% and 2.3\% for Hits@1 and Hits@10. It suggests that highway gates are also beneficial to GCN. 
+	Among all models, when enhanced with layer-wise highway gates, our HRGCN model performs the best, significantly improving upon RGCN by 21.0\% and 15.6\% for Hits@1 and Hits@10. This indicates that highway gates play a significant role in our model. And HGCN model which adds highway gates to GCN also improves the performance of GCN by 2.4\% and 2.3\% for Hits@1 and Hits@10. It suggests that highway gates are also beneficial to GCN.
 	
 	When comparing our full model HRGCN with HRGCN (w/o $X$), we find that removing the predefined input feature matrix $X$ leads to a drop of 43.3\% for Hits@1 and 45.4\% for Hits@10. This confirms that initializing entity representations using pre-trained word embeddings and normalized value vectors is very helpful in aligning entities from different KGs.
 	

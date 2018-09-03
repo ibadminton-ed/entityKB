@@ -77,8 +77,8 @@ the overall architecture of our model.
 	The elements in an entity's attribute vector equal to the normalized values of the corresponding attributes. \FIXME{ZW: This sentence is confusing. Please consider rephrasing.}
     Because not all entities contain all the attribute types, we pad missing attributes with a value of 0 to form a constant-sized  vector.
 
- \subsubsection{ii. Adjacency relation}
- Like standard \GCNs, we extract node relations from an adjacency matrix of neighboring nodes in a graph.
+ \subsubsection{ii. Node relation}
+ Like standard \GCNs, we capture the relation of graph neighboring nodes using an adjacency matrix.
  In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations of graph $G$.
 
@@ -88,12 +88,11 @@ the overall architecture of our model.
  \FIXME{ZW: We either need a diagram or link this paragraph to Figure~\ref{all}}
 
  \eparagraph{Calculate the embedding matrix}
- Our approach stacks two \RGCNs as depicted in Figure~\ref{all}.
- The input for layer $l$ in each of our \RGCNs is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
- |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each element of the node feature vector, $x_i$, is updated using forward propagation, and we stack the output of each \RGCN, $x_i^{(l+1)}$
+ The input for layer $l$ in each of our stacked \RGCNs is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each node feature vector, $x_i$, is updated using forward propagation, and we stack the output of each \RGCN, $x_i^{(l+1)}$
  , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
 
-   Specifically, the forward propagation of $x_i^{(l+1)}$ of a \RGCN is formulated as:
+   The forward propagation of $x_i^{(l+1)}$ of a \RGCN is formulated as:
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)})
 	\end{equation}
@@ -108,9 +107,9 @@ A_r$ is an approximate of spectral convolutions on $A^r$, introduced by ~\cite{K
 
 	
 	\eparagraph{Calculate the weight matrix} For each relation $r$, we construct a weight matrix, $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)}
-\times d^{(l)}}$ for the stacked \RGCNs. As there are often thousands of types of relations in \KGs, there typically will be a large amount
-of parameters to train over, which is likely to model overfiting. To minimize the impact of the large parameter size, we employ the basis
-decomposition introduced in~\cite{Schlichtkrull2017Modeling} to regularize the weights:
+\times d^{(l)}}$ for the stacked \RGCNs. As a \KG often has over thousands of types of relations, there will be a large amount of network
+parameters to learn over, which is likely to lead to overfiting. To minimize the impact of the large parameter size, we employ the basis
+decomposition method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 	\begin{equation}
 	W_r^{(l)}=\sum\limits_{b=1}^B a_{rb}^{(l)}V_b^{(l)}
 	\end{equation}
@@ -126,48 +125,60 @@ Why do we need this paragraph? I don't know where to put it.}
 %	We leave this for future work.
 
 
-	\subsubsection{Noise reduction}
+	\subsubsection{Noise control}
 	\label{section:hgcn}
-	While stacking RGCN layers makes our model capable of learning more neighborhood information from several relational steps, it may as
-well bring noise from the exponentially increasing neighbors. To reduce the effect of noise and ensure effective spread of more informative
-and discriminative neighborhood information, we add layer-wise gates similar to highway networks~\cite{Srivastava2015Highway} to our RGCN
-entity alignment model. ~\cite{Rahimi2018Semi} have successfully introduced highway gates to \GCNs~\cite{Kipf2016Semi} to solve the user
-geolocation problem. We introduce layer-wise highway gates to our RGCN model to finally get Highway RGCN (HRGCN) model and the output of a
-HRGCN layer is computed as:
+	While stacking \RGCN layers enhances our model's capable in learning neighborhood information from relational steps, it may as well
+bring noise from the exponentially increasing number of neighbors. To ensure effective spread of informative and discriminative
+neighborhood information, we add to our \RGCN-based model layer-wise gates similar to highway networks~\cite{Srivastava2015Highway}.
+%~\cite{Rahimi2018Semi} have successfully introduced highway gates to \GCNs~\cite{Kipf2016Semi} to solve the user geolocation problem.
+We use layer-wise highway gates to build a Highway \RGCN (\HRGCN) model where the output of a \HRGCN layer is computed as:
 	\begin{equation}
 	\begin{split}
 	&T(x^{(l)})=\sigma(W_T^{(l)}x^{(l)}+b_T^{(l)}) \\
 	&x^{(l+1)}=x^{(l+1)} \cdot T(x^{(l)})+x^{(l)} \cdot (1-T(x^{(l)}))
 	\end{split}
 	\end{equation}
-	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
+	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l+1)}
+\times d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
+    In Section~\ref{overall}, we show that the highway gates significantly boost the performance of our \RGCN-based model.
 	
 	\subsection{Alignment Prediction}
-	After HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We measure the similarity between $e_1$ in $G_1$ and $e_2$ in $G_2$ by the distance between their hidden representations:
+	After \HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We then measure the similarity between of two
+edges, $e_1$ and $e_2$ from $G_1$ and $G_2$, respectively. The similarity is determined by computing the distance between the hidden
+representations of two edges:
+
 	\begin{equation}
 	\label{d}
 	d(e_1,e_2)=|\bar{x}_{e_1}-\bar{x}_{e_2}|
 	\end{equation}
-	, where $|\cdot|$ indicates the $l_1$ norm. The distance for equivalent entities is expected to be smaller than non-equivalent ones. In our experiments, for a entity $e_1$ in $G_1$, we computes the distances between $e_1$ and all the entities in $G_2$. The alignment process can also be reversed, i.e. from $G_2$ to $G_1$. Since, we report the results of both directions of entity alignment in our experiments.
+	where $|\cdot|$ is the $l_1$ norm. The distance for equivalent entities is expected to be smaller than the non-equivalent counterparts.
+In our experiments, for a entity $e_1$ in $G_1$, we compute the distances between $e_1$ and all the entities in $G_2$. The alignment
+process can also be reversed, i.e., from $G_2$ to $G_1$. In Section~\ref{sec:results}, we report the results of both directions of entity
+alignment.
 	
-	A set of pre-aligned entity pairs $\mathbb{L}$ and the set of negative pairs $\mathbb{L'}$  constructed by corrupting $(p, q)$, i.e. replacing $p$ or $q$ with a randomly chosen entity in $G_1$ or $G_2$ are used for training. To maximize the distance between positive and negative instances, we use the margin-based loss function:
+	A set of pre-aligned entity pairs $\mathbb{L}$ and the set of negative pairs $\mathbb{L'}$  constructed by corrupting $(p, q)$, i.e.
+replacing $p$ or $q$ with a randomly chosen entity in $G_1$ or $G_2$ are used for training. To maximize the distance between positive and
+negative instances, we use the margin-based loss function: \FIXME{ZW: This paragraph appears from nowhere. Please connect it with the
+previous paragraph.}
 	\begin{equation}
 	L=\sum\limits_{(p,q)\in \mathbb{L}}\sum\limits_{(p',q')\in \mathbb{L'}}\mathrm{max}\{0,d(p,q)-d(p',q')+\gamma\}
 	\end{equation}
 	$\gamma > 0$ is a margin hyper-parameter separating positive and negative entity alignments.
 	
-	\subsection{Combination of Semantic Embedding and Attribute Embedding}
-	As we introduced in Section~\ref{subsection:Node Representations}, there are two methods to initialize the input node feature vectors.
-	When we leverage the pre-trained word embeddings to initialize the node feature vectors, we call HRGCNs acting semantic embedding.
-	And when the nodes are initialized by attribute vectors, we call HRGCNs performing attribute embedding.
-	Following the same architecture in Figure~\ref{all}, we do semantic embedding and attribute embedding for $G$ respectively.
-	
+	\subsection{Combination of Semantic and Attribute Embeddings}
+    Recall that the node feature vector can be initialized from either semantics (i.e., entity names) or attributes (Section~\ref{subsection:Node
+    Representations}). %Following the stack structure in Figure~\ref{all}, we
+    As a result, each of the stacked \HRGCNs can be applied to a semantic or an attribute embedding.
+	%When we leverage the pre-trained word embeddings to initialize the node feature vectors, we call HRGCNs acting semantic embedding.
+%	And when the nodes are initialized by attribute vectors, we call HRGCNs performing attribute embedding.
+%	Following the same architecture in Figure~\ref{all}, we do semantic embedding and attribute embedding for $G$ respectively.
+%
 	We integrate semantic embedding and attribute embedding by defining a combined distance $D$ for aligning entities:
 	\begin{equation}
 		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
 
-	where $m$ is the dimension of the new node features produced by HRGCNs.
+	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter. $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
 	In our experiments, we set the output dimensions of two models (one for semantic embedding and the other one for attribute embedding) to be the same.
-	$\omega$ is a hyper-parameter. $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
+	
 	
