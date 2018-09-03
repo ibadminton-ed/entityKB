@@ -12,19 +12,19 @@ information by controlling the balance of how much neighborhood information shou
 	We use the French-English subset of DBP15K in our experiments, because it seems to be the most challenging subset for entity alignment. 
 	According to the experimental results of~\cite{sun2017cross}, all previous entity alignment methods perform the worst on this subset. Table~\ref{dbp} shows the statistics of the French-English subset.
 	
-	\begin{table}
+		\begin{table}
 		\centering
 		\scriptsize
-		\begin{tabular}{l|lllll}
+		\begin{tabular}{cccccc}
 			\toprule
-			& Entities & Relations & Attributes & Rel. triples & Attr. triples \\
+			&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 			\midrule
 			French & 66,858 & 1,379 & 4,547 & 192,191 & 528,665 \\ 
 			English & 105,889 & 2,209 & 6,422 & 278,590 & 576,543 \\
 			\bottomrule
 		\end{tabular}
-	    \caption{The statistics for $DBP15K_{FR-EN}$.}
-	    \label{dbp}
+		\caption{The statistics for $DBP15K_{FR-EN}$.}
+		\label{dbp}
 	\end{table}
 	
     For the Chinese dataset, we extracted data from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia). 
@@ -44,24 +44,23 @@ information by controlling the balance of how much neighborhood information shou
 	
 
 %dataset WBD for . Since both of the two KGs mentioned above are constructed from data that we crawled from web encyclopedias, there are no ready-made aligned entity pairs. Therefore, we manually aligned a portion of entities as the seed data.
+
 	\begin{table}
-		\centering
-		\scriptsize
-		\begin{tabular}{llll}
-			\toprule
-			& Wiki & Baidu & Total \\
-			\midrule
-			\#Entities & 25,139 & 32,101 & 57,240 \\
-			\#Relations & 1,301 & 2,262 & 3,563 \\
-			\#Attributes & 8,332 & 20,263 & 28,595 \\
-			\#Triples & 147,139 & 446,344 & 593,483 \\
-			%\multicolumn{4}{l}{\#Alignment Entity Pairs: 8000} \\
-			\bottomrule
-		\end{tabular}
-		\caption{The statistics for WBD.}
-		\label{dataset}
-	\end{table}
-	
+	\centering
+	\scriptsize
+	\begin{tabular}{cccccc}
+		\toprule
+		&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
+		\midrule
+		Wiki & 25,139 & 1,301 & 8,332 & 87,775 & 211,949 \\ 
+		Baidu & 32,101 & 2,262 & 20,263 & 143,228 & 303,116 \\
+		\bottomrule
+	\end{tabular}
+	\caption{The statistics for WBD.}
+	\label{dataset}
+\end{table}
+
+
 	\subsection{Competitive Approaches}
 	On our WBD dataset, we compare our approach against two state-of-the-art entity alignment methods~\cite{hao2016joint,zhu2017iterative} and alternative \GCN-based models, described as follows.
 
