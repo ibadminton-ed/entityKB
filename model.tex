@@ -36,9 +36,23 @@ the overall architecture of our model.
 	\subsection{R-GCN-based Entity Alignment}
 	\label{section:rgcn}	
 
-	The input to our \RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
-	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
-	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
+ 	The input to our \RGCN model are two parts: (i) a list of adjacency matrices, which describes the adjacency relationships among nodes of a
+ \KG, and (ii) a node feature matrix that captures the semantic information of entity names and their attributes.
+
+%
+% We utilize predefined node features
+% described in Section~\ref{subsection:Node Representations} to construct $X$ to capture the semantic information. 	The second part is
+
+
+ \subsubsection{Adjacency relation}
+ The adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
+ \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations.
+ We extract $R_0$ original
+ relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self
+ loop to retain information of the node itself. These together compose $R=2R_0+1$ relations. 	In each layer $l$, the input is $X^{(l)} =
+ \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
+
+
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)})
 	\end{equation}
@@ -57,8 +71,9 @@ the overall architecture of our model.
 	where $V_b^{(l)} \in \mathbb{R}^{d^{(l+1)} \times d^{(l)}}$ and $a_{rb}^{(l)}$ is the coefficient of matrix $V_b^{(l)}$ for relation $r$.
 	
 
-	\subsection{Node Representations}
+	\subsubsection{Node representations}
 	\label{subsection:Node Representations}
+   The node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, capture the semantic infomration of $N$  nodes in a $d^{(0)}$ dimensional input representation vector.
 	There are two methods to initialize the node feature vectors.
 	One way is to use the semantics of entity names, and the other is to use entities' attribute information. The specific initialization methods are as follows.
 	
