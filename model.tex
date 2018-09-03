@@ -10,6 +10,7 @@ the overall architecture of our model.
 		\centering
 			\includegraphics[width=0.8\linewidth]{figures/graph2.pdf}
 			\caption{Overall architecture of our entity alignment model.}
+            \FIXME{ZW: What is $d_s$ in the diagram? This is not mentioned in the text.}
 			\label{all}
 	\end{figure}
 	
@@ -39,7 +40,9 @@ the overall architecture of our model.
 %	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 %	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
 
-  	The input to our \RGCN model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
+
+    Figure~\ref{all} depicts our entity alignment model which is a stack of two \RGCNs.
+  	The input to each \RGCN consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
 
   \FIXME{ZW: This section is so confusing. I have tried to rewrite it. Please double check.}
