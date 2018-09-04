@@ -14,7 +14,8 @@ extract graph information from the \KGs, which is used to capture the semantics 
 neighbouring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the graph information
 (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is optimized in a way
 that two aligned entities in the training data are similar to each other in the feature space. With this entity representation in place, we
-can calculate the distance between any two entity representations to determine if they should be aligned (Section~\ref{prediction}).
+can calculate the distance between any two entity representations to determine if the entities should be aligned
+(Section~\ref{prediction}).
 
 	
 
@@ -26,8 +27,8 @@ can calculate the distance between any two entity representations to determine i
 %    Each input adjacency matrix describes the adjacency relationships among all nodes in the graph under each different relation.
     We choose to use \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs.
 
- Our work improves \RGCNs in two ways. Firstly, we we use automatically learned semantic features such as entity names and attributes to
- help the \RGCN better capture the subtle correlations between two \KGs (Section~\ref{section:rgcn}.i).
+ Our work improves \RGCNs in two ways. Firstly, we use automatically learned semantic features such as entity names and attributes to
+ help the \RGCN better capture the subtle correlations of entities from two different \KGs (Section~\ref{section:rgcn}.i).
     Secondly, we introduce highway gates to reduce the impact of noise (Section~\ref{section:hgcn}).
 
 
