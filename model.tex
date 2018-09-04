@@ -40,11 +40,7 @@ can calculate the distance between any two entity representations to determine i
 	
 
 
-\subsubsection{Notations}
 
-Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
-entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$
-together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover latent aligned entities.
 	
 	\subsection{Graph Information}
 	\label{section:rgcn}	
@@ -57,7 +53,16 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
   	The input to our model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
 
+
+\subsubsection{Notations}
+
+Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
+entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$
+together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover latent aligned entities.
+
 %
+
+
 % We utilize predefined node features
 % described in Section~\ref{subsection:Node Representations} to construct $X$ to capture the semantic information. 	The second part is
 
