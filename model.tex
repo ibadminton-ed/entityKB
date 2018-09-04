@@ -11,7 +11,7 @@
 Figure~\ref{fig:overview} gives a high-level overview of our approach. To align entities from two \KGs, we first manually label some entity
 pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and unaligned entity pairs. Next, we
 extract graph information from the \KGs, which is used to capture the semantics and attributes of entities as well as the relation of
-neighbouring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the graph information
+neighboring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the graph information
 (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is optimized in a way
 that two aligned entities in the training data are similar to each other in the feature space. With this entity representation in place, we
 can calculate the distance between any two entity representations to determine if the entities should be aligned
@@ -42,7 +42,7 @@ can calculate the distance between any two entity representations to determine i
 
 
 	
-	\subsection{Graph Information}
+	\subsection{Knowledge Graph Information}
 	\label{section:rgcn}	
   %  The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
 %	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
@@ -56,9 +56,9 @@ can calculate the distance between any two entity representations to determine i
 
 \subsubsection{Notations}
 
-Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
+Without loss of generality, we introduce our model using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
 entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$
-together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover latent aligned entities.
+together in one large graph $G$. We utilize pre-aligned entity pairs to train our model and then discover latent aligned entities.
 
 %
 
@@ -68,16 +68,19 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
 
 \subsubsection{i. Node representations}
 	\label{subsection:Node Representations}
-   We use a node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, to encode the semantic information of $N$  nodes in a $d^{(0)}$ dimensional input representation vector.
-   This input directs \RGCN to draw attention to the entity names and attributes, which are shown to be useful in entity
-   alignment (Section~\ref{sec:motivation}). We stress that this node feature matrix is automatically initialized and updated during training.
+   We use a node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, to encode the semantic information of $N$  nodes in a
+   $d^{(0)}$ dimensional input vector. This input directs \RGCN to draw attention to the entity names and attributes, which are shown to be
+   useful in entity alignment (Section~\ref{sec:motivation}). This node representation can be used to encode either the entity names
+   (semantic information) or attributes, or a combination of both. In \FIXME{Section~\ref{}}, we provide a evaluation of different node
+   representation strategies.
+
 
 	
 	\eparagraph{Semantic information}
 	\label{wordvector}
 	Intuitively, if two entities can be linked together, their names in different \KGs should have similar semantics (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
     Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic
-    information entity names.
+    information of entity names.
     %This is achieved by applying a word2vec model to generate word embeddings from training entity names.
     %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
 
@@ -85,15 +88,16 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
 	\eparagraph{Attribute information}
     In addition to entity names, we also consider entity attributes for node representations.
 	Our current implementation distinguishes four types of attributes, i.e., \emph{Integer}, \emph{Double}, \emph{Date} and \emph{String}
-(as default), but other data types can be added into the model.
+    (as default), but other data types can be added into the model. When examining attributes of \emph{Integer}, \emph{Double}, and \emph{Date} types,
+    we also record the range of values that can be taken by each type.
 	%In this paper, we only consider the first three types, i.e., Integer, Double and Date.
 %	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 %	
-	We construct normalized attribute vector for each entity. The dimension of an attribute vector equals to the number of distinct attributes of aforementioned four types.
-	Each element in an attribute vector equals to the normalized value of the corresponding attribute.
+	For for each entity within the TWO target \KGs, We construct A normalized attribute vector. The dimension of the vector equals to the number of distinct attributes of the target attribute types.
+	Each element in the vector equals to the normalized value of the corresponding attribute.
     Because not all entities contain all the attributes, we pad missing attributes with a value of 0 to form a constant-sized vector.
 
- \subsubsection{ii. Node relation}
+ \subsubsection{ii. Neighboring node relation}
  Like standard \RGCNs, we capture the relation of graph neighboring nodes using an adjacency matrix.
  In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations of graph $G$.
