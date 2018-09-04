@@ -1,30 +1,34 @@
 \section{Our Approach}
 	\label{section:app}
-	Our work aims to develop an entity alignment model for any two arbitrary (heterogeneous) \KGs. Without loss of generality, we
-introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where
-$E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$ together in one large
-graph $G$. We utilize pre-aligned entity pairs to train our models and then discover latent aligned entities. Figure~\ref{all} demonstrates
-the overall architecture of our model. 	
+\begin{figure}
+  \centering
+  % Requires \usepackage{graphicx}
+  \includegraphics[width=0.5\textwidth]{figures/overview.pdf}\\
+  \caption{Overview of our approach}\label{fig:overview}
+\end{figure}
+
+\subsection{Overview}
+Figure~\ref{fig:overview} gives a high-level overview of our approach. To align entities from two \KGs, we first manually label some entity
+pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and unaligned entity pairs. Next, we
+extract graph information from the \KGs, which is used to capture the semantics and attributes of entities as well as the relation of
+neighbouring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the graph information
+(organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is optimized in a way
+that two aligned entities in the training data are similar to each other in the feature space. With this entity representation in place, we
+can calculate the distance between any two entity representations to determine if they should be aligned (Section~\ref{prediction}).
+
 	
-	\begin{figure}[t!]
-		\centering
-			\includegraphics[width=0.8\linewidth]{figures/graph2.pdf}
-			\caption{Overall architecture of our entity alignment model.}
-            \FIXME{ZW: What is $d_s$ in the diagram? This is not mentioned in the text.}
-			\label{all}
-	\end{figure}
+
 	
-    \subsection{Base Model}
-    Our approach is based on the recently proposed relational graph convolutional network (\RGCN)~\cite{Schlichtkrull2017Modeling}.
-    \RGCN is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
-    A \RGCN layer takes a set of adjacency matrices as input, and produces a new set of node features.
-    Each input adjacency matrix describes the adjacency relationships among all nodes in the graph under each different relation.
+    \subsection{Graph Representation Model\label{sec:model}}
+    Our model for generating \KG representations  is based on the recently proposed relational graph convolutional network (\RGCN)~\cite{Schlichtkrull2017Modeling}.
+    The \RGCN is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
+   % A \RGCN layer takes a set of adjacency matrices as input, and produces a new set of node features.
+%    Each input adjacency matrix describes the adjacency relationships among all nodes in the graph under each different relation.
     We choose to use \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs.
 
-
- Our work improves \RGCNs in two ways. Firstly, we introduce highway gates to reduce the impact of noise.
-    Secondly, we use automatically learned semantic features such as entity names and attributes to help the \RGCN better capture the
-    subtle correlations between two \KGs.
+ Our work improves \RGCNs in two ways. Firstly, we we use automatically learned semantic features such as entity names and attributes to
+ help the \RGCN better capture the subtle correlations between two \KGs (Section~\ref{section:rgcn}.i).
+    Secondly, we introduce highway gates to reduce the impact of noise (Section~\ref{section:hgcn}).
 
 
  %   Our work improves the featureless approach of \RGCN with pre-defined node feature vectors.
@@ -33,16 +37,24 @@ the overall architecture of our model.
 
 
 	
+
+
+\subsection{Notations}
+
+Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
+entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$
+together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover latent aligned entities.
+Figure~\ref{all} demonstrates the overall architecture of our model. 	
 	
-	\subsection{Our R-GCN-based Entity Alignment Model}
+	\subsection{Graph Information}
 	\label{section:rgcn}	
   %  The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
 %	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 %	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
 
 
-    Figure~\ref{all} depicts our entity alignment model which is a stack of two \RGCNs.
-  	The input to each \RGCN consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
+
+  	The input to our model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
 
 %
@@ -60,7 +72,7 @@ the overall architecture of our model.
 	\label{wordvector}
 	Intuitively, if two entities can be linked together, their names in different \KGs should have similar semantics (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
     Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic
-    information entity names. 
+    information entity names.
     %This is achieved by applying a word2vec model to generate word embeddings from training entity names.
     %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
 
@@ -73,7 +85,7 @@ the overall architecture of our model.
 %	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 %	
 	We construct normalized attribute vector for each entity. The dimension of an attribute vector equals to the number of distinct attributes of aforementioned four types.
-	Each element in an attribute vector equals to the normalized value of the corresponding attribute. 
+	Each element in an attribute vector equals to the normalized value of the corresponding attribute.
     Because not all entities contain all the attributes, we pad missing attributes with a value of 0 to form a constant-sized vector.
 
  \subsubsection{ii. Node relation}
@@ -115,7 +127,7 @@ decomposition method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 %	We leave this for future work.
 
 
-	\subsubsection{Noise control}
+	\subsection{Noise control}
 	\label{section:hgcn}
 	While stacking \RGCN layers enhances our model's capability in learning neighborhood information from relational steps, it may as well
 bring noise from the exponentially increasing number of neighbors. To ensure effective spread of informative and discriminative
@@ -132,7 +144,7 @@ We use layer-wise highway gates to build a Highway \RGCN (\HRGCN) model where th
 \times d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
     In Section~\ref{overall}, we show that the highway gates significantly boost the performance of our \RGCN-based model.
 	
-	\subsection{Alignment Prediction}
+	\subsection{Alignment Prediction\label{prediction}}
 	After \HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We then measure the similarity between of two
 nodes, $e_1$ and $e_2$ from $G_1$ and $G_2$, respectively. The similarity is determined by computing the distance between the hidden
 representations of two nodes:
