@@ -158,6 +158,19 @@ output of a \HRGCN layer is computed as:
 	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l+1)}
 \times d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
 
+
+\subsection{Exploiting Entity Semantics and Attributes\label{sec:combine}}
+    Recall that the node feature vector can be initialized from either the semantics of entity names  or entity attributes (Section~\ref{subsection:Node
+    Representations}). There are multiple ways to exploit the semantic and attribute embeddings. One is to simply concatenate a pre-trained word vector
+    and an attribute vector as an input node feature vector. Another is to apply two stacked \HRGCNs to respectively perform a
+    semantic or an attribute embedding.  We provide a further discussion on these strategies in \FIXME{Section~\ref{}}.
+
+    For stacked \HRGCNs, we define a combined distance to integrate semantic embedding and attribute embedding:
+	\begin{equation}
+		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
+	\end{equation}
+
+	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
 	
 	\subsection{Entity Alignment Prediction\label{prediction}}
    We use the network's output, $\bar{X}$, as the graph representation for the two \KGs within graph
@@ -185,18 +198,7 @@ representation space. Specifically, the similarity, $d(e_1,e_2)$, between two en
 	%In our experiments, for a entity $e_1$ in $G_1$, we compute the distances between $e_1$ and all the entities in $G_2$. The alignment process can also be reversed, i.e., from $G_2$ to $G_1$. In Section~\ref{sec:results}, we report the results of both directions of entity alignment.
 
 	
-	\subsection{Exploiting Entity Semantics and Attributes\label{sec:combine}}
-    Recall that the node feature vector can be initialized from either the semantics of entity names  or entity attributes (Section~\ref{subsection:Node
-    Representations}). There are multiple ways to exploit the semantic and attribute embeddings. One is to simply concatenate a pre-trained word vector
-    and an attribute vector as an input node feature vector. Another is to apply two stacked \HRGCNs to respectively perform a
-    semantic or an attribute embedding.  We provide a further discussion on these strategies in \FIXME{Section~\ref{}}.
-
-    For stacked \HRGCNs, we define a combined distance to integrate semantic embedding and attribute embedding:
-	\begin{equation}
-		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
-	\end{equation}
-
-	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
+	
 
 	%In our experiments, we set the output dimensions of two models (one for semantic embedding and the other one for attribute embedding) to be the same.
 	

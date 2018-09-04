@@ -1,7 +1,7 @@
 \section{Experimental Setup}
-	Our experiments are designed to investigate whether \RGCN-based models can better represent an entity with its highly multi-relational
-structure information compared to \KG embedding-based methods, and whether highway gates can effectively capture discriminative neighboring
-information by controlling the balance of how much neighborhood information should be passed to a node in \RGCN.
+	Our experiments are designed to investigate (1) if \RGCN-based models can better represent an entity  compared to existing \KG
+embedding-based methods, and (2) whether highway gates can effectively capture discriminative neighboring information by controlling how
+much neighborhood information should be passed to a node in a \RGCN.
 
 \subsection{Datasets}
 \label{subsection:datasets}
@@ -17,7 +17,7 @@ referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{
 		\begin{table}
 		\centering
 		\scriptsize
-		\begin{tabular}{c|ccccc}
+		\begin{tabular}{l|rrrrr}
 			\toprule
 			&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 			\midrule
@@ -25,7 +25,7 @@ referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{
 			English & 105,889 & 2,209 & 6,422 & 278,590 & 576,543 \\
 			\bottomrule
 		\end{tabular}
-		\caption{The statistics for $DBP15K_{FR-EN}$.}
+		\caption{Summary of the $DBP15K_{FR-EN}$ dataset.}
 		\label{dbp}
 	\end{table}
 	
@@ -39,9 +39,14 @@ referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{
 %	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extracted 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG.
 %	The data were collected from Baidu Baike between February 2018 and July 2018.
 	
-	\cparagraph{WBD} We manually aligned 16,969 randomly chosen entity pairs from the Chinese version of the Wikipedia dump (released on June 2, 2015) and Baidu Baike data (collected between February 2018 and July 2018).
-	To construct the dataset, we first randomly  selected an aligned entity pair and then extracted relation and attribute triples for selected entities.
-	Table~\ref{dataset} gives the statistics of this dataset.
+	\cparagraph{WBD}
+    From the the Chinese version
+of the Wikipedia dump (released on June 2, 2015), we extracted over 1  million entities and three million $\langle$subject, predicate,
+object$\rangle$ triples. From Baidu Baike (collected between February 2018 and July 2018), we extracted over 11.55 million entities and
+39.2 million structured triples.
+    We then manually aligned 16,969 randomly chosen entity pairs from both \KGs as the gold standards.
+	%To construct the dataset, we first randomly  selected an aligned entity pair and then extracted relation and attribute triples for selected entities.
+	Table~\ref{dataset} gives the statistics of this dataset. \FIXME{Check the texts against the table.}
 	
 
 
@@ -51,15 +56,15 @@ referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{
 	\begin{table}
 	\centering
 	\scriptsize
-	\begin{tabular}{c|ccccc}
+	\begin{tabular}{l|rrrrr}
 		\toprule
 		&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
 		\midrule
-		Wiki & 25,139 & 1,301 & 8,332 & 87,775 & 211,949 \\
+		Wikipedia & 25,139 & 1,301 & 8,332 & 87,775 & 211,949 \\
 		Baidu & 32,101 & 2,262 & 20,263 & 143,228 & 303,116 \\
 		\bottomrule
 	\end{tabular}
-	\caption{The statistics for WBD.}
+	\caption{Summary of the WBD dataset.}
 	\label{dataset}
 \end{table}
 
@@ -70,14 +75,15 @@ referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{
 	The two \GCN-based models combine the semantic and attribute embeddings with $\omega=0.95$ in the combined distance.
 	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units.
 	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
-	These hyperparameters were found to give the best overall performance in our experiments.
+	These hyperparameters were found to give the best overall performance in our experiments. \FIXME{ZW: Check the description of
+    \HGCN.}
 
 
 
     \cparagraph{Prior methods}
-    On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}.
-    These competitive models have been tuned and tested on this dataset.
-	On our WBD dataset, we compare our approach against two JE and ITransE~\cite{zhu2017iterative}. ITransE requires all relations to be
+    On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against three state-of-the-art methods that have been tuned and tested on
+    the dataset: JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}.
+	On our WBD dataset, we compare our approach against two approaches: JE and ITransE~\cite{zhu2017iterative}. ITransE requires all relations to be
 shared between two \KGs. This strong assumption, however, cannot be satisfied on heterogeneous \KGs. To provide a fair comparison, we build
 ITransE$'$, a variant of ITransE which does not require the \KGs to have the same relations. 	
 
@@ -99,7 +105,7 @@ regularization with $\lambda=5e-4$ to avoid overfitting.
 
 
 	\subsection{Evaluation Methodology}
-    	For the $DBP15K_{FR-EN}$ dataset, we use the same split of gold standards as in~\cite{sun2017cross}: 30\% for training and 70\% for
+    	For the $DBP15K_{FR-EN}$ dataset, we use the same split of gold standards as JAPE~\cite{sun2017cross}: 30\% for training and 70\% for
     testing.
 	For semantic embedding, we first directly utilize Google Translate to translate French entities and relations into English.
 	Then, we use pre-trained English word vectors \emph{glove.840B.300d}~\footnote{http://nlp.stanford.edu/projects/glove/} to construct the input node feature vectors.
@@ -107,16 +113,20 @@ regularization with $\lambda=5e-4$ to avoid overfitting.
 
 
 	For the WBD dataset, we break the gold standards for two parts with equal-size, and use one for training and the other for testing.
-	As mentioned in Section~\ref{wordvector}, we utilize pre-trained 100-dimensional Chinese word vectors.
-	By counting the frequency of attributes appearing in each \KG of the WBD dataset, we select 63 high-frequency attributes from each \KG to construct 63-dimensional attribute vectors.
+	We utilize pre-trained 100-dimensional Chinese word vectors for embeddings.
+	By counting the frequency of attributes, we select 63 high-frequency attributes from each \KG to construct 63-dimensional attribute vectors.
      To learn the word vectors to capture the semantics of entity names for the node representation (see Section~\ref{subsection:Node
-    Representations}), we use sentences from  the Baidu dataset. We use a window size of 5 and a threshold of 20 for downsampling the frequent words
-    for the word2vec model.
-	
+    Representations}), we use sentences from  the Baidu dataset.
+    %We use a window size of 5 and a threshold of 20 for downsampling the frequent words
+    %for a word2vec model.
+
+
+ 	All the neural networks are trained using the Adam optimizer~\cite{Kingma2014Adam} for a maximum of 200 epochs with a
+ learning rate of 0.01.  Moreover, all models are initialized using Glorot initialization~\cite{Glorot2010Understanding}.
 
 	
-	We use Hits@k to assess the performance of all the approaches.
-	This metric is widely used for evaluating entity alignment~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative} by measuring the proportion of correctly aligned entities ranked in the top k.
-	All the neural network based models are trained using the Adam optimizer~\cite{Kingma2014Adam} for a maximum of 200 epochs with a learning rate
-    of 0.01.  Moreover, all models are initialized using Glorot initialization~\cite{Glorot2010Understanding}.
+ 	We use Hits@k, a widely used metric for entity
+ alignment evaluation~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. A Hits@k score (higher is better) is computed by
+ measuring the proportion of correctly aligned entities ranked in the top k. In this work, we set k to 1 to report the Hits@1 score. 
+	
 	
