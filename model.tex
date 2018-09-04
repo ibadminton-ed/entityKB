@@ -68,15 +68,14 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
 
 \subsubsection{i. Node representations}
 	\label{subsection:Node Representations}
-   We use a node feature matrix, $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, to encode the semantic information of $N$  nodes in a
-   $d^{(0)}$ dimensional input vector. This input directs \RGCN to draw attention to the entity names and attributes, which are shown to be
-   useful in entity alignment (Section~\ref{sec:motivation}). This node representation can be used to encode either the entity names
-   (semantic information) or attributes, or a combination of both. In \FIXME{Section~\ref{}}, we provide a evaluation of different node
-   representation strategies.
+   We use a node feature matrix, $X \in \mathbb{R}^{N \times d}$ of $G$, to encode the semantic information of $N$  nodes in an
+   input vector of $d$ elements. This representation is used to direct the \RGCN to draw attention to entity names and attributes, which are shown to be
+   useful in entity alignment (Section~\ref{sec:motivation}). This node representation can be used to encode either the semantics of entity names
+   or entity attributes, or a combination of both (Section~\ref{sec:combine}).
 
 
 	
-	\eparagraph{Semantic information}
+	\eparagraph{Encoding semantics}
 	\label{wordvector}
 	Intuitively, if two entities can be linked together, their names in different \KGs should have similar semantics (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
     Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic
@@ -85,37 +84,37 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
     %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
 
 	
-	\eparagraph{Attribute information}
+	\eparagraph{Encoding attribute}
     In addition to entity names, we also consider entity attributes for node representations.
 	Our current implementation distinguishes four types of attributes, i.e., \emph{Integer}, \emph{Double}, \emph{Date} and \emph{String}
-    (as default), but other data types can be added into the model. When examining attributes of \emph{Integer}, \emph{Double}, and \emph{Date} types,
-    we also record the range of values that can be taken by each type.
+    (as default), but the proposed method can be extended to other data types too.
 	%In this paper, we only consider the first three types, i.e., Integer, Double and Date.
 %	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 %	
-	For for each entity within two \KGs, We construct A normalized attribute vector. The dimension of the vector equals to the number of distinct attributes of the target attribute types.
-	Each element in the vector equals to the normalized value of the corresponding attribute.
-    Because not all entities contain all the attributes, we pad missing attributes with a value of 0 to form a constant-sized vector.
+	For each entity in a \KG, we construct a attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG.
+    We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized
+    vector for each entity.
 
  \subsubsection{ii. Neighboring node relation}
  Like standard \RGCNs, we capture the relation of graph neighboring nodes using an adjacency matrix.
  In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
- \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations of graph $G$.
+ \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations (e.g., edges or predicates) of graph $G$.
 
  To construct an adjacency matrix, $A_r$, for relation $r$ we follow a number of steps. We first extract $R_0$ original
- relations from \KGs, then we add reverse relations in order to pass information from the opposite direction. And for retaining the node's information, we also add a self-referencing loop to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in Figure~\ref{all}, original relations, reverse relations and the self loops all participate in the updating of node features.
+ relations from \KGs, then we add reverse relations in order to pass information from the opposite direction. To retain the node's
+ information, we also add a self-referencing loop to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in
+ \FIXME{Figure~\ref{all}}, original relations, reverse relations and the self loops all participate in the updating of node features.
 
  \eparagraph{Calculate the embedding matrix}
- The input for layer $l$ in each of our stacked \RGCNs is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
- |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each node feature vector, $x_i$, is updated using forward propagation, and we stack the output vector for each node, $x_i^{(l+1)}$
- , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
+ The input for layer $l$ a \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each node feature vector, $x_i$, is updated using forward propagation as:
 
-   The forward propagation of $x_i^{(l+1)}$ of a \RGCN is formulated as:
+ %, and we stack the output vector for each node, $x_i^{(l+1)}$
+% , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)}),
-	\end{equation}
-where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$, according to normalized adjacency matrix $\hat A_r$; and $\hat
-A_r$ is an approximate of spectral convolutions on $A^r$, introduced by ~\cite{Kipf2016Semi}:
+	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$, according to the normalized adjacency
+matrix $\hat A_r$ -- an approximate of spectral convolutions on the adjacency matrix $A_r$~\cite{Kipf2016Semi}:
 	\begin{equation}
 	\hat A_r=\hat D_r^{- \frac{1}{2}}(A_r+I)\hat D_r^{- \frac{1}{2}},
 	\end{equation}
@@ -123,9 +122,9 @@ A_r$ is an approximate of spectral convolutions on $A^r$, introduced by ~\cite{K
 
 	
 	\eparagraph{Calculate the weight matrix} For each relation $r$, we construct a weight matrix, $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)}
-\times d^{(l)}}$ for the stacked \RGCNs. As a \KG often has over thousands of types of relations, there will be a large amount of network
-parameters to learn over, which is likely to lead to overfiting. To minimize the impact of the large parameter size, we employ the basis
-decomposition method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
+\times d^{(l)}}$. As a \KG often has over thousands of types of relations, there will be a large amount of network parameters to learn
+over, making the trained model more likely to overfit. To minimize the impact of the parameter size, we employ the basis decomposition
+method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 	\begin{equation}
 	W_r^{(l)}=\sum\limits_{b=1}^B a_{rb}^{(l)}V_b^{(l)},
 	\end{equation}
@@ -136,13 +135,20 @@ decomposition method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 %	We leave this for future work.
 
 
-	\subsection{Noise control}
+	\subsection{Noise Control Through Highway Gates}
 	\label{section:hgcn}
-	While stacking \RGCN layers enhances our model's capability in learning neighborhood information from relational steps, it may as well
-bring noise from the exponentially increasing number of neighbors. To ensure effective spread of informative and discriminative
-neighborhood information, we add layer-wise gates similar to highway networks~\cite{Srivastava2015Highway} to our \RGCN-based model.
-%~\cite{Rahimi2018Semi} have successfully introduced highway gates to \GCNs~\cite{Kipf2016Semi} to solve the user geolocation problem.
-We use layer-wise highway gates to build a Highway \RGCN (\HRGCN) model where the output of a \HRGCN layer is computed as:
+%	While stacking \RGCN layers enhances our model's capability in learning neighborhood information from relational steps, it may as well
+%bring noise from the exponentially increasing number of neighbors.
+One of the challenges for applying \RGCNs to a large \KG is that the noise accumulated across the network layers can significantly affect
+the learning quality. To tackle this challenge, we employ layer-wise gates similar to highway networks~\cite{Srivastava2015Highway} to
+process the output of the \RGCN. This results in a novel highway \RGCN for entity alignment, for which we refer as \HRGCN thereafter. The
+output of a \HRGCN layer is computed as:
+%
+%
+% To ensure effective spread of informative and discriminative neighborhood information, we add layer-wise gates
+%similar to highway networks~\cite{Srivastava2015Highway} to our \RGCN-based model.
+%%~\cite{Rahimi2018Semi} have successfully introduced highway gates to \GCNs~\cite{Kipf2016Semi} to solve the user geolocation problem.
+%We use layer-wise highway gates to build a Highway \RGCN (\HRGCN) model where the output of a \HRGCN layer is computed as:
 	\begin{equation}
 	\begin{split}
 	&T(x^{(l)})=\sigma(W_T^{(l)}x^{(l)}+b_T^{(l)}), \\
@@ -151,12 +157,17 @@ We use layer-wise highway gates to build a Highway \RGCN (\HRGCN) model where th
 	\end{equation}
 	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l+1)}
 \times d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
-    In Section~\ref{overall}, we show that the highway gates significantly boost the performance of our \RGCN-based model.
+
 	
-	\subsection{Alignment Prediction\label{prediction}}
-	After \HRGCN layers, we get the hidden representations $\bar{X}$ of all nodes in both \KGs. We then measure the similarity between of two
-nodes, $e_1$ and $e_2$ from $G_1$ and $G_2$, respectively. The similarity is determined by computing the distance between the hidden
-representations of two nodes:
+	\subsection{Entity Alignment Prediction\label{prediction}}
+   We use the network's output, $\bar{X}$, as the graph representation for the two \KGs within graph
+    $G$. Here, $\bar{X}$ is an embedding matrix of $N$ vectors, $\bar{x}_1,\bar{x}_2,...,\bar{x}_N$, where each vector, $\bar{x}$, corresponds to one
+    of the $N$ entity nodes within graph $G$. 	
+
+
+With the graph representation in place, entity alignment is as simple as measuring the similarity between two entity nodes in the
+representation space. Specifically, the similarity, $d(e_1,e_2)$, between two entity nodes, $e_1$ from \texttt{KG1} and $e_2$ from
+\texttt{KG2} is calculated as:
 	\begin{equation}
 	\label{d}
 	d(e_1,e_2)=||\bar{x}_{e_1}-\bar{x}_{e_2}||_{L_1}.
@@ -174,19 +185,19 @@ representations of two nodes:
 	%In our experiments, for a entity $e_1$ in $G_1$, we compute the distances between $e_1$ and all the entities in $G_2$. The alignment process can also be reversed, i.e., from $G_2$ to $G_1$. In Section~\ref{sec:results}, we report the results of both directions of entity alignment.
 
 	
-	\subsection{Combination of Semantic and Attribute Embeddings}
-    Recall that the node feature vector can be initialized from either semantics (i.e., entity names) or attributes (Section~\ref{subsection:Node
-    Representations}). For combining the semantic and attribute embeddings, the most straightforward way is to simply concatenate a pre-trained word vector and an attribute vector as an input node feature vector. Another idea is to apply two stacked \HRGCNs to respectively perform a semantic or an attribute embedding.
-	%When we leverage the pre-trained word embeddings to initialize the node feature vectors, we call HRGCNs acting semantic embedding.
-%	And when the nodes are initialized by attribute vectors, we call HRGCNs performing attribute embedding.
-%	Following the same architecture in Figure~\ref{all}, we do semantic embedding and attribute embedding for $G$ respectively.
-%
-	For the latter, we define a combined distance to integrate semantic embedding and attribute embedding:
+	\subsection{Exploiting Entity Semantics and Attributes\label{sec:combine}}
+    Recall that the node feature vector can be initialized from either the semantics of entity names  or entity attributes (Section~\ref{subsection:Node
+    Representations}). There are multiple ways to exploit the semantic and attribute embeddings. One is to simply concatenate a pre-trained word vector
+    and an attribute vector as an input node feature vector. Another is to apply two stacked \HRGCNs to respectively perform a
+    semantic or an attribute embedding.  We provide a further discussion on these strategies in \FIXME{Section~\ref{}}.
+
+    For stacked \HRGCNs, we define a combined distance to integrate semantic embedding and attribute embedding:
 	\begin{equation}
 		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
 
-	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter. $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
-	In our experiments, we set the output dimensions of two models (one for semantic embedding and the other one for attribute embedding) to be the same.
+	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
+
+	%In our experiments, we set the output dimensions of two models (one for semantic embedding and the other one for attribute embedding) to be the same.
 	
 	
