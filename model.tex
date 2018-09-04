@@ -19,7 +19,7 @@ can calculate the distance between any two entity representations to determine i
 	
 
 	
-    \subsection{Graph Representation Model\label{sec:model}}
+    \subsection{Knowledge Graph Representation Model\label{sec:model}}
     Our model for generating \KG representations  is based on the recently proposed relational graph convolutional network (\RGCN)~\cite{Schlichtkrull2017Modeling}.
     The \RGCN is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
    % A \RGCN layer takes a set of adjacency matrices as input, and produces a new set of node features.
@@ -39,12 +39,11 @@ can calculate the distance between any two entity representations to determine i
 	
 
 
-\subsection{Notations}
+\subsubsection{Notations}
 
 Without loss of generality, we introduce our approach using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
 entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$
 together in one large graph $G$. We utilize pre-aligned entity pairs to train our models and then discover latent aligned entities.
-Figure~\ref{all} demonstrates the overall architecture of our model. 	
 	
 	\subsection{Graph Information}
 	\label{section:rgcn}	
@@ -53,7 +52,7 @@ Figure~\ref{all} demonstrates the overall architecture of our model.
 %	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
 
 
-
+    Figure~\ref{all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
   	The input to our model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
 
