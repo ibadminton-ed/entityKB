@@ -49,7 +49,7 @@ can calculate the distance between any two entity representations to determine i
 \begin{figure}
 	\centering
 	\includegraphics[width=0.4\textwidth]{figures/RGCN.pdf}
-	\caption{overall architecture of our \RGCN-based model}\label{fig:all}
+	\caption{Overall architecture of our \RGCN-based model}\label{fig:all}
 \end{figure}
 
     Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
@@ -167,11 +167,11 @@ respectively.
     Recall that the node feature vector can be constructed from either entity name semantics or entity attributes (Section~\ref{subsection:Node
     Representations}). There are multiple ways to exploit the semantic and attribute embeddings. One is to simply concatenate a pre-trained word vector
     and an attribute vector as an input node feature vector. Another is to apply two stacked \HRGCNs to respectively perform a
-    semantic or an attribute embedding.  We provide a further discussion on these strategies in \FIXME{Section~\ref{}}.
+    semantic or an attribute embedding.  We provide a further discussion on these strategies in Section~\ref{overall}.
 
-    For stacked \HRGCNs, we define a new feature vector, $D$, to combine the semantic and attribute embeddings produced by each \HRGCN:
+    For stacked \HRGCNs, we define a new feature vector, $d$, to combine the semantic and attribute embeddings produced by each \HRGCN:
 	\begin{equation}
-		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
+		d(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
 
 	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic and attribute embeddings, respectively.

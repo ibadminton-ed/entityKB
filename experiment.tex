@@ -5,68 +5,78 @@
 
 %when the available clues for alignment are sparse, we have performed comparative evaluation of our model against several baselines.
 
-\subsection{Overall Performance\label{overall}}
-\cparagraph{Results on WBD dataset}
-Table~\ref{f1} reports the performance of all models on WBD dataset. 
-%Since the performance of each model is very similar in two alignment directions, we will mainly discuss the results of all models in the direction of Baidu$\rightarrow$Wiki. 
-Among all models, %when enhanced with layer-wise highway gates,
-our \HRGCN (S$\|$A) model performs the best in both alignment directions, significantly improving upon ITransE$'$ by 45.7\% and 46.2\% for Hits@1 and Hits@10 in the direction of Baidu$\rightarrow$Wiki. This shows that our model has distinct advantage in entity alignment task over existing approaches. 
-ITransE$'$ outperforms JE regarding all the Hits@k and outperforms \GCN for Hits@1 in both alignment directions. This indicates that ITransE is an outstanding model for entity alignment and it also shows that TransE can effectively embed the structure information of KGs.
-
-
-
-
-\cparagraph{Results on $\bf DBP15K_{FR-EN}$ dataset}
-Table~\ref{cross} reports the results of all the compared approaches on $DBP15K_{FR-EN}$ dataset. Since we use the same French-English subset and the same split of gold standards for training and testing as in~\cite{sun2017cross}, the results of JE, MTransE, and JAPE are obtained from~\cite{sun2017cross}. JAPE has two variants: Structure Embedding (SE), Structure and attribute joint embedding (SE+AE). We evaluate three variants of our model: \HRGCN (SE), \HRGCN (SE+AE) and \HRGCN (S$\|$A). We can see that our \HRGCN (SE+AE) model gets the best Hits@1 in both alignment directions. Although we handle cross-lingual data through rough machine translation which might introduce lots of noise, our model still outperforms all the compared baselines regarding Hits@1. This indicates that our model has strong noise immunity. JAPE (SE+AE) outperforms \HRGCN (SE+AE) by 10\%$\sim$13\% for Hits@10. It shows that JAPE is an
-excellent model for entity alignment. However JAPE needs additional aligned relations and attributes, while our model does not need such high-quality seed alignment data.
-
 \begin{table}
 	\centering
 	% \small
 	\scriptsize
-	\begin{tabular}{c|cc|cc}
-		\toprule
-		\multirow{2}{*}{\bf Models} &  \multicolumn{2}{c|}{$\bf Baidu \rightarrow Wiki$} & \multicolumn{2}{c}{$\bf Wiki \rightarrow Baidu$} \\
-		& \bf Hits@1 & \bf Hits@10 & \bf Hits@1 & \bf Hits@10 \\
-		\midrule
-		JE & 14.8 & 21.6 & 13.2 & 20.3 \\
-		ITransE$'$ & 19.4 & 25.5 & 17.6 & 24.8 \\
-		\GCN & 17.1 & 27.3 & 15.7 & 25.9 \\
-		\HGCN & 19.5 & 29.6 & 19.4 & 29.5  \\
-		\bf \RGCN & 37.3 & 51.5 & 34.8 & 51.6 \\
-		\bf \HRGCN (w/o $X$) & 15.0 & 21.7 & 14.5 & 21.5 \\
-		\bf \HRGCN (SE+AE) & 58.3 & 67.1 & 57.8{\tiny } & 65.7 \\
-		\bf \HRGCN (S$\|$A) & \bf 65.1 & \bf 71.7 & \bf 62.2 & \bf 71.4\\ 
-		\bottomrule
-	\end{tabular}
-	\caption{Results comparison of entity alignment on WBD dataset.}
-	\label{f1}
-\end{table}
-
-\begin{table}
-	\centering
-	% \small
-	\scriptsize
-	\begin{tabular}{c|cc|cc}
+	\begin{tabular}{lrrrr}
 		\toprule
 		\multirow{2}{*}{$\bf DBP15K_{FR-EN}$} & \multicolumn{2}{c|}{$\bf FR \rightarrow EN$} & \multicolumn{2}{c}{$\bf EN \rightarrow FR$} \\
 		& \bf Hits@1 & \bf Hits@10 & \bf Hits@1 & \bf Hits@10 \\
 		\midrule
-		JE & 15.38 & 38.84 & 14.61 & 37.25 \\
-		\midrule
+		\rowcolor{Gray}JE & 15.38 & 38.84 & 14.61 & 37.25 \\
 		MTransE & 24.41 & 55.55 & 21.26 & 50.60 \\
-		\midrule
-		JAPE (SE) & 29.63 & 64.55 & 26.55 & 60.30 \\
+		\rowcolor{Gray}JAPE (SE) & 29.63 & 64.55 & 26.55 & 60.30 \\
 		JAPE (SE+AE) & 32.39 & \bf 66.68 & 32.97 & \bf 65.91 \\
-		\midrule
-		\bf \HRGCN (SE) & 33.43& 35.72& 31.22& 34.65 \\
-		\bf \HRGCN (SE+AE) & \bf 44.82 & 56.68 &\bf 41.08 & 52.95 \\
-		\bf \HRGCN (S$\|$A) & 23.8 & 32.4 & 20.4 & 27.5 \\ 
+		\rowcolor{Gray} \bf \HRGCN (SE) & 33.43& 35.72& 31.22& 34.65 \\
+		\bf \HRGCN (S$\|$A) & 23.8 & 32.4 & 20.4 & 27.5 \\
+        \rowcolor{Gray} 	\bf \HRGCN (SE+AE) & \bf 44.82 & 56.68 &\bf 41.08 & 52.95 \\
 		\bottomrule
 	\end{tabular}
-	\caption{Results comparison of entity alignment on $DBP15K_{FR-EN}$ dataset.}
+	\caption{Performance on $DBP15K_{FR-EN}$ dataset.}
 	\label{cross}
 \end{table}
+
+\begin{table}
+	\centering
+	% \small
+	\scriptsize
+	\begin{tabular}{lrrrr}
+		\toprule
+		\multirow{2}{*}{\bf Models} &  \multicolumn{2}{c|}{$\bf Baidu \rightarrow Wiki$} & \multicolumn{2}{c}{$\bf Wiki \rightarrow Baidu$} \\
+		& \bf Hits@1 & \bf Hits@10 & \bf Hits@1 & \bf Hits@10 \\
+		\midrule
+		\rowcolor{Gray} JE & 14.8 & 21.6 & 13.2 & 20.3 \\
+		ITransE$'$ & 19.4 & 25.5 & 17.6 & 24.8 \\
+		\rowcolor{Gray} \GCN & 17.1 & 27.3 & 15.7 & 25.9 \\
+		\HGCN & 19.5 & 29.6 & 19.4 & 29.5  \\
+		\rowcolor{Gray} \RGCN & 37.3 & 51.5 & 34.8 & 51.6 \\
+		\bf \HRGCN (w/o $X$) & 15.0 & 21.7 & 14.5 & 21.5 \\
+		\rowcolor{Gray} \bf \HRGCN (SE+AE) & 58.3 & 67.1 & 57.8{\tiny } & 65.7 \\
+		\bf \HRGCN (S$\|$A) & \bf 65.1 & \bf 71.7 & \bf 62.2 & \bf 71.4\\
+		\bottomrule
+	\end{tabular}
+	\caption{Performance on WBD dataset.}
+	\label{f1}
+\end{table}
+\subsection{Overall Performance\label{overall}}
+We evaluate our approach on four variant implementations: (1) a two-layered \HRGCN (S$\|$A) which directly uses concatenated vectors
+introduced in \FIXME{Section~\ref{combine}} as input node features, (2) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
+attribute embedding, (3) a two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, (4) two-layered
+\HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
+		Representations} as the input.
+
+\cparagraph{Results on $\bf DBP15K_{FR-EN}$} Table~\ref{cross} reports the results of all the compared approaches on $DBP15K_{FR-EN}$
+dataset. We apply each approach
+ to two alignment directions: French to English and vice versa. This dataset requires us to handle
+cross-lingual data through rough machine translation which is likely to introduce lots of noise. We report the performance of JAPE on the
+two implementations presented at
+ ~\cite{sun2017cross} when using structure embedding (SE), and structure and attribute joint embedding (SE+AE).
+For Hits@1, our \HRGCN (SE+AE) outperforms all other approaches by delivering the highest score. This is due to the capability of \HRGCN
+(SE+AE)in preventing noisy nodes from driving the \KG representations. For Hits@10, JAPE (SE+AE) gives the best performance, which
+translates to a improvement of 10\%$\sim$13\% over \HRGCN (SE+AE). However, our approach has the advantage for not relying on aligned
+relations and attributes and thus has lower overhead.
+
+
+\cparagraph{Results on WBD} Table~\ref{f1} reports the performance of all models on WBD dataset. While the vanilla \GCN performs worse than
+exhibiting alignment models, by adding highway gates to control the noise, \HGCN is able to outperform all existing approaches. By
+incorporating node representation and \RGCN, our \HRGCN (S$\|$A) model delivers the best Hits@k score in both alignment directions,
+improving upon the best-existing method -- ITransE$'$ by 45.7\% and 46.2\% for Hits@1 and Hits@10 respectively in the direction of
+Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in entity alignment task over existing approaches.
+
+
+
+
 
 
 
@@ -90,7 +100,7 @@ According to the results listed in Table~\ref{f1}, \HRGCN (S$\|$A) outperforms \
 
 
 \cparagraph{(SE+AE) vs. (SE)}
-Comparing the results of \HRGCN (SE+AE) and \HRGCN (SE) in Table~\ref{cross}, we can see that adding attribute embedding greatly improves the performance, resulting in a 11.39\% jump in Hits@1 and a 20.96\% jump in Hits@10 in the direction of FR$\rightarrow$EN. It shows that the attribute information is very useful for entity alignment. 
+Comparing the results of \HRGCN (SE+AE) and \HRGCN (SE) in Table~\ref{cross}, we can see that adding attribute embedding greatly improves the performance, resulting in a 11.39\% jump in Hits@1 and a 20.96\% jump in Hits@10 in the direction of FR$\rightarrow$EN. It shows that the attribute information is very useful for entity alignment.
 From Table~\ref{f1}, when comparing our full model \HRGCN with \HRGCN (w/o $X$), we find that removing the predefined input feature matrix $X$ leads to a drop of 43.3\% for Hits@1 and 45.4\% for Hits@10. This confirms that initializing entity representations using pre-trained word embeddings and normalized attribute vectors is very helpful in aligning entities from different KGs.
 
 \cparagraph{Performance comparing under sparse alignment clues}
@@ -150,6 +160,3 @@ In addition, from Table~\ref{f1}, we can observe that the \GCN or \RGCN-based mo
 	\caption{The effect of adding more \RGCN layers in terms of Hits@1 over the test set of WBD with and without the highway gates.}
 	\label{highway}
 \end{figure}
-
-
-

@@ -82,7 +82,7 @@ referred as Wikipedia-Baidu dataset (WBD).
     \cparagraph{Prior methods}
     On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against three methods that have been tuned and tested on the dataset:
     JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}. 	On our WBD dataset, we compare our \HRGCN
-    against two approaches: JE and ITransE~\cite{zhu2017iterative}. We note that MTransE is tuned for cross-lingual knowledge allignment, while JAPE cannot be applied to the WBD dataset because
+    against two approaches: JE and ITransE~\cite{zhu2017iterative}. We note that MTransE is tuned for cross-lingual knowledge alignment, while JAPE cannot be applied to the WBD dataset because
     it
     requires aligned relation triples (see Table~\ref{seed}). We extend ITransE to allow it work on heterogeneous
     \KGs and refer this extension as ITransE$'$.
@@ -92,17 +92,12 @@ referred as Wikipedia-Baidu dataset (WBD).
 
 
 	
-	\cparagraph{Variants of our model} We evaluate our approach on five variant implementations: two-layered \HRGCN (S$\|$A) which directly uses concatenated vectors introduced in Section~\ref{combine} as input node features, two-layered \HRGCN (SE+AE) which combines semantic embedding and attribute embedding, two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, two-layered \HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
-		Representations} as the input, and two-layered no-highway \RGCN (SE+AE). %For all variants of our model, we use \RGCN with 16 hidden units for each layer and $B = 80$
-%	for basis function decomposition. We set $\omega=0.95$ in the combined distance for semantic and attribute embeddings, and apply L2
-%	regularization with $\lambda=5e-4$ to avoid overfitting.
-	
-	%Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition.
-%	The hyper-parameter $\omega$ in the combined distance is set to 0.9.
-    %ZW: I don't know why you use different hidden units for different datasets. But this doesn't look good, so I comment it out.
-
-	
-	
+%	\cparagraph{Variants of our model} We evaluate our approach on five variant implementations: two-layered \HRGCN (S$\|$A) which directly
+%uses concatenated vectors introduced in Section~\ref{combine} as input node features, two-layered \HRGCN (SE+AE) which combines semantic
+%embedding and attribute embedding, two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors,
+%two-layered \HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
+%		Representations} as the input, and two-layered no-highway \RGCN (SE+AE).
+%	
 
 
 
@@ -127,7 +122,6 @@ referred as Wikipedia-Baidu dataset (WBD).
 	
  	We use Hits@k, a widely used metric for entity
  alignment evaluation~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. A Hits@k score (higher is better) is computed by
- measuring the proportion of correctly aligned entities ranked in the top k. In this work, we set k to 1 and 10 to report the Hits@1 and Hits@10 scores
-  respectively.
+ measuring the proportion of correctly aligned entities ranked in the top k. In this work, we report the Hits@1 and Hits@10 scores.
 	
 	
