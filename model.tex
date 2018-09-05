@@ -38,6 +38,24 @@ neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relat
 
 	
 
+\cparagraph{Notations} Without loss of generality, we introduce our model using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 =
+(E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	
+We put $G_1$ and $G_2$ together in one large graph $G$. We utilize pre-aligned entity pairs to train our model and then discover latent
+aligned entities.
+
+\begin{figure}[t!]
+	\centering
+	\includegraphics[width=0.4\textwidth]{figures/RGCN.pdf}
+	\caption{Overall architecture of our \RGCN-based model}\label{fig:all}
+\end{figure}
+
+\cparagraph{Model architecture} Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
+	The input to our model consists of two parts (Section~\ref{section:rgcn}): (i) a node feature matrix that captures the semantic information such as the entity
+  names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
+    The output of a \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the processed result is passed as part of
+    the next layer's input. Entity alignment is achieved by calculating the distance, $d(e_1, e_2)$, of two entity nodes, $e1$ and $e2$, using the
+   network output (Section~\ref{prediction}).
+
 
 
 	
@@ -46,23 +64,11 @@ neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relat
   %  The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
 %	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 %	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
-\begin{figure}
-	\centering
-	\includegraphics[width=0.4\textwidth]{figures/RGCN.pdf}
-	\caption{Overall architecture of our \RGCN-based model}\label{fig:all}
-\end{figure}
 
-    Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
-  	The input to our model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
-  names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
-    The output of a \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the result is passed as part of
-    the input to the next layer.
+We use two sets of information to represent nodes and relations of neighboring nodes of a \KG, described as follow.
 
-\subsubsection{Notations}
 
-Without loss of generality, we introduce our model using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 = (E_2,V_2,R_2,A_2,T_2)$ for
-entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	We put $G_1$ and $G_2$
-together in one large graph $G$. We utilize pre-aligned entity pairs to train our model and then discover latent aligned entities.
+
 
 %
 
