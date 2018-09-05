@@ -2,7 +2,7 @@
 	\section{Introduction}
 	\label{section:intro}
     Acquiring knowledge from large volumes of unstructured textual data plays an important role in not only the development of Semantic
-    Web, but also the understanding of text content. There has been an extensive body of work in transforming online encyclopedia resources, such as
+    Web, but also the understanding of massive text content. There has been an extensive body of work in transforming online encyclopedia resources, such as
     Wikipedia, into structured knowledge bases (\KBs) in a form of $\langle$\emph{subject entity},
    \emph{ predicate/relation}, \emph{object}$\rangle$ triples, such as DBpedia~\cite{Lehmann2009DBpedia,Auer2007DBpedia},
     Freebase~\cite{Bollacker2007Freebase}, Yago~\cite{Suchanek2008YAGO}, etc.
@@ -10,14 +10,14 @@
 
    %In order to better show the relations among entities,
 
-	Such kind of \KBs can be naturally organized into the form of graphs which we call knowledge graphs (\KGs). \KGs originate from the
-same \KB  are usually created independently, thus often use different expressions and surface forms to indicate equivalent entities and
+	Such kind of \KBs can be naturally organized into the form of graphs which we call knowledge graphs (\KGs). \KGs originating from the
+same resource, e.g., Wikipedia,  are usually created independently, thus often use different expressions and surface forms to indicate equivalent entities and
 relations -- let alone those built from different resources, or even different languages. This common heterogenous problem makes it
 difficult to perform tasks like knowledge sharing, complementary and integration among different \KGs.
 	
 	One of the key enabling techniques to integrate different \KGs is \emph{entity alignment} -- the task of linking the equivalent
 entities from different \KGs if they refer to the same real-world identity, usually with different surface forms. However, entity alignment
-is non-trivial, which currently has to be realized through a complex alignment system~\cite{gokhale2014corleone,scharffe2014ontology}.
+is non-trivial, which  has to be realized through a complex alignment system~\cite{gokhale2014corleone,scharffe2014ontology}.
 Traditional approaches generally rely on external information (such as hyperlinks in web pages). This limits the practicality of the
 approach because it requires a labour-intensive and time-consuming process to construct an alignment model for each
 \KG~\cite{zhu2017iterative}.
@@ -41,19 +41,19 @@ approach because it requires a labour-intensive and time-consuming process to co
 \end{table}
 	
 	Most recently, efforts have been devoted to the so-called \KG embedding-based approaches. The idea is to jointly embed the structures
-of multiple \KGs into a unified feature space, by using the pre-aligned entities or relations to bridge the heterogeneities of different
+of multiple \KGs into a unified feature space, by using the pre-aligned entities and/or relations to bridge the heterogeneities of different
 \KGs. These approaches all rely on a translation-based model, such as TransE~\cite{bordes2013translating}, to learn entity representations.
 
 However, the current \KG embedding-based approaches have three significant drawbacks that limit the uptake of this promising technique and
 the scale at which it can operate. Firstly, existing approaches cannot effectively handle situations where two entities' neighboring nodes
-have significantly different relational structures - a common problem in heterogeneous \KGs. This is because the current approaches cannot
+have significantly different relational structures - a common problem in heterogeneous \KGs. This is because current approaches cannot
 identify which of the common entities and attributes are important for the alignment task (Section~\ref{sec:motivation}). Secondly, as we
 summarize in Table~\ref{seed}, existing methods all rely on some forms of high-quality seed alignment data, such as pre-aligned \KG
 predicates/relations or triples. Since such information in heterogeneous \KGs may be greatly different, it is very hard if not impossible
 to collect such data in practice. Furthermore, most of the prior approaches do not consider the specific attribute values in the \KGs
 because of the complex and diverse forms of attributes. As we will show later in Section~\ref{sec:motivation}, the attribute values are
 often important for entity alignment and cannot be ignored. JAPE~\cite{sun2017cross} was the first attempt to consider attributes for
-entity alignment. However, it only considers the type but not the value of an attribute, and thus misses massive opportunities
+entity alignment. However, it only considers the type but not the value of an attribute, thus misses massive opportunities
 (Section~\ref{overall}).
 
 %In addition, as shown by the last column in the
@@ -96,9 +96,9 @@ exploits both entity semantics and associated attribute values. It automatically
 for the \KG-specific alignment task, enabling the learned model to better handle heterogeneous graph structures where prior methods fail.
 
 We evaluate our approach by applying it to two real-world datasets and testing it on over 50,000 entities with a large number of relations
-and attributes. We compare our approach against four state-of-the-art embedding-based
+and attributes. We compare our approach against state-of-the-art embedding-based
 methods~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. Experimental results show that our approach can
-significantly outperform prior methods that need much more seeding information to work on. As a result, our work not only reduces the
+significantly outperform prior methods that need much more seed information to work on. As a result, our work not only reduces the
 overhead for constructing entity alignment models, but offers a new way to construct effective entity alignment models for heterogeneous
 \KGs.
 
@@ -111,8 +111,8 @@ overhead for constructing entity alignment models, but offers a new way to const
         \item We show that the attribute values are important for aligning entities from heterogeneous \KGs and how this information can
             be exploited within an entity alignment framework (Section~\ref{sec:model}).
 
-		\item Our work is the first to employ layer-wise highway gates in a \RGCN to control how much neighborhood information should be
-passed to a neural network node (Section~\ref{section:hgcn}). This technique greatly improves the performance of a \RGCN when processing
+		\item Our work employs layer-wise highway gates in a \RGCN to control how much neighborhood information should be
+passed (Section~\ref{section:hgcn}), which greatly improves the performance of a \RGCN when processing
 large \KGs (Section~\ref{sec:results}).
 		
 		%\item We build a large-scale entity alignment dataset in Chinese, containing 57,240 entities, 3,563 relations, 28,595 attributes, 231,003 relation triples and 515,065 attribute triples. We manually aligned 16,969 entity pairs as the gold standards of entity alignment.
