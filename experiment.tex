@@ -74,7 +74,8 @@ incorporating node representation and \RGCN, our \HRGCN (S$\oplus$A) model deliv
 improving upon the best-existing method -- ITransE$'$ by 45.7\% and 46.2\% for Hits@1 and Hits@10 respectively in the direction of
 Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in entity alignment task over existing approaches.
 
-In addition, we find that the performance of \HRGCN (SE+AE) and \HRGCN (S$\oplus$A) is very different on the two datasets. We provide a further discussion on the two strategies for exploiting the semantic and attribute embeddings in Section~\ref{sec:analysis}.
+In addition, we find that the performance of \HRGCN (SE+AE) and \HRGCN (S$\oplus$A) exhibit distinct behaviors on the two datasets. We
+provide a further discussion on these two strategies in the next section.
 
 
 \subsection{Analysis\label{sec:analysis}}
@@ -125,7 +126,7 @@ which provide crucial supporting evidence for the final prediction. Unfortunatel
 \begin{table}
 	\centering
 	\scriptsize
-	\begin{tabular}{ccccc}
+	\begin{tabular}{lcrcr}
 		\toprule
 		\multirow{2}{*}{\bf Aligned Entities} & \bf \#Neighbors & \bf \#Similar & \bf \#Values & \bf \#Similar \\
 		&\bf  Wiki \& Baidu &\bf  Neighbors &\bf  Wiki \& Baidu &\bf  Values \\
