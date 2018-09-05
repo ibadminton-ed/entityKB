@@ -40,20 +40,21 @@ approach because it requires a labour-intensive and time-consuming process to co
 	\label{seed}
 \end{table}
 	
-	Most recently, efforts have been devoted to the so-called \KG embedding-based approaches. The idea is to jointly embed the structures
-of multiple \KGs into a unified feature space, by using the pre-aligned entities and/or relations to iron out the heterogeneity issue.
-These approaches all rely on a translation-based model, such as TransE~\cite{bordes2013translating}, to learn entity representations.
+	Most recently, efforts have been devoted to the so-called \KG embedding-based approaches. The idea is to use a translation-based model,
+such as TransE~\cite{bordes2013translating}, to learn entity representations to jointly embed the structures of multiple \KGs into a
+unified feature space where entity alignment can be easily performed. %To iron out the heterogeneity issue across different \KGs, such approaches rely
+%on the pre-aligned entities and/or relations.
 
 However, the current \KG embedding-based approaches have three significant drawbacks that limit the uptake of this promising technique and
 the scale at which it can operate. Firstly, existing approaches cannot effectively handle situations where two entities' neighboring nodes
 have significantly different relational structures - a common problem in heterogeneous \KGs. This is because current approaches cannot
 identify which of the common entities and attributes are important for the alignment task (Section~\ref{sec:motivation}). Secondly, as we
 summarize in Table~\ref{seed}, existing methods all rely on some forms of high-quality seed alignment data, such as pre-aligned \KG
-predicates/relations or triples. Since such information in heterogeneous \KGs may be greatly different, it is very hard, if not impossible,
-to collect such data in practice. Furthermore, most of the prior approaches do not consider the specific attribute values in the \KGs
-because of the complex and diverse forms of attributes. As we will show later in Section~\ref{sec:motivation}, the attribute values are
-often important for entity alignment and cannot be ignored. JAPE~\cite{sun2017cross} was the first attempt to consider attributes for
-entity alignment. However, it only considers the type but not the value of an attribute, thus misses massive opportunities
+predicates/relations or triples. Since those data structures in heterogeneous \KGs may be greatly different, it is very hard, if not
+impossible, to collect such data in practice. Furthermore, most of the prior approaches do not consider the specific attribute values in
+the \KGs because of the complex and diverse forms of attributes. As we will show later in the paper, the attribute values are often
+important for entity alignment and cannot be ignored. JAPE~\cite{sun2017cross} was the first attempt to consider attributes for entity
+alignment. However, it only considers the type but not the value of an attribute, thus misses massive opportunities
 (Section~\ref{overall}).
 
 %In addition, as shown by the last column in the
@@ -98,8 +99,8 @@ specific alignment task, enabling the learned model to better handle heterogeneo
 We evaluate our approach by applying it to two real-world datasets and testing it on over 50,000 entities with a large number of relations
 and attributes. We compare our approach against state-of-the-art embedding-based
 methods~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. Experimental results show that our approach can
-significantly outperform prior methods that need much more seed information to work on. Our work offers an effective but low-cost way for
-performing entity alignment among heterogeneous \KGs.
+significantly outperform prior methods that need much more seed information to work on. Our work thus offers an effective but low-cost way
+for performing entity alignment among heterogeneous \KGs.
 
 
 
