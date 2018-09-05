@@ -78,6 +78,12 @@ referred as Wikipedia-Baidu dataset (WBD).
 %	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
 %	These hyperparameters were found to give the best overall performance in our experiments.
 
+    \cparagraph{Implementation variants}
+    	We evaluate our approach on four variant implementations: (1) a two-layered \HRGCN (S$\oplus$A) ($\oplus$ represents concatenation) which directly uses concatenated vectors
+introduced in Section~\ref{sec:combine} as input node features, (2) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
+attribute embedding, (3) a two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, (4) two-layered
+\HRGCN (w/o X) which just randomly initializes the node representations without considering the semantic or attribute information mentioned
+in Section~\ref{subsection:Node Representations}.
 
     \cparagraph{Prior methods}
     On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against three methods that have been tuned and tested on the dataset:
@@ -121,5 +127,4 @@ referred as Wikipedia-Baidu dataset (WBD).
  	We use Hits@k, a widely used metric for entity
  alignment evaluation~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. A Hits@k score (higher is better) is computed by
  measuring the proportion of correctly aligned entities ranked in the top k. In this work, we report the Hits@1 and Hits@10 scores.
-	
 	
