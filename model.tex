@@ -100,13 +100,13 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
  In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations (e.g., edges or predicates) of graph $G$.
 
- To construct an adjacency matrix, $A_r$, for relation $r$ we follow a number of steps. We first extract $R_0$ original
+ To construct the adjacency matrices, $A$, we follow a number of steps. We first extract $R_0$ original
  relations from \KGs, then we add reverse relations in order to pass information from the opposite direction. To retain the node's
- information, we also add a self-referencing loop to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in
+ information, we also add a self-referencing loop of a special relation type to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in
  \FIXME{Figure~\ref{all}}, original relations, reverse relations and the self loops all participate in the updating of node features.
 
  \eparagraph{Calculate the embedding matrix}
- The input for layer $l$ a \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ The input for layer $l$ of a \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
  |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each node feature vector, $x_i$, is updated using forward propagation as:
 
  %, and we stack the output vector for each node, $x_i^{(l+1)}$
