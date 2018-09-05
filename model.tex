@@ -25,11 +25,11 @@ can calculate the distance between any two entity representations to determine i
     The \RGCN is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
    % A \RGCN layer takes a set of adjacency matrices as input, and produces a new set of node features.
 %    Each input adjacency matrix describes the adjacency relationships among all nodes in the graph under each different relation.
-    We choose to use \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs.
+    We choose to use the \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs.
 
  Our work improves \RGCNs in two ways. Firstly, we use automatically learned semantic features such as entity names and attributes to
  help the \RGCN better capture the subtle correlations of entities from two different \KGs (Section~\ref{section:rgcn}.i).
-    Secondly, we introduce highway gates to reduce the impact of noise (Section~\ref{section:hgcn}).
+    Secondly, we introduce highway gates to reduce the impact of accumulated noise when processing large graphs (Section~\ref{section:hgcn}).
 
 
  %   Our work improves the featureless approach of \RGCN with pre-defined node feature vectors.
@@ -137,7 +137,7 @@ method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 
 
 	\subsection{Noise Control Through Highway Gates}
-	\label
+	\label{section:hgcn}
 %	While stacking \RGCN layers enhances our model's capability in learning neighborhood information from relational steps, it may as well
 %bring noise from the exponentially increasing number of neighbors.
 One of the challenges for applying \GCNs to a large \KG is that the noise accumulated across network layers can have a seriously negative

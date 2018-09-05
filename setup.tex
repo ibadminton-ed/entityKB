@@ -82,8 +82,9 @@ referred as Wikipedia-Baidu dataset (WBD).
     \cparagraph{Prior methods}
     On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against three methods that have been tuned and tested on the dataset:
     JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}. 	On our WBD dataset, we compare our \HRGCN
-    against two approaches: JE and ITransE~\cite{zhu2017iterative}. We note that MTransE and JAPE cannot be applied to the WBD dataset because they
-    require aligned relation triples (see Table~\ref{seed}), but we extend ITransE to allow it work on heterogeneous
+    against two approaches: JE and ITransE~\cite{zhu2017iterative}. We note that MTransE is tuned for cross-lingual knowledge allignment, while JAPE cannot be applied to the WBD dataset because
+    it
+    requires aligned relation triples (see Table~\ref{seed}). We extend ITransE to allow it work on heterogeneous
     \KGs and refer this extension as ITransE$'$.
 %
 %ITransE requires all relations to be shared between two \KGs, which is a too strong assumption for heterogeneous \KGs. To provide a fair

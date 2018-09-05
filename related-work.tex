@@ -3,32 +3,35 @@
 	\section{Related Work}
     Our work builds upon the following foundations, while qualitatively differing from each.
 
+    	\cparagraph{Entity alignment} Previous approaches of entity alignment typically
+follow a labour-intensive and time-consuming process to tune model features. For example, the work presented in ~\cite{Wang2017} requires
+one to collect network semantic labels like category labels, attribute labels and unstructured text keywords of the entity entries to build
+the alignment model. Embedding-based methods~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative} based on
+TransE~\cite{bordes2013translating} have been proposed to address this feature engineering issue. However, these prior approaches rely on
+seed alignment information which is difficult to obtain and construct. This limits their practicability. Furthermore, they also ignore the
+attribute values which are crucial for entity alignment on heterogeneous \KGs. As a departure from the previous embedding-based approaches,
+our work leverages \RGCNs to better characterize entities by incorporating the neighboring relational structures and considers the specific
+attribute information, leading to significantly better performance when performing entity alignment on heterogeneous \KGs.
 
-	\cparagraph{Graph convolutional networks} Recently, \GCNs~\cite{Duvenaud2015Convolutional,Kearnes2016Molecular}
+	\cparagraph{Graph convolutional networks} In recent years, \GCNs~\cite{Duvenaud2015Convolutional,Kearnes2016Molecular}
     have demonstrated promising results in domains that have previously been dominated by kernel-based methods or graph-based regularization.
     They are shown to be effective in performing NLP tasks like semi-supervised
     node classification~\cite{Kipf2016Semi}, semantic role labeling~\cite{Marcheggiani2017Encoding}, neural machine
-    translation~\cite{Bastings2017Graph}. Our work builds on these past foundations by extending \GCNs to process relational data.
+    translation~\cite{Bastings2017Graph}. Our work extends the capability of \GCNs for processing relational data.
 
 
 	\cparagraph{Relational graph convolutional networks}
-	Since \GCNs generally operate on undirected and unlabeled graphs, \RGCNs~\cite{Schlichtkrull2017Modeling} are proposed  for relational
-(directed and labeled) multi-graphs. It has been successfully exploited in two standard knowledge base completion tasks: link prediction
-and entity classification~\cite{Schlichtkrull2017Modeling}. Our work is the first to apply \RGCNs to entity alignment and the first to
-employ semantic and attribute embeddings as well as highway gates to improve the learning quality of \RGCNs.
-
-
-
+	Recently, \RGCNs~\cite{Schlichtkrull2017Modeling} are proposed  for relational (directed and labeled) multi-graphs. It has been
+successfully exploited in two standard NLP tasks: link prediction and entity classification~\cite{Schlichtkrull2017Modeling}. Our work is
+the first to apply \RGCNs to entity alignment and the first to employ semantic and attribute embeddings as well as highway gates to improve
+the learning quality of \RGCNs.
 
 	
-	\cparagraph{Entity alignment} As an important NLP task, entity alignment is certainly not a new research topic. Previous approaches of
-entity alignment typically follow a labour-intensive and time-consuming process to tune model features. For example, the work presented in
-~\cite{Wang2017} requires one to collect network semantic labels like category labels, attribute labels and unstructured
-text keywords of the entity entries to build the alignment model.
+
 	
-	
-	To address these issues, several embedding-based methods have been proposed and achieve promising results. JE~\cite{hao2016joint} jointly learns the embeddings of different \KGs in a uniform vector space for entity alignment based on aligned entities. MTransE~\cite{chen2016multilingual} also uses structural information of \KGs for cross-lingual KG alignment with known aligned triples. Also for cross-lingual \KG alignment, JAPE~\cite{sun2017cross} proposed a joint attribute-preserving embedding model based on aligned entities, relations and attributes. Moreover, ITransE~\cite{zhu2017iterative} presented iterative entity alignment via joint knowledge embeddings, requiring all relations being shared among KGs.
-	
-	Since utilizing TransE to embed entities, JE, MTransE, JAPE and ITransE might not perform well under several tough situations and these embedding-based approaches all ignored the specific attribute values as mentioned in Section~\ref{section:intro}. In addition, the seed alignments required by MTransE, JAPE and ITransE are difficult to obtain in practice.
-	
-	Instead of utilizing TransE, our approach leverages R-GCNs~\cite{Schlichtkrull2017Modeling} to better characterize entities by incorporating the neighboring relational structure information and considers the specific value information in multiple KGs.
+%	
+%	To address these issues, several embedding-based methods have been proposed and achieve promising results. JE~\cite{hao2016joint} jointly learns the embeddings of different \KGs in a uniform vector space for entity alignment based on aligned entities. MTransE~\cite{chen2016multilingual} also uses structural information of \KGs for cross-lingual KG alignment with known aligned triples. Also for cross-lingual \KG alignment, JAPE~\cite{sun2017cross} proposed a joint attribute-preserving embedding model based on aligned entities, relations and attributes. Moreover, ITransE~\cite{zhu2017iterative} presented iterative entity alignment via joint knowledge embeddings, requiring all relations being shared among KGs.
+%	
+%	Since utilizing TransE to embed entities, JE, MTransE, JAPE and ITransE might not perform well under several tough situations and these embedding-based approaches all ignored the specific attribute values as mentioned in Section~\ref{section:intro}. In addition, the seed alignments required by MTransE, JAPE and ITransE are difficult to obtain in practice.
+%	
+%	Instead of utilizing TransE, our approach leverages R-GCNs~\cite{Schlichtkrull2017Modeling} to better characterize entities by incorporating the neighboring relational structure information and considers the specific value information in multiple KGs.
