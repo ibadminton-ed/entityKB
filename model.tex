@@ -105,7 +105,7 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations (i.e., edges in the \KG or predicates of entities) of graph $G$.
 
  To construct the adjacency matrices, $A$, we follow a number of steps. We first extract $R_0$ original
- relations from \KGs, then we add reverse relations in order to pass information from the opposite direction. To retain the node's
+ relations from the input \KGs, then we add reverse relations in order to pass information from the opposite direction. To retain the node's
  information, we also add a self-referencing loop of a special relation type to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in Figure~\ref{fig:all}, original relations, reverse relations and the self loops all participate in the updating of node features.
 
  \eparagraph{Calculate the embedding matrix}
