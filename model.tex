@@ -4,7 +4,6 @@
   \centering
   \includegraphics[width=0.5\textwidth]{figures/overview.pdf}
   \caption{Overview of our approach}\label{fig:overview}
-  \vspace{-2mm}
 \end{figure}
 
 \subsection{Overview}
@@ -47,9 +46,13 @@ can calculate the distance between any two entity representations to determine i
   %  The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
 %	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 %	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\textwidth]{figures/RGCN.pdf}
+	\caption{overall architecture of our \RGCN-based model}\label{fig:all}
+\end{figure}
 
-
-    Figure~\ref{all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
+    Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
   	The input to our model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
 
@@ -102,8 +105,7 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
 
  To construct the adjacency matrices, $A$, we follow a number of steps. We first extract $R_0$ original
  relations from \KGs, then we add reverse relations in order to pass information from the opposite direction. To retain the node's
- information, we also add a self-referencing loop of a special relation type to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in
- \FIXME{Figure~\ref{all}}, original relations, reverse relations and the self loops all participate in the updating of node features.
+ information, we also add a self-referencing loop of a special relation type to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in Figure~\ref{fig:all}, original relations, reverse relations and the self loops all participate in the updating of node features.
 
  \eparagraph{Calculate the embedding matrix}
  The input for layer $l$ of a \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
