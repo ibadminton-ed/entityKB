@@ -19,7 +19,7 @@
 		\rowcolor{Gray}JAPE (SE) & 29.63 & 64.55 & 26.55 & 60.30 \\
 		JAPE (SE+AE) & 32.39 & \bf 66.68 & 32.97 & \bf 65.91 \\
 		\rowcolor{Gray} \bf \HRGCN (SE) & 33.43& 35.72& 31.22& 34.65 \\
-		\bf \HRGCN (S$\|$A) & 23.8 & 32.4 & 20.4 & 27.5 \\
+		\bf \HRGCN (S$\oplus$A) & 23.8 & 32.4 & 20.4 & 27.5 \\
         \rowcolor{Gray} 	\bf \HRGCN (SE+AE) & \bf 44.82 & 56.68 &\bf 41.08 & 52.95 \\
 		\bottomrule
 	\end{tabular}
@@ -43,15 +43,15 @@
 		\rowcolor{Gray} \RGCN & 37.3 & 51.5 & 34.8 & 51.6 \\
 		\bf \HRGCN (w/o $X$) & 15.0 & 21.7 & 14.5 & 21.5 \\
 		\rowcolor{Gray} \bf \HRGCN (SE+AE) & 58.3 & 67.1 & 57.8{\tiny } & 65.7 \\
-		\bf \HRGCN (S$\|$A) & \bf 65.1 & \bf 71.7 & \bf 62.2 & \bf 71.4\\
+		\bf \HRGCN (S$\oplus$A) & \bf 65.1 & \bf 71.7 & \bf 62.2 & \bf 71.4\\
 		\bottomrule
 	\end{tabular}
 	\caption{Performance on WBD dataset.}
 	\label{f1}
 \end{table}
 \subsection{Overall Performance\label{overall}}
-We evaluate our approach on four variant implementations: (1) a two-layered \HRGCN (S$\|$A) which directly uses concatenated vectors
-introduced in \FIXME{Section~\ref{combine}} as input node features, (2) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
+We evaluate our approach on four variant implementations: (1) a two-layered \HRGCN (S$\oplus$A) ($\oplus$ represents concatenation) which directly uses concatenated vectors
+introduced in Section~\ref{sec:combine} as input node features, (2) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
 attribute embedding, (3) a two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, (4) two-layered
 \HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
 		Representations} as the input.
@@ -63,24 +63,18 @@ cross-lingual data through rough machine translation which is likely to introduc
 two implementations presented at
  ~\cite{sun2017cross} when using structure embedding (SE), and structure and attribute joint embedding (SE+AE).
 For Hits@1, our \HRGCN (SE+AE) outperforms all other approaches by delivering the highest score. This is due to the capability of \HRGCN
-(SE+AE)in preventing noisy nodes from driving the \KG representations. For Hits@10, JAPE (SE+AE) gives the best performance, which
+(SE+AE) in preventing noisy nodes from driving the \KG representations. For Hits@10, JAPE (SE+AE) gives the best performance, which
 translates to a improvement of 10\%$\sim$13\% over \HRGCN (SE+AE). However, our approach has the advantage for not relying on aligned
 relations and attributes and thus has lower overhead.
 
 
 \cparagraph{Results on WBD} Table~\ref{f1} reports the performance of all models on WBD dataset. While the vanilla \GCN performs worse than
 exhibiting alignment models, by adding highway gates to control the noise, \HGCN is able to outperform all existing approaches. By
-incorporating node representation and \RGCN, our \HRGCN (S$\|$A) model delivers the best Hits@k score in both alignment directions,
+incorporating node representation and \RGCN, our \HRGCN (S$\oplus$A) model delivers the best Hits@k score in both alignment directions,
 improving upon the best-existing method -- ITransE$'$ by 45.7\% and 46.2\% for Hits@1 and Hits@10 respectively in the direction of
 Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in entity alignment task over existing approaches.
 
-
-
-
-
-
-
-
+In addition, we find that the performance of \HRGCN (SE+AE) and \HRGCN (S$\oplus$A) is very different on the two datasets. We provide a further discussion on the two strategies for exploiting the semantic and attribute embeddings in Section~\ref{sec:analysis}.
 
 
 \subsection{Analysis\label{sec:analysis}}
@@ -95,8 +89,8 @@ From Table~\ref{f1}, \GCN-based model outperforms JE regarding all the Hits@k an
 
 \cparagraph{\GCN vs. \RGCN} As shown in Table~\ref{f1}, comparing with \GCN, the \RGCN-based model further boosts the performance by 20.2\% and 24.2\% for Hits@1 and Hits@10 in the direction of Baidu$\rightarrow$Wiki. And in the opposite alignment direction, \RGCN also has obvious advantage. This verifies the fact that introducing highly multi-relational information to \GCN framework can achieve significant improvements on KG embedding.
 
-\cparagraph{(SE+AE) vs. (S$\|$A)}
-According to the results listed in Table~\ref{f1}, \HRGCN (S$\|$A) outperforms \HRGCN (SE+AE) for Hits@1 and Hits@10 in both alignment directions. However, \HRGCN (SE+AE) achieve better performance than \HRGCN (S$\|$A) on $DBP15K_{FR-EN}$ dataset. This might be because the data of the two \KGs in $DBP15K_{FR-EN}$ dataset are all from DBpedia, their normalized attribute vectors could be very similar, even exactly match in some dimensions. But the data in WBD dataset was extracted from two heterogeneous KGs, their attribute vectors may be very different. When two attribute vectors with large differences pass through \HRGCNs, it may amplify their difference. On the contrary, two very similar vectors may be more similar after encoded by \HRGCNs.
+\cparagraph{(SE+AE) vs. (S$\oplus$A)}
+According to the results listed in Table~\ref{f1}, \HRGCN (S$\oplus$A) outperforms \HRGCN (SE+AE) for Hits@1 and Hits@10 in both alignment directions. However, \HRGCN (SE+AE) achieve better performance than \HRGCN (S$\oplus$A) on $DBP15K_{FR-EN}$ dataset. This might be because the data of the two \KGs in $DBP15K_{FR-EN}$ dataset are all from DBpedia, their normalized attribute vectors could be very similar, even exactly match in some dimensions. But the data in WBD dataset was extracted from two heterogeneous KGs, their attribute vectors may be very different. When two attribute vectors with large differences pass through \HRGCNs, it may amplify their difference. On the contrary, two very similar vectors may be more similar after encoded by \HRGCNs.
 
 
 \cparagraph{(SE+AE) vs. (SE)}
