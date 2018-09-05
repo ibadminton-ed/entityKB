@@ -1,252 +1,127 @@
-@inproceedings{Suchanek2007YAGO,
-	title={Yago: a core of semantic knowledge},
-	author={Suchanek, Fabian M. and Kasneci, Gjergji and Weikum, Gerhard},
-	booktitle={International Conference on World Wide Web},
-	pages={697-706},
-	year={2007},
-}
+\section{Experimental Setup}
+	Our experiments are designed to investigate (1) if \RGCN-based models can better represent an entity  compared to existing \KG
+embedding-based methods, and (2) whether highway gates can effectively capture discriminative neighboring information by controlling how
+much neighborhood information should be passed to a node in a \RGCN.
 
-@article{Suchanek2008YAGO,
-	title={YAGO: A Large Ontology from Wikipedia and WordNet},
-	author={Suchanek, Fabian M. and Kasneci, Gjergji and Weikum, Gerhard},
-	journal={Web Semantics Science Services \& Agents on the World Wide Web},
-	volume={6},
-	number={3},
-	pages={203-217},
-	year={2008},
-}
+\subsection{Datasets}
+\label{subsection:datasets}
+	We use two real-world datasets: DBP15K from~\cite{sun2017cross} and a Chinese language dataset constructed by ourselves. The latter
+dataset is built using data extracted from Wikipedia and Baidu Baike (the largest Chinese-language web-based encyclopedia), which is
+referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{url redacted for double-blind review}]}.
+	
+	\cparagraph{DBP15K} This is a cross-lingual dataset built upon DBpedia.
+	It has a series of subsets, each of which contains data from two \KGs in different languages and provides 15,000 pre-aligned entity pairs.
+	We use the French-English subset of DBP15K, because it is considered to be the most challenging subset for entity alignment~\cite{sun2017cross}.
+     Table~\ref{dbp} shows the statistics of the selected subset.
+	
+		\begin{table}
+		\centering
+		\scriptsize
+		\begin{tabular}{l|rrrrr}
+			\toprule
+			&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
+			\midrule
+			French & 66,858 & 1,379 & 4,547 & 192,191 & 528,665 \\
+			English & 105,889 & 2,209 & 6,422 & 278,590 & 576,543 \\
+			\bottomrule
+		\end{tabular}
+		\caption{Summary of the $DBP15K_{FR-EN}$ dataset.}
+		\label{dbp}
+	\end{table}
+	
+%    For the Chinese dataset, we extracted data from two web-based encyclopedia sources: Wikipedia and Baidu Baike (which is the largest Chinese-language web-based encyclopedia).
+%    The two sources contain rich information and are widely used to constructed \KGs.
+%	
+%	\cparagraph{Raw Wiki dataset}
+%	We used the Chinese version of the Wikipedia dump\footnote{https://dumps.wikimedia.org/zhwiki} released on June 2, 2015.
+%    From the dump, we extracted over one million entities and three million $\langle$subject, predicate, object$\rangle$ triples from the infobox (i.e., a fixed-format table that summarizes some unifying aspect of a Wikipedia article) to form the Wiki \KG.
+%	
+%	\cparagraph{Raw Baidu dataset} From Baidu Baike, we extracted 11.55 million entities and 39.2 million structured triples from the infobox on each page to construct the Baidu \KG.
+%	The data were collected from Baidu Baike between February 2018 and July 2018.
+	
+	\cparagraph{WBD}
+    From the the Chinese version
+of the Wikipedia dump (released on June 2, 2015), we extracted over 1 million entities and three million $\langle$subject, predicate,
+object$\rangle$ triples. From Baidu Baike (collected between February 2018 and July 2018), we extracted over 11.55 million entities and
+39.2 million structured triples. To construct the evaluation dataset used in our experiments, we manually aligned 16,969 randomly chosen entity pairs from both \KGs as the gold standards. Then for each of the aligned entity pairs, we extracted relation and attribute triples for two entities from two \KGs, respectively. Table~\ref{dataset} gives the statistics of this dataset. \FIXME{Check the texts against the table.}
+	
 
-@article{Lehmann2009DBpedia,
-	title={DBpedia - A crystallization point for the Web of Data},
-	author={Bizer, Christian and Lehmann, Jens and Kobilarov, Georgi and Becker, Christian and Hellmann, Sebastian and Hellmann, Sebastian},
-	journal={Web Semantics Science Services \& Agents on the World Wide Web},
-	volume={7},
-	number={3},
-	pages={154-165},
-	year={2009},
-}
 
-@inproceedings{Auer2007DBpedia,
-	title={DBpedia: A Nucleus for a Web of Open Data.},
-	author={Auer, S and Bizer, Christian and Kobilarov, Georgi and Lehmann, Jens and Cyganiak, Richard and Ives, Zachary},
-	booktitle={The Semantic Web,  International Semantic Web Conference,  Asian Semantic Web Conference, ISWC 2007 + Aswc 2007, Busan, Korea, November},
-	pages={722-735},
-	year={2007},
-}
 
-@inproceedings{Bollacker2007Freebase,
-	title={Freebase: A Shared Database of Structured General Human Knowledge.},
-	author={Bollacker, Kurt and Cook, Robert and Tufts, Patrick},
-	booktitle={AAAI Conference on Artificial Intelligence, July 22-26, 2007, Vancouver, British Columbia, Canada},
-	pages={1962-1963},
-	year={2007},
-}
+%dataset WBD for . Since both of the two KGs mentioned above are constructed from data that we crawled from web encyclopedias, there are no ready-made aligned entity pairs. Therefore, we manually aligned a portion of entities as the seed data.
 
-@inproceedings{hao2016joint,
-	title={A joint embedding method for entity alignment of knowledge bases},
-	author={Hao, Yanchao and Zhang, Yuanzhe and He, Shizhu and Liu, Kang and Zhao, Jun},
-	booktitle={China Conference on Knowledge Graph and Semantic Computing},
-	pages={3--14},
-	year={2016},
-	organization={Springer}
-}
+	\begin{table}
+	\centering
+	\scriptsize
+	\begin{tabular}{l|rrrrr}
+		\toprule
+		&\bf  Entities &\bf  Relations &\bf  Attributes &\bf  Rel. triples &\bf  Attr. triples \\
+		\midrule
+		Wikipedia & 25,139 & 1,301 & 8,332 & 87,775 & 211,949 \\
+		Baidu & 32,101 & 2,262 & 20,263 & 143,228 & 303,116 \\
+		\bottomrule
+	\end{tabular}
+	\caption{Summary of the WBD dataset.}
+	\label{dataset}
+\end{table}
 
-@inproceedings{gokhale2014corleone,
-	title={Corleone: hands-off crowdsourcing for entity matching},
-	author={Gokhale, Chaitanya and Das, Sanjib and Doan, AnHai and Naughton, Jeffrey F and Rampalli, Narasimhan and Shavlik, Jude and Zhu, Xiaojin},
-	booktitle={Proceedings of the 2014 ACM SIGMOD international conference on Management of data},
-	pages={601--612},
-	year={2014},
-	organization={ACM}
-}
 
-@article{scharffe2014ontology,
-	title={Ontology alignment design patterns},
-	author={Scharffe, Fran{\c{c}}ois and Zamazal, Ond{\v{r}}ej and Fensel, Dieter},
-	journal={Knowledge and information systems},
-	volume={40},
-	number={1},
-	pages={1--28},
-	year={2014},
-	publisher={Springer}
-}
+	\subsection{Competitive Approaches}
+    \cparagraph{Baselines}
+	We build two \GCN-based models as our baselines: a \GCN and a Highway \GCN (\HGCN), which respectively replace the \RGCN layers of our \RGCN and \HRGCN with standard \GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs.
+	The two \GCN-based models combine the semantic and attribute embeddings with $\omega=0.95$ in the combined distance.
+	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units.
+	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
+	These hyperparameters were found to give the best overall performance in our experiments. \FIXME{ZW: Check the description of
+    \HGCN.}
 
-@inproceedings{zhu2017iterative,
-	title={Iterative Entity Alignment via Joint Knowledge Embeddings},
-	author={Zhu, Hao and Xie, Ruobing and Liu, Zhiyuan and Sun, Maosong},
-	booktitle={Proceedings of the 26th International Joint Conference on Artificial Intelligence},
-	pages={4258--4264},
-	year={2017},
-	organization={AAAI Press}
-}
 
-@inproceedings{Niu2011Zhishi,
-	title={Zhishi.me: weaving chinese linking open data},
-	author={Niu, Xing and Sun, Xinruo and Wang, Haofen and Rong, Shu and Qi, Guilin and Yu, Yong},
-	booktitle={International Conference on the Semantic Web},
-	pages={205-220},
-	year={2011},
-	abstract={Linking Open Data (LOD) has become one of the most important community efforts to publish high-quality interconnected semantic data. Such data has been widely used in many applications to provide inte},
-}
 
-@article{Wang2017,
-	title={Multi-Source Knowledge Bases Entity Alignment by Leveraging Semantic Tags},
-	author={Wang, Xuepeng and Liu, Kang and He, Shizhu and Liu, Shulin and Zhang, Yuanzhe and Zhao, Jun},
-	journal={Chinese Journal of Computers},
-	volume={40},
-	number={3},
-	pages={701-711},
-	year={2017},
-	keywords={语义标签;多源知识库;实体对齐;异构;实体歧义},
-	abstract={摘　要: 知识库是多种自然语言处理任务的重要数据资源,但单一知识库覆盖度低,不同知识库异构性强,不利于数据的共享和集成.因此,多源知识库融合技术的研究有着十分重要的意义.其中,多源知识库实体对齐是多源知识库融合技术中的重要组成部分.在语义万维网发展的推动下,国外开展了很多相关工作,大多适用于英文知识库,对于中文知识库的研究较少.出于对中文知识库融合的研究目的,该文提出了一种基于网络语义标签的多源知识库实体对齐算法.该算法综合利用属性标签、类别标签和非结构化文本关键词,对齐中文百科实体.经实验测试,该算法能够较好地解决多源知识库实体对齐问题,算法在近95%的准确率下,仍能保持近55%的较好的召回率,应用于实际系统中,满足了实际的多源知识库实体对齐应用需求.},
-}
+    \cparagraph{Prior methods}
+    On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against three state-of-the-art methods that have been tuned and tested on
+    the dataset: JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}.
+	On our WBD dataset, we compare our approach against two approaches: JE and ITransE~\cite{zhu2017iterative}. ITransE requires all relations to be
+shared between two \KGs. This strong assumption, however, cannot be satisfied on heterogeneous \KGs. To provide a fair comparison, we build
+ITransE$'$, a variant of ITransE which does not require the \KGs to have the same relations. 	
 
-@inproceedings{sun2017cross,
-	title={Cross-lingual Entity Alignment via Joint Attribute-Preserving Embedding},
-	author={Sun, Zequn and Hu, Wei and Li, Chengkai},
-	booktitle={International Semantic Web Conference},
-	pages={628--644},
-	year={2017},
-	organization={Springer}
-}
 
-@article{chen2016multilingual,
-	title={Multilingual knowledge graph embeddings for cross-lingual knowledge alignment},
-	author={Chen, Muhao and Tian, Yingtao and Yang, Mohan and Zaniolo, Carlo},
-	journal={arXiv preprint arXiv:1611.03954},
-	year={2016}
-}
+	
+	\cparagraph{Variants of our model} We evaluate our approach on five variant implementations: two-layered \HRGCN (S$\|$A) which directly uses concatenated vectors introduced in Section~\ref{combine} as input node features, two-layered \HRGCN (SE+AE) which combines semantic embedding and attribute embedding, two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, two-layered \HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
+		Representations} as the input, and two-layered no-highway \RGCN (SE+AE). For all variants of our model, we use \RGCN with 16 hidden units for each layer and $B = 80$
+	for basis function decomposition. We set $\omega=0.95$ in the combined distance for semantic and attribute embeddings, and apply L2
+	regularization with $\lambda=5e-4$ to avoid overfitting.
+	
+	%Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition.
+%	The hyper-parameter $\omega$ in the combined distance is set to 0.9.
+    %ZW: I don't know why you use different hidden units for different datasets. But this doesn't look good, so I comment it out.
 
-@inproceedings{bordes2013translating,
-	title={Translating embeddings for modeling multi-relational data},
-	author={Bordes, Antoine and Usunier, Nicolas and Garcia-Duran, Alberto and Weston, Jason and Yakhnenko, Oksana},
-	booktitle={Advances in neural information processing systems},
-	pages={2787--2795},
-	year={2013}
-}
+	
+	
 
-@article{Kipf2016Semi,
-	title={Semi-Supervised Classification with Graph Convolutional Networks},
-	author={Kipf, Thomas N and Welling, Max},
-	year={2016},
-	keywords={Computer Science - Learning;Statistics - Machine Learning},
-	abstract={Abstract:  We present a scalable approach for semi-supervised learning on graph-structured data that is based on an efficient variant of convolutional neural networks which operate directly on graphs. We motivate the choice of our convolutional architecture via a localized first-order approximation of spectral graph convolutions. Our model scales linearly in the number of graph edges and learns hidden layer representations that encode both local graph structure and features of nodes. In a number of experiments on citation networks and on a knowledge graph dataset we demonstrate that our approach outperforms related methods by a significant margin.},
-}
 
-@article{Veli2017Graph,
-	title={Graph Attention Networks},
-	author={Veličković, Petar and Cucurull, Guillem and Casanova, Arantxa and Romero, Adriana and Liò, Pietro and Bengio, Yoshua},
-	year={2017},
-	abstract={Abstract:  We present graph attention networks (GATs), novel neural network architectures that operate on graph-structured data, leveraging masked self-attentional layers to address the shortcomings of prior methods based on graph convolutions or their approximations. By stacking layers in which nodes are able to attend over their neighborhoods' features, we enable (implicitly) specifying different weights to different nodes in a neighborhood, without requiring any kind of costly matrix operation (such as inversion) or depending on knowing the graph structure upfront. In this way, we address several key challenges of spectral-based graph neural networks simultaneously, and make our model readily applicable to inductive as well as transductive problems. Our GAT models have achieved or matched state-of-the-art results across four established transductive and inductive graph benchmarks: the Cora, Citeseer and Pubmed citation network datasets, as well as a protein-protein interaction dataset (wherein test graphs remain unseen during training).},
-}
 
-@article{lin2015modeling,
-	title={Modeling relation paths for representation learning of knowledge bases},
-	author={Lin, Yankai and Liu, Zhiyuan and Luan, Huanbo and Sun, Maosong and Rao, Siwei and Liu, Song},
-	journal={arXiv preprint arXiv:1506.00379},
-	year={2015}
-}
+	\subsection{Evaluation Methodology}
+    	For the $DBP15K_{FR-EN}$ dataset, we use the same split of gold standards as JAPE~\cite{sun2017cross}: 30\% for training and 70\% for
+    testing.
+	For semantic embedding, we first directly utilize Google Translate to translate French entities and relations into English.
+	Then, we use pre-trained English word vectors \emph{glove.840B.300d}~\footnote{http://nlp.stanford.edu/projects/glove/} to construct the input node feature vectors.
+	For attribute embedding, we select 180 high-frequency attributes from each \KG and generate 180-dimensional attribute vectors.	
 
-@inproceedings{lin2015learning,
-	title={Learning entity and relation embeddings for knowledge graph completion.},
-	author={Lin, Yankai and Liu, Zhiyuan and Sun, Maosong and Liu, Yang and Zhu, Xuan},
-	booktitle={AAAI},
-	volume={15},
-	pages={2181--2187},
-	year={2015}
-}
 
-@inproceedings{wang2014knowledge,
-	title={Knowledge Graph Embedding by Translating on Hyperplanes.},
-	author={Wang, Zhen and Zhang, Jianwen and Feng, Jianlin and Chen, Zheng},
-	booktitle={AAAI},
-	volume={14},
-	pages={1112--1119},
-	year={2014}
-}
+	For the WBD dataset, we break the gold standards for two parts with equal-size, and use one for training and the other for testing.
+	To capture the semantics of entity names for the node representation (see Section~\ref{subsection:Node
+		Representations}), we apply a word2vec~\cite{Mikolov2013Efficient} model to generate 100-dimensional Chinese word embeddings from training the sentences in Baidu dataset.
+	By counting the frequency of attributes, we select 63 high-frequency attributes from each \KG to construct 63-dimensional attribute vectors.
+    %We use a window size of 5 and a threshold of 20 for downsampling the frequent words
+    %for a word2vec model.
 
-@inproceedings{ji2015knowledge,
-	title={Knowledge graph embedding via dynamic mapping matrix},
-	author={Ji, Guoliang and He, Shizhu and Xu, Liheng and Liu, Kang and Zhao, Jun},
-	booktitle={Proceedings of the 53rd Annual Meeting of the Association for Computational Linguistics and the 7th International Joint Conference on Natural Language Processing (Volume 1: Long Papers)},
-	volume={1},
-	pages={687--696},
-	year={2015}
-}
 
-@article{Kingma2014Adam,
-	title={Adam: A Method for Stochastic Optimization},
-	author={Kingma, Diederik and Ba, Jimmy},
-	journal={Computer Science},
-	year={2014},
-	keywords={Computer Science - Learning},
-	abstract={Abstract:  We introduce Adam, an algorithm for first-order gradient-based optimization of stochastic objective functions, based on adaptive estimates of lower-order moments. The method is straightforward to implement, is computationally efficient, has little memory requirements, is invariant to diagonal rescaling of the gradients, and is well suited for problems that are large in terms of data and/or parameters. The method is also appropriate for non-stationary objectives and problems with very noisy and/or sparse gradients. The hyper-parameters have intuitive interpretations and typically require little tuning. Some connections to related algorithms, on which Adam was inspired, are discussed. We also analyze the theoretical convergence properties of the algorithm and provide a regret bound on the convergence rate that is comparable to the best known results under the online convex optimization framework. Empirical results demonstrate that Adam works well in practice and compares favorably to other stochastic optimization methods. Finally, we discuss AdaMax, a variant of Adam based on the infinity norm.},
-}
+ 	All the neural networks are trained using the Adam optimizer~\cite{Kingma2014Adam} for a maximum of 200 epochs with a
+ learning rate of 0.01.  Moreover, all models are initialized using Glorot initialization~\cite{Glorot2010Understanding}.
 
-@article{Glorot2010Understanding,
-	title={Understanding the difficulty of training deep feedforward neural networks},
-	author={Glorot, Xavier and Bengio, Yoshua},
-	journal={Journal of Machine Learning Research},
-	volume={9},
-	pages={249-256},
-	year={2010},
-	abstract={Whereas before 2006 it appears that deep multi-layer neural networks were not successfully trained, since then several algorithms have been shown to successfully train them, with experimental results showing the superiority of deeper vs less deep architectures. All these experimental results were obtained with new initialization or training mechanisms. Our objective here is to understand better why standard gradient descent from random initialization is doing so poorly with deep neural networks, to better understand these recent relative successes and help design better algorithms in the future. We first observe the influence of the non-linear activations functions. We find that the logistic sigmoid activation is unsuited for deep networks with random initialization because of its mean value, which can drive especially the top hidden layer into saturation. Surprisingly, we find that saturated units can move out of saturation by themselves, albeit slowly, and explaining the plateaus sometimes seen when training neural networks. We find that a new non-linearity that saturates less can often be beneficial. Finally, we study how activations and gradients vary across layers and during training, with the idea that training may be more difficult when the singular values of the Jacobian associated with each layer are far from 1. Based on these considerations, we propose a new initialization scheme that brings substantially faster convergence.},
-}
-
-@article{Schlichtkrull2017Modeling,
-	title={Modeling Relational Data with Graph Convolutional Networks},
-	author={Schlichtkrull, Michael and Kipf, Thomas N and Bloem, Peter and Berg, Rianne Van Den and Titov, Ivan and Welling, Max},
-	year={2017},
-}
-
-@inproceedings{Duvenaud2015Convolutional,
-	title={Convolutional networks on graphs for learning molecular fingerprints},
-	author={Duvenaud, David and Maclaurin, Dougal and Aguilera-Iparraguirre, Jorge and Hirzel, Timothy and Adams, Ryan P.},
-	booktitle={International Conference on Neural Information Processing Systems},
-	pages={2224-2232},
-	year={2015},
-}
-
-@article{Kearnes2016Molecular,
-	title={Molecular graph convolutions: moving beyond fingerprints},
-	author={Kearnes, Steven and Mccloskey, Kevin and Berndl, Marc and Pande, Vijay and Riley, Patrick},
-	journal={Journal of Computer-Aided Molecular Design},
-	volume={30},
-	number={8},
-	pages={1-14},
-	year={2016},
-}
-
-@article{Marcheggiani2017Encoding,
-	title={Encoding Sentences with Graph Convolutional Networks for Semantic Role Labeling},
-	author={Marcheggiani, Diego and Titov, Ivan},
-	pages={1506-1515},
-	year={2017},
-}
-
-@article{Bastings2017Graph,
-	title={Graph Convolutional Encoders for Syntax-aware Neural Machine Translation},
-	author={Bastings, Joost and Titov, Ivan and Aziz, Wilker and Marcheggiani, Diego and Sima'An, Khalil},
-	pages={1957-1967},
-	year={2017},
-}
-
-@article{Srivastava2015Highway,
-	title={Highway Networks},
-	author={Srivastava, Rupesh Kumar and Greff, Klaus and Schmidhuber, Jürgen},
-	journal={Computer Science},
-	year={2015},
-}
-
-@article{Rahimi2018Semi,
-	title={Semi-supervised User Geolocation via Graph Convolutional Networks},
-	author={Rahimi, Afshin and Cohn, Trevor and Baldwin, Timothy},
-	year={2018},
-}
-
-@article{Mikolov2013Efficient,
-	title={Efficient Estimation of Word Representations in Vector Space},
-	author={Mikolov, Tomas and Chen, Kai and Corrado, Greg and Dean, Jeffrey},
-	journal={Computer Science},
-	year={2013},
-}
+	
+ 	We use Hits@k, a widely used metric for entity
+ alignment evaluation~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. A Hits@k score (higher is better) is computed by
+ measuring the proportion of correctly aligned entities ranked in the top k. In this work, we set k to 1 and 10 to report the Hits@1 and Hits@10 scores. 
+	
+	
