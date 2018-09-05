@@ -2,9 +2,9 @@
 	\label{section:app}
 \begin{figure}
   \centering
-  % Requires \usepackage{graphicx}
-  \includegraphics[width=0.5\textwidth]{figures/overview.pdf}\\
+  \includegraphics[width=0.5\textwidth]{figures/overview.pdf}
   \caption{Overview of our approach}\label{fig:overview}
+  \vspace{-2mm}
 \end{figure}
 
 \subsection{Overview}
@@ -84,7 +84,7 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
     %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
 
 	
-	\eparagraph{Encoding attribute}
+	\eparagraph{Encoding attributes}
     In addition to entity names, we also consider entity attributes for node representations.
 	Our current implementation distinguishes four types of attributes, i.e., \emph{Integer}, \emph{Double}, \emph{Date} and \emph{String}
     (as default), but the proposed method can be extended to other data types too.
@@ -98,7 +98,7 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
  \subsubsection{ii. Neighboring node relation}
  Like standard \RGCNs, we capture the relation of graph neighboring nodes using an adjacency matrix.
  In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
- \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations (e.g., edges or predicates) of graph $G$.
+ \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations (i.e., edges in the \KG or predicates of entities) of graph $G$.
 
  To construct the adjacency matrices, $A$, we follow a number of steps. We first extract $R_0$ original
  relations from \KGs, then we add reverse relations in order to pass information from the opposite direction. To retain the node's
@@ -113,12 +113,13 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
 % , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)}),
-	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$, according to the normalized adjacency
+	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$.
+    $N_i^r$ is computed based on the normalized adjacency
 matrix $\hat A_r$ -- an approximate of spectral convolutions on the adjacency matrix $A_r$~\cite{Kipf2016Semi}:
 	\begin{equation}
 	\hat A_r=\hat D_r^{- \frac{1}{2}}(A_r+I)\hat D_r^{- \frac{1}{2}},
 	\end{equation}
-	where $(\hat D_r)_{jj}=\sum_k(A_r+I)_{jk}$.
+	where $(\hat D_r)_{jj}=\sum_k(A_r+I)_{jk}$, and $I$ is an identity matrix.
 
 	
 	\eparagraph{Calculate the weight matrix} For each relation $r$, we construct a weight matrix, $W_r^{(l)} \in \mathbb{R}^{d^{(l+1)}
@@ -136,13 +137,13 @@ method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 
 
 	\subsection{Noise Control Through Highway Gates}
-	\label{section:hgcn}
+	\label
 %	While stacking \RGCN layers enhances our model's capability in learning neighborhood information from relational steps, it may as well
 %bring noise from the exponentially increasing number of neighbors.
-One of the challenges for applying \RGCNs to a large \KG is that the noise accumulated across the network layers can significantly affect
-the learning quality. To tackle this challenge, we employ layer-wise gates similar to highway networks~\cite{Srivastava2015Highway} to
-process the output of the \RGCN. This results in a novel highway \RGCN for entity alignment, for which we refer as \HRGCN thereafter. The
-output of a \HRGCN layer is computed as:
+One of the challenges for applying \GCNs to a large \KG is that the noise accumulated across network layers can have a seriously negative
+impact on the learning quality. To tackle this challenge, we employ layer-wise gates similar to highway
+networks~\cite{Srivastava2015Highway} to process the output of the \RGCN. This results in a novel highway \RGCN for entity alignment, for
+which we refer as \HRGCN thereafter. With highway gates, the output of a \HRGCN layer is computed as:
 %
 %
 % To ensure effective spread of informative and discriminative neighborhood information, we add layer-wise gates
@@ -155,37 +156,41 @@ output of a \HRGCN layer is computed as:
 	&x^{(l+1)}=x^{(l+1)} \cdot T(x^{(l)})+x^{(l)} \cdot (1-T(x^{(l)})),
 	\end{split}
 	\end{equation}
-	where $\sigma$ indicates the sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l+1)}
-\times d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of transform gate $T(x^{(l)})$.
+	where $\sigma$ is a sigmoid activation function, $\cdot$ is element-wise multiplication, $W_T^{(l)} \in \mathbb{R}^{d^{(l+1)} \times
+d^{(l)}}$ and $b_T^{(l)} \in \mathbb{R}^{d^{(l)} \times 1}$ are the weight matrix and bias vector of highway gate $T(x^{(l)})$,
+respectively.
 
 
 \subsection{Exploiting Entity Semantics and Attributes\label{sec:combine}}
-    Recall that the node feature vector can be initialized from either the semantics of entity names  or entity attributes (Section~\ref{subsection:Node
+    Recall that the node feature vector can be constructed from either entity name semantics or entity attributes (Section~\ref{subsection:Node
     Representations}). There are multiple ways to exploit the semantic and attribute embeddings. One is to simply concatenate a pre-trained word vector
     and an attribute vector as an input node feature vector. Another is to apply two stacked \HRGCNs to respectively perform a
     semantic or an attribute embedding.  We provide a further discussion on these strategies in \FIXME{Section~\ref{}}.
 
-    For stacked \HRGCNs, we define a combined distance to integrate semantic embedding and attribute embedding:
+    For stacked \HRGCNs, we define a new feature vector, $D$, to combine the semantic and attribute embeddings produced by each \HRGCN:
 	\begin{equation}
 		D(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
 
-	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic embedding and attribute embedding, respectively.
+	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic and attribute embeddings, respectively.
 	
 	\subsection{Entity Alignment Prediction\label{prediction}}
-   We use the network's output, $\bar{X}$, as the graph representation for the two \KGs within graph
-    $G$. Here, $\bar{X}$ is an embedding matrix of $N$ vectors, $\bar{x}_1,\bar{x}_2,...,\bar{x}_N$, where each vector, $\bar{x}$, corresponds to one
+   In our work, entity alignment is based on the network output's (i.e., the graph representation), $\bar{X}$ -- an embedding matrix of $N$ vectors, $\bar{x}_1,\bar{x}_2,...,\bar{x}_N$, where
+   each vector, $\bar{x}$, corresponds to one
     of the $N$ entity nodes within graph $G$. 	
 
 
-With the graph representation in place, entity alignment is as simple as measuring the similarity between two entity nodes in the
-representation space. Specifically, the similarity, $d(e_1,e_2)$, between two entity nodes, $e_1$ from \texttt{KG1} and $e_2$ from
-\texttt{KG2} is calculated as:
+\cparagraph{Alignment} With the graph representation in place, entity alignment is as simple as measuring the similarity between two entity
+nodes in the representation space. Specifically, the similarity, $d(e_1,e_2)$, between two entity nodes, $e_1$ from \texttt{KG1} and $e_2$
+from \texttt{KG2} is calculated as:
 	\begin{equation}
 	\label{d}
 	d(e_1,e_2)=||\bar{x}_{e_1}-\bar{x}_{e_2}||_{L_1}.
 	\end{equation}
-	Since we expect the distance for latent aligned entities to be smaller than the non-equivalent counterparts and hope the distance between positive and negative aligned entity pairs can be separated by a large margin, we utilize a margin-based score function as the training objective, defined as:
+
+	\cparagraph{Training objective} Since we expect the distance for latent aligned entities to be smaller than the non-equivalent counterparts and hope the distance
+between positive and negative aligned entity pairs can be separated by a large margin, we utilize a margin-based score function as the
+training objective, defined as:
 	\begin{equation}
 	L=\sum\limits_{(p,q)\in \mathbb{L}}\sum\limits_{(p',q')\in \mathbb{L'}}\mathrm{max}\{0,d(p,q)-d(p',q')+\gamma\},
 	\end{equation}

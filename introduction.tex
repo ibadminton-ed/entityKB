@@ -29,7 +29,7 @@ alignment data, such as pre-aligned KG predicates/relations or triples. Since th
 be very different, it is often difficult and expensive to collect such high-quality alignment data. In addition, as shown by the last
 column in the Table~\ref{seed}, most of these models, except JAPE~\cite{sun2017cross}, ignore specific attribute values in the \KGs because
 of their complexity and heterogeneity. And actually, JAPE only considers the types of those values for simplicity, and the specific
-attribute values, such as \textit{1.86m} as someone's height, are ignored. However, values are actually very significant parts of \KGs, especially for low-quality \KGs which may contain large-scale values. The approaches that do not consider values will lose this part of information when aligning \KGs. We argue that those attribute value information are crucial for entity alignment and should be taken into account. 
+attribute values, such as \textit{1.86m} as someone's height, are ignored. However, values are actually very significant parts of \KGs, especially for low-quality \KGs which may contain large-scale values. The approaches that do not consider values will lose this part of information when aligning \KGs. We argue that those attribute value information are crucial for entity alignment and should be taken into account.
 
 \begin{table}
 	\centering
@@ -52,7 +52,7 @@ attribute values, such as \textit{1.86m} as someone's height, are ignored. Howev
 	\begin{figure}
 		\centering
 			\includegraphics[width=1\linewidth]{figures/graph1.pdf}
-			\caption{The neighborhoods of three entities extracted from Wiki and Baidu \KGs. The red circles indicate the aligned center entities. The blue circles represent the similar neighbors. The green rectangles indicate the same attribute values.}
+			\caption{This example shows that the \emph{Xinjiang} entity from two heterogeneous \KGs (1 and 3) can be aligned using an entity (\emph{Urumqi}) and an attribute (1,660,000$km^2$), but existing methods all fail to align this entity.}
 			\label{Xinjiang}
 	\end{figure}
 	%The relational graph convolutional networks (R-GCNs), an extension of graph convolutional networks (GCNs) that operate on local graph neighborhoodsa recent class of multilayer neural networks operating on graphs, can better describe graph networks and facilitate the integration of semantic information into node features, which also makes it convenient to add value information. In addition, we believe that a favorable attention mechanism can further improve the ability to embed the nodes and can accurately extract structural information even in the absence of much information. By further introducing the attention mechanism, the graph attention networks(GATs) have been proposed. GAT computes the hidden representations of each node in the graph, by attending over its neighbors according to different weights, following a self-attention strategy.
