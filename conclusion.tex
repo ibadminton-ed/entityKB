@@ -1,8 +1,9 @@
 
 	
-	\section{Conclusions}
-	In this paper, we propose a novel neural framework for entity alignment over heterogeneous KGs, which leverages relational graph convolutional networks to better characterize entities when the available clues for alignment are sparse by considering the neighboring relational structures as well as attribute value information.
-	We further utilize highway network gates to enable our model to control the amount of useful neighborhood information expansion. Experiments shows that our solutions can provide more accurate and discriminative entity representation in various situations for high-quality entity alignment. 
-	
-	In the future, we will take KG relations or predicates into consideration to explore richer
-	semantics for both entity alignment and predicate alignment simultaneously.
+                       \section{Conclusions} This paper has presented a novel neural framework for entity alignment over heterogeneous
+                       knowledge graphs. At the heart of our approach is a relational graph convolutional network that can leverage the
+                       semantic and attribute embeddings of the input knowledge graphs. To control the inevitable noise when performing
+                       learning on a large graph, we employ highway gates to control the amount of neighborhood information passing through
+                       neural network layers. We evaluate our approach by applying it to two real-world datasets. Experimental results show
+                       that our approach significantly outperforms the prior state-of-the arts by generating higher quality entity
+                       alignment and providing more accurate and discriminative entity representation.
