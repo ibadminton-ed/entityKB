@@ -2,13 +2,20 @@
 	\label{section:app}
 
 \subsection{Overview}
-Figure~\ref{fig:overview} gives a high-level overview of our approach. To align entities from two \KGs, we first manually label some entity
-pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and randomly sampled unaligned
-entity pairs. Next, we extract graph information from the \KGs, which is used to capture the semantics and attributes of entities as well
-as the relation of neighboring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the
-graph information (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is
-optimized in a way that two aligned entities in the training data are similar to each other in the feature space. With this entity
-representation in place, we can calculate the distance between any two entity representations to determine if the entities should be
+Figure~\ref{fig:overview} gives an overview of our approach. To align entities from two \KGs, 
+%we first manually label some entity
+%pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and randomly sampled unaligned entity pairs. 
+%Next, 
+we first extract the entities' graph information (including semantic, attribute and neighboring information) from the \KGs, 
+%which is used to capture the semantics and attributes of entities as well
+%as the relation of neighboring nodes (Section~\ref{section:rgcn}). 
+and fed them to an \HRGCN model to obtain their vector representations. 
+%Then, we learn a neural network (Section~\ref{sec:model}) to take in the
+%graph information (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is
+%optimized in a way that two aligned entities in the training data are similar to each other in the feature space. 
+With these entity
+representations in place, we can calculate the distance between %any two entity representations to 
+them and determine if they should be
 aligned (Section~\ref{prediction}).
 
 \begin{figure}[t!]
@@ -19,7 +26,7 @@ aligned (Section~\ref{prediction}).
 
 
 	
-    \subsection{Knowledge Graph Representation Model\label{sec:model}}
+    \subsection{Relational Graph Convolutional Networks\label{sec:model}}
     Our model for generating \KG representations  is based on the \RGCN~\cite{Schlichtkrull2017Modeling}, which is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph
 neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
    % A \RGCN layer takes a set of adjacency matrices as input, and produces a new set of node features.
@@ -27,7 +34,7 @@ neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relat
     We choose to use the \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs.
 
  Our work improves \RGCNs in two ways. Firstly, we use automatically learned semantic features such as entity names and attributes to
- help the \RGCN better capture the subtle correlations of entities from two different \KGs (Section~\ref{section:rgcn}.i).
+ help \RGCN better capture the subtle correlations of entities from different \KGs (Section~\ref{section:rgcn}.i).
     Secondly, we introduce highway gates to reduce the impact of accumulated noise when processing large graphs (Section~\ref{section:hgcn}).
 
 
@@ -39,7 +46,7 @@ neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relat
 	
 
 \cparagraph{Notations} Without loss of generality, we introduce our model using two \KGs: $G_1 = (E_1,V_1,R_1,A_1,T_1)$ and $G_2 =
-(E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples respectively. 	
+(E_2,V_2,R_2,A_2,T_2)$ for entity alignment, where $E,V,R,A,T$ represent entities, values, relations, attributes and triples, respectively. 	
 We put $G_1$ and $G_2$ together in one large graph $G$. We utilize pre-aligned entity pairs to train our model and then discover latent
 aligned entities.
 
@@ -52,20 +59,20 @@ aligned entities.
 \cparagraph{Model architecture} Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
 	The input to our model consists of two parts (Section~\ref{section:rgcn}): (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
-    The output of a \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the processed result is passed as part of
+    The output of an \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the processed result is passed as part of
     the next layer's input. Entity alignment is achieved by calculating the distance, $d(e_1, e_2)$, of two entity nodes, $e1$ and $e2$, using the
    network output (Section~\ref{prediction}).
 
 
 
 	
-	\subsection{Modeling Knowledge Graph Information}
+	\subsection{Our Model}
 	\label{section:rgcn}	
   %  The input to our RGCN model are two parts. The first part is the node feature matrix $X^{(0)} \in \mathbb{R}^{N \times d^{(0)}}$ of $G$, where $N$ is the number of nodes and $d^{(0)}$ is the dimension of the input representations. We utilize predefined node features described in Section~\ref{subsection:Node Representations} to construct $X$ instead of using a featureless approach in \RGCNs~\cite{Schlichtkrull2017Modeling}.
 %	The second part is the list of adjacency matrices $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N \times N} \}$, which describes the adjacency relationships among $N$ nodes under $R$ different relations. We extract $R_0$ original relations from knowledge graphs, then we add reverse relations in order to pass information from the opposite direction; and add the self loop to retain information of the node itself. These together compose $R=2R_0+1$ relations.
 %	In each layer $l$, the input is $X^{(l)} = \{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N} |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. The forward propagation is formulated as:
 
-We use two sets of information to represent nodes and relations of neighboring nodes of a \KG, described as follow.
+In our model, we use two sets of information to characterize nodes and relations of neighboring nodes of a \KG, described as follow.
 
 
 
@@ -87,7 +94,7 @@ We use two sets of information to represent nodes and relations of neighboring n
 	
 	\eparagraph{Encoding semantics}
 	\label{wordvector}
-	Intuitively, if two entities can be linked together, their names in different \KGs should have similar semantics (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
+	Intuitively, if two entities can be linked together, their names in different \KGs should be similar somehow (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
     Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic
     information of entity names.
     %This is achieved by applying a word2vec model to generate word embeddings from training entity names.
@@ -101,7 +108,7 @@ We use two sets of information to represent nodes and relations of neighboring n
 	%In this paper, we only consider the first three types, i.e., Integer, Double and Date.
 %	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 %	
-	For each entity in a \KG, we construct a attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG.
+	For each entity in a \KG, we construct an attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG.
     We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized
     vector for each entity.
 
@@ -115,7 +122,7 @@ We use two sets of information to represent nodes and relations of neighboring n
  information, we also add a self-referencing loop of a special relation type to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in Figure~\ref{fig:all}, original relations, reverse relations and the self loops all participate in the updating of node features.
 
  \eparagraph{Calculate the embedding matrix}
- The input for layer $l$ of a \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ The input for layer $l$ of an \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
  |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each node feature vector, $x_i$, is updated using forward propagation as:
 
  %, and we stack the output vector for each node, $x_i^{(l+1)}$
@@ -152,7 +159,7 @@ method~\cite{Schlichtkrull2017Modeling} to regularize the weights:
 One of the challenges for applying \GCNs to a large \KG is that the noise accumulated across network layers can have a seriously negative
 impact on the learning quality. To tackle this challenge, we employ layer-wise gates similar to highway
 networks~\cite{Srivastava2015Highway} to process the output of the \RGCN. This results in a novel highway \RGCN for entity alignment, for
-which we refer as \HRGCN thereafter. With highway gates, the output of a \HRGCN layer is computed as:
+which we refer as \HRGCN thereafter. With highway gates, the output of an \HRGCN layer is computed as:
 %
 %
 % To ensure effective spread of informative and discriminative neighborhood information, we add layer-wise gates
@@ -180,7 +187,6 @@ respectively.
 	\begin{equation}
 		d(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
-
 	where $m$ is the dimension of the new node features produced by \HRGCNs, $\omega$ is a hyper-parameter, and $d_s$ and $d_a$ are the distance computed by Eq.~\ref{d} according to semantic and attribute embeddings, respectively.
 	
 	\subsection{Entity Alignment Prediction and Training\label{prediction}}
@@ -198,7 +204,7 @@ from \texttt{KG2} is calculated as:
 	\end{equation}
 
 	\cparagraph{Training objective} Since we expect the distance for latent aligned entities to be smaller than the non-equivalent counterparts and hope the distance
-between positive and negative aligned entity pairs can be separated by a large margin, we utilize a margin-based score function as the
+between positive and negative aligned entity pairs can be separated by a large margin, we utilize a margin-based scoring function as the
 training objective, defined as:
 	\begin{equation}
 	L=\sum\limits_{(p,q)\in \mathbb{L}}\sum\limits_{(p',q')\in \mathbb{L'}}\mathrm{max}\{0,d(p,q)-d(p',q')+\gamma\},
@@ -207,7 +213,7 @@ training objective, defined as:
 	\begin{equation}
 	\mathbb{L'}=\{(p',q)|p'\in E_1\}\cup\{(p,q')|q'\in E_2\}, (p,q)\in \mathbb{L'}.
 	\end{equation}
-	This indicates one of two entities in an aligned entity pair is randomly replaced by others.
+	where we randomly replace one of the two entities in an aligned entity pair with others as negative instances.
 	
 	%In our experiments, for a entity $e_1$ in $G_1$, we compute the distances between $e_1$ and all the entities in $G_2$. The alignment process can also be reversed, i.e., from $G_2$ to $G_1$. In Section~\ref{sec:results}, we report the results of both directions of entity alignment.
 
