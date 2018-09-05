@@ -41,12 +41,9 @@ referred as Wikipedia-Baidu dataset (WBD)\footnote{Dataset available at: [\emph{
 	
 	\cparagraph{WBD}
     From the the Chinese version
-of the Wikipedia dump (released on June 2, 2015), we extracted over 1  million entities and three million $\langle$subject, predicate,
+of the Wikipedia dump (released on June 2, 2015), we extracted over 1 million entities and three million $\langle$subject, predicate,
 object$\rangle$ triples. From Baidu Baike (collected between February 2018 and July 2018), we extracted over 11.55 million entities and
-39.2 million structured triples.
-    We then manually aligned 16,969 randomly chosen entity pairs from both \KGs as the gold standards.
-	%To construct the dataset, we first randomly  selected an aligned entity pair and then extracted relation and attribute triples for selected entities.
-	Table~\ref{dataset} gives the statistics of this dataset. \FIXME{Check the texts against the table.}
+39.2 million structured triples. To construct the evaluation dataset used in our experiments, we manually aligned 16,969 randomly chosen entity pairs from both \KGs as the gold standards. Then for each of the aligned entity pairs, we extracted relation and attribute triples for two entities from two \KGs, respectively. Table~\ref{dataset} gives the statistics of this dataset. \FIXME{Check the texts against the table.}
 	
 
 
@@ -71,7 +68,7 @@ object$\rangle$ triples. From Baidu Baike (collected between February 2018 and J
 
 	\subsection{Competitive Approaches}
     \cparagraph{Baselines}
-	We build two \GCN-based models as our baselines: a \GCN and a \HGCN, which respectively replace the \RGCN layers of our \RGCN and \HRGCN with standard \GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs.
+	We build two \GCN-based models as our baselines: a \GCN and a Highway \GCN (\HGCN), which respectively replace the \RGCN layers of our \RGCN and \HRGCN with standard \GCN layers~\cite{Kipf2016Semi} to embed the structure information of two \KGs.
 	The two \GCN-based models combine the semantic and attribute embeddings with $\omega=0.95$ in the combined distance.
 	In our experiments, we stack two \GCN layers, where each \GCN contains 64 hidden units.
 	To avoid over-fitting, we apply L2 regularization with $\lambda=0.00001$ and utilize dropout with $\mathrm{dropout rate}=0.1$.
@@ -89,13 +86,12 @@ ITransE$'$, a variant of ITransE which does not require the \KGs to have the sam
 
 
 	
-	\cparagraph{Variants of our model} We evaluate our approach on three variant implementaions: two-layered Highway \RGCN (\HRGCN),
-two-layered no-highway \RGCN and \HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
-Representations} as the input to the \HRGCN. For all variants of our model, we use \RGCN with 16 hidden units for each layer and $B = 80$
-for basis function decomposition. We set $\omega=0.95$ in the combined distance for semantic and attribute embeddings, and apply L2
-regularization with $\lambda=5e-4$ to avoid overfitting.
-
- %  Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition.
+	\cparagraph{Variants of our model} We evaluate our approach on five variant implementations: two-layered \HRGCN (S$\|$A) which directly uses concatenated vectors introduced in Section~\ref{combine} as input node features, two-layered \HRGCN (SE+AE) which combines semantic embedding and attribute embedding, two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, two-layered \HRGCN (w/o X) which does not use the predefined feature vectors mentioned in Section~\ref{subsection:Node
+		Representations} as the input, and two-layered no-highway \RGCN (SE+AE). For all variants of our model, we use \RGCN with 16 hidden units for each layer and $B = 80$
+	for basis function decomposition. We set $\omega=0.95$ in the combined distance for semantic and attribute embeddings, and apply L2
+	regularization with $\lambda=5e-4$ to avoid overfitting.
+	
+	%Different from WBD dataset, we use RGCN with 32 hidden units for each layer and $B = 100$ for basis function decomposition.
 %	The hyper-parameter $\omega$ in the combined distance is set to 0.9.
     %ZW: I don't know why you use different hidden units for different datasets. But this doesn't look good, so I comment it out.
 
@@ -113,10 +109,9 @@ regularization with $\lambda=5e-4$ to avoid overfitting.
 
 
 	For the WBD dataset, we break the gold standards for two parts with equal-size, and use one for training and the other for testing.
-	We utilize pre-trained 100-dimensional Chinese word vectors for embeddings.
+	To capture the semantics of entity names for the node representation (see Section~\ref{subsection:Node
+		Representations}), we apply a word2vec~\cite{Mikolov2013Efficient} model to generate 100-dimensional Chinese word embeddings from training the sentences in Baidu dataset.
 	By counting the frequency of attributes, we select 63 high-frequency attributes from each \KG to construct 63-dimensional attribute vectors.
-     To learn the word vectors to capture the semantics of entity names for the node representation (see Section~\ref{subsection:Node
-    Representations}), we use sentences from  the Baidu dataset.
     %We use a window size of 5 and a threshold of 20 for downsampling the frequent words
     %for a word2vec model.
 
@@ -127,6 +122,6 @@ regularization with $\lambda=5e-4$ to avoid overfitting.
 	
  	We use Hits@k, a widely used metric for entity
  alignment evaluation~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. A Hits@k score (higher is better) is computed by
- measuring the proportion of correctly aligned entities ranked in the top k. In this work, we set k to 1 to report the Hits@1 score. 
+ measuring the proportion of correctly aligned entities ranked in the top k. In this work, we set k to 1 and 10 to report the Hits@1 and Hits@10 scores. 
 	
 	
