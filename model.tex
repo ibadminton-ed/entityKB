@@ -70,7 +70,7 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
 % We utilize predefined node features
 % described in Section~\ref{subsection:Node Representations} to construct $X$ to capture the semantic information. 	The second part is
 
-\subsubsection{i. Node representations}
+\subsubsection{Node representations}
 	\label{subsection:Node Representations}
    We use a node feature matrix, $X \in \mathbb{R}^{N \times d}$ of $G$, to encode the semantic information of $N$  nodes in an
    input vector of $d$ elements. This representation is used to direct the \RGCN to draw attention to entity names and attributes, which are shown to be
@@ -99,7 +99,7 @@ together in one large graph $G$. We utilize pre-aligned entity pairs to train ou
     We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized
     vector for each entity.
 
- \subsubsection{ii. Neighboring node relation}
+ \subsubsection{Neighboring node relation}
  Like standard \RGCNs, we capture the relation of graph neighboring nodes using an adjacency matrix.
  In our case, the adjacency matrices, $A=\{A_1,A_2,...,A_R |A_i \in \mathbb{R}^{N
  \times N} \}$, describe the adjacency relationships among $N$ nodes under $R$ different relations (i.e., edges in the \KG or predicates of entities) of graph $G$.
