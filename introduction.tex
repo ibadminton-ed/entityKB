@@ -5,33 +5,25 @@
     Web, but also the understanding of text content. There has been an extensive body of work in transforming online encyclopedia resources, such as
     Wikipedia, into structured knowledge bases (\KBs) in a form of $\langle$\emph{subject entity},
    \emph{ predicate/relation}, \emph{object}$\rangle$ triples, such as DBpedia~\cite{Lehmann2009DBpedia,Auer2007DBpedia},
-    Freebase~\cite{Bollacker2007Freebase}, Yago~\cite{Suchanek2008YAGO} etc.
+    Freebase~\cite{Bollacker2007Freebase}, Yago~\cite{Suchanek2008YAGO}, etc.
     	
 
    %In order to better show the relations among entities,
 
-	Such kind of \KBs can be naturally organized into the form of graphs which we call knowledge graphs (\KGs). Although most of those \KGs
-originate from Wikipedia, they are usually created independently, thus often use different expressions and surface forms to indicate
-equivalent entities and relations, let alone those built from different resources, or even different languages. This further makes it more
-challenging to achieve knowledge sharing, complementary and integration among different \KGs.
+	Such kind of \KBs can be naturally organized into the form of graphs which we call knowledge graphs (\KGs). \KGs originate from the
+same \KB  are usually created independently, thus often use different expressions and surface forms to indicate equivalent entities and
+relations -- let alone those built from different resources, or even different languages. This common heterogenous problem makes it
+difficult to perform tasks like knowledge sharing, complementary and integration among different \KGs.
 	
-	One of the key techniques to integrate different \KGs is \textbf{Entity Alignment}, the task of linking the equivalent entities from
-different \KGs if they refer to the same real-world identity, usually with different surface forms. However, entity alignment is not a
-trivial task, and the alignment system is often complex~\cite{gokhale2014corleone,scharffe2014ontology}. Traditional approaches, which
-generally rely on external information such as hyperlinks in web pages and require costly manual feature construction, are often time
-consuming and labor intensive~\cite{zhu2017iterative}.
-	
-	Most recently, many efforts have been devoted to the so-called KG embedding-based approaches, following similar ideas to jointly embed
-the structures of multiple \KGs into a unified vector space with the pre-aligned entities or relations serving as a bridge. These
-KG embedding-based approaches all rely on translation-based KG embedding models, such as TransE~\cite{bordes2013translating}, to learn
-entity representations. However, as listed in Table~\ref{seed}, most of these KG embedding-based methods require high-quality seed
-alignment data, such as pre-aligned KG predicates/relations or triples. Since the predicates/relations or triples in heterogeneous \KGs may
-be very different, it is often difficult and expensive to collect such high-quality alignment data. In addition, as shown by the last
-column in the Table~\ref{seed}, most of these models, except JAPE~\cite{sun2017cross}, ignore specific attribute values in the \KGs because
-of their complexity and heterogeneity. And actually, JAPE only considers the types of those values for simplicity, and the specific
-attribute values, such as \textit{1.86m} as someone's height, are ignored. However, values are actually very significant parts of \KGs, especially for low-quality \KGs which may contain large-scale values. The approaches that do not consider values will lose this part of information when aligning \KGs. We argue that those attribute value information are crucial for entity alignment and should be taken into account.
+	One of the key enabling techniques to integrate different \KGs is \emph{entity alignment} -- the task of linking the equivalent
+entities from different \KGs if they refer to the same real-world identity, usually with different surface forms. However, entity alignment
+is non-trivial, which currently has to be realized through a complex alignment system~\cite{gokhale2014corleone,scharffe2014ontology}.
+Traditional approaches generally rely on external information (such as hyperlinks in web pages). This limits the practicality of the
+approach because it requires a labour-intensive and time-consuming process to construct an alignment model for each
+\KG~\cite{zhu2017iterative}.
 
-\begin{table}
+
+\begin{table}[t!]
 	\centering
 	\scriptsize
 	\begin{tabular}{lllll}
@@ -40,31 +32,89 @@ attribute values, such as \textit{1.86m} as someone's height, are ignored. Howev
 		\midrule
 		\rowcolor{Gray} JE~\cite{hao2016joint} & ${\surd}$ & & & \\
 		MTransE~\cite{chen2016multilingual} & $ $ & $ $ & ${\surd}$ & \\
-		\rowcolor{Gray} JAPE~\cite{sun2017cross} & ${\surd}$& ${\surd}$& & ${\surd}$ (type)\\
-		ITransE~\cite{zhu2017iterative} & ${\surd}$ & ${\surd}$& & \\
+		\rowcolor{Gray} ITransE~\cite{zhu2017iterative} & ${\surd}$ & ${\surd}$& & \\
+		JAPE~\cite{sun2017cross} & ${\surd}$& ${\surd}$& & ${\surd}$ (type)\\
 		\bottomrule
 	\end{tabular}
 	\caption{\small The use of seed alignment information in prior methods.}
 	\label{seed}
 \end{table}
 	
-	Moreover, although TransE can effectively capture the structure information of \KGs, it may not perform well when the neighboring relational structures of two entities are significantly different. Since TransE utilizes the relation between the head entity and the tail entity to define the distance between the head entity vector and the tail entity vector, the TransE-based approaches actually tend to require that the neighboring structures of the equivalent entities from different \KGs should be as similar as possible. Nevertheless, due to the incompleteness of knowledge graphs, the densities of the neighborhoods of the two entities $e_1$ and $e_2$ that we need to align may be very different or similar relations and neighbors between $e_1$ and $e_2$ may be few, which leads to sparse available clues for alignment and will make a large difference between the learned vectors of $e_1$ and $e_2$ by TransE. But actually, when we judge whether two entities refer to the equivalent identity, we often only pay attention to the more informative and discriminative neighbors of the two entities, especially when the available clues are sparse.
-	\begin{figure}
-		\centering
-			\includegraphics[width=1\linewidth]{figures/graph1.pdf}
-			\caption{This example shows that the \emph{Xinjiang} entity from two heterogeneous \KGs (1 and 3) can be aligned using an entity (\emph{Urumqi}) and an attribute (1,660,000$km^2$), but existing methods all fail to align this entity.}
-			\label{Xinjiang}
-	\end{figure}
-	%The relational graph convolutional networks (R-GCNs), an extension of graph convolutional networks (GCNs) that operate on local graph neighborhoodsa recent class of multilayer neural networks operating on graphs, can better describe graph networks and facilitate the integration of semantic information into node features, which also makes it convenient to add value information. In addition, we believe that a favorable attention mechanism can further improve the ability to embed the nodes and can accurately extract structural information even in the absence of much information. By further introducing the attention mechanism, the graph attention networks(GATs) have been proposed. GAT computes the hidden representations of each node in the graph, by attending over its neighbors according to different weights, following a self-attention strategy.
+	Most recently, efforts have been devoted to the so-called \KG embedding-based approaches. The idea is to jointly embed the structures
+of multiple \KGs into a unified feature space, by using the pre-aligned entities or relations to bridge the heterogeneities of different
+\KGs. These approaches all rely on a translation-based model, such as TransE~\cite{bordes2013translating}, to learn entity representations.
+
+However, the current \KG embedding-based approaches have three significant drawbacks that limit the uptake of this promising technique and
+the scale at which it can operate. Firstly, existing approaches cannot effectively handle situations where two entities' neighboring nodes
+have significantly different relational structures - a common problem in heterogeneous \KGs. This is because the current approaches cannot
+identify which of the common entities and attributes are important for the alignment task (Section~\ref{sec:motivation}). Secondly, as we
+summarize in Table~\ref{seed}, existing methods all rely on some forms of high-quality seed alignment data, such as pre-aligned \KG
+predicates/relations or triples. Since such information in heterogeneous \KGs may be greatly different, it is very hard if not impossible
+to collect such data in practice. Furthermore, most of the prior approaches do not consider the specific attribute values in the \KGs
+because of the complex and diverse forms of attributes. As we will show later in Section~\ref{sec:motivation}, the attribute values are
+often important for entity alignment and cannot be ignored. JAPE~\cite{sun2017cross} was the first attempt to consider attributes for
+entity alignment. However, it only considers the type but not the value of an attribute, and thus misses massive opportunities
+(Section~\ref{overall}).
+
+%In addition, as shown by the last column in the
+%Table~\ref{seed}, most of these models, except JAPE , ignore specific attribute values in the \KGs because of their complexity and
+%heterogeneity. And actually, JAPE only considers the types of those values for simplicity, and the specific attribute values, such as
+%\textit{1.86m} as someone's height, are ignored. However, values are actually very significant parts of \KGs, especially for low-quality
+%\KGs which may contain large-scale values. The approaches that do not consider values will lose this part of information when aligning
+%\KGs. We argue that those attribute value information are crucial for entity alignment and should be taken into account.
+
 	
-	In this paper, we propose a new embedding-based entity alignment approach which leverages relational graph convolutional networks to better embed the highly multi-relational structure information of heterogeneous \KGs with a set of pre-aligned entities and considers the specific attribute values in multiple \KGs. Our model solves the limitations of existing embedding-based methods which ignore the value information and can not properly align the entities with very different neighborhoods.
+%%	Moreover, although TransE can effectively capture the structure information of \KGs, it may not perform well when the neighboring
+%relational structures of two entities are significantly different. Since TransE utilizes the relation between the head entity and the tail
+%entity to define the distance between the head entity vector and the tail entity vector, the TransE-based approaches actually tend to
+%require that the neighboring structures of the equivalent entities from different \KGs should be as similar as possible. Nevertheless, due
+%to the incompleteness of knowledge graphs, the densities of the neighborhoods of the two entities $e_1$ and $e_2$ that we need to align may
+%be very different or similar relations and neighbors between $e_1$ and $e_2$ may be few, which leads to sparse available clues for
+%alignment and will make a large difference between the learned vectors of $e_1$ and $e_2$ by TransE. But actually, when we judge whether
+%two entities refer to the equivalent identity, we often only pay attention to the more informative and discriminative neighbors of the two
+%entities, especially when the available clues are sparse.
 	
-	More specifically, the contributions of this paper can be summarized as follows:
+	%The relational graph convolutional networks (R-GCNs), an extension of graph convolutional networks (GCNs) that operate on local graph
+%neighborhoodsa recent class of multilayer neural networks operating on graphs, can better describe graph networks and facilitate the
+%integration of semantic information into node features, which also makes it convenient to add value information. In addition, we believe
+%that a favorable attention mechanism can further improve the ability to embed the nodes and can accurately extract structural information
+%even in the absence of much information. By further introducing the attention mechanism, the graph attention networks(GATs) have been
+%proposed. GAT computes the hidden representations of each node in the graph, by attending over its neighbors according to different
+%weights, following a self-attention strategy.
+%	
+%	In this paper, we propose a new embedding-based entity alignment approach which leverages relational graph convolutional networks to
+%better embed the highly multi-relational structure information of heterogeneous \KGs with a set of pre-aligned entities and considers the
+%specific attribute values in multiple \KGs. Our model solves the limitations of existing embedding-based methods which ignore the value
+%information and can not properly align the entities with very different neighborhoods.
+
+Our work aims to address the aforementioned limitations of entity alignment. We do so by developing a new embedding-based framework based
+on the recently proposed relational graph convolutional network (\RGCN)~\cite{Schlichtkrull2017Modeling}. We demonstrate, for the first
+time, that (i) how \RGCNs can be employed to better embed the highly multi-relational structure information of heterogeneous \KGs, (ii) how
+an effective alignment model can be learned using only a small set of pre-aligned entities, and (iii) how highway network gates can be
+employed to control the noise accumulated across the network layers when processing large graphs. As a departure from prior work, our model
+exploits both entity semantics and associated attribute values. It automatically learns which of the entities and attributes are important
+for the \KG-specific alignment task, enabling the learned model to better handle heterogeneous graph structures where prior methods fail.
+
+We evaluate our approach by applying it to two real-world datasets and testing it on over 50,000 entities with a large number of relations
+and attributes. We compare our approach against four state-of-the-art embedding-based
+methods~\cite{hao2016joint,chen2016multilingual,sun2017cross,zhu2017iterative}. Experimental results show that our approach can
+significantly outperform prior methods that need much more seeding information to work on. As a result, our work not only reduces the
+overhead for constructing entity alignment models, but offers a new way to construct effective entity alignment models for heterogeneous
+\KGs.
+
+
+	
+	The technical contributions of this paper can be summarized as follows:
 	\begin{itemize}
-		\item We propose RGCN, a novel entity alignment model, to better characterize entities in heterogeneous \KGs by considering their neighboring relational structure as well as the attribute values in the \KGs.
+		\item We propose the first \RGCN-based entity alignment model for heterogeneous \KGs (Section~\ref {sec:model}).
 		
-		\item We show that layer-wise highway gates play a significant role to control the balance of how much neighborhood information should be passed to a node in our HRGCN model.
+        \item We show that the attribute values are important for aligning entities from heterogeneous \KGs and how this information can
+            be exploited within an entity alignment framework (Section~\ref{sec:model}).
+
+		\item Our work is the first to employ layer-wise highway gates in a \RGCN to control how much neighborhood information should be
+passed to a neural network node (Section~\ref{section:hgcn}). This technique greatly improves the performance of a \RGCN when processing
+large \KGs (Section~\ref{sec:results}).
 		
-		\item We build a large-scale entity alignment dataset in Chinese, containing 57,240 entities, 3,563 relations, 28,595 attributes, 231,003 relation triples and 515,065 attribute triples. We manually aligned 16,969 entity pairs as the gold standards of entity alignment.
+		%\item We build a large-scale entity alignment dataset in Chinese, containing 57,240 entities, 3,563 relations, 28,595 attributes, 231,003 relation triples and 515,065 attribute triples. We manually aligned 16,969 entity pairs as the gold standards of entity alignment.
 		
 	\end{itemize}

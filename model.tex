@@ -1,27 +1,27 @@
 \section{Our Approach}
 	\label{section:app}
-\begin{figure}
+
+\subsection{Overview}
+Figure~\ref{fig:overview} gives a high-level overview of our approach. To align entities from two \KGs, we first manually label some entity
+pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and randomly sampled unaligned
+entity pairs. Next, we extract graph information from the \KGs, which is used to capture the semantics and attributes of entities as well
+as the relation of neighboring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the
+graph information (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is
+optimized in a way that two aligned entities in the training data are similar to each other in the feature space. With this entity
+representation in place, we can calculate the distance between any two entity representations to determine if the entities should be
+aligned (Section~\ref{prediction}).
+
+\begin{figure}[t!]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/overview.pdf}
   \caption{Overview of our approach}\label{fig:overview}
 \end{figure}
 
-\subsection{Overview}
-Figure~\ref{fig:overview} gives a high-level overview of our approach. To align entities from two \KGs, we first manually label some entity
-pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and unaligned entity pairs. Next, we
-extract graph information from the \KGs, which is used to capture the semantics and attributes of entities as well as the relation of
-neighboring nodes (Section~\ref{section:rgcn}). Then, we learn a neural network (Section~\ref{sec:model}) to take in the graph information
-(organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is optimized in a way
-that two aligned entities in the training data are similar to each other in the feature space. With this entity representation in place, we
-can calculate the distance between any two entity representations to determine if the entities should be aligned
-(Section~\ref{prediction}).
-
-	
 
 	
     \subsection{Knowledge Graph Representation Model\label{sec:model}}
-    Our model for generating \KG representations  is based on the recently proposed relational graph convolutional network (\RGCN)~\cite{Schlichtkrull2017Modeling}.
-    The \RGCN is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
+    Our model for generating \KG representations  is based on the \RGCN~\cite{Schlichtkrull2017Modeling}, which is an extension of Graph Convolutional Networks (\GCNs) that operate on local graph
+neighborhoods~\cite{Duvenaud2015Convolutional,Kipf2016Semi} to large-scale relational data.
    % A \RGCN layer takes a set of adjacency matrices as input, and produces a new set of node features.
 %    Each input adjacency matrix describes the adjacency relationships among all nodes in the graph under each different relation.
     We choose to use the \RGCN because it can model relational (directed and labeled) multi-graphs like \KGs.
@@ -55,7 +55,8 @@ can calculate the distance between any two entity representations to determine i
     Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
   	The input to our model consists of two parts: (i) a node feature matrix that captures the semantic information such as the entity
   names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
-
+    The output of a \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the result is passed as part of
+    the input to the next layer.
 
 \subsubsection{Notations}
 
