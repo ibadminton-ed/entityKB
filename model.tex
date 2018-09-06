@@ -57,11 +57,7 @@ aligned entities.
 \end{figure}
 
 \cparagraph{Model architecture} Figure~\ref{fig:all} depicts the overall architecture of our \RGCN-based \KG representation model. 	
-	The input to our model consists of two parts (Section~\ref{section:rgcn}): (i) a node feature matrix that captures the semantic information such as the entity
-  names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG.
-    The output of an \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the processed result is passed as part of
-    the next layer's input. Entity alignment is achieved by calculating the distance, $d(e_1, e_2)$, of two entity nodes, $e1$ and $e2$, using the
-   network output (Section~\ref{prediction}).
+	The input to our model consists of two parts (Section~\ref{section:rgcn}): (i) a node feature matrix that captures the semantic information such as the entity names and their attributes, and (ii) a list of adjacency matrices, which describes the adjacency relationships among nodes of a \KG. The output of an \RGCN layer is processed by a highway gate function (Section~\ref{section:hgcn}), and the processed result is passed as part of the next layer's input. Entity alignment is achieved by calculating the distance, $d(e_1, e_2)$, of two entity nodes, $e1$ and $e2$, using the network output (Section~\ref{prediction}).
 
 
 
@@ -85,32 +81,27 @@ In our model, we use two sets of information to characterize nodes and relations
 
 \subsubsection{Node representations}
 	\label{subsection:Node Representations}
-   We use a node feature matrix, $X \in \mathbb{R}^{N \times d}$ of $G$, to encode the semantic information of $N$  nodes in an
-   input vector of $d$ elements. This representation is used to direct the \RGCN to draw attention to entity names and attributes, which are shown to be
-   useful in entity alignment (Section~\ref{sec:motivation}). This node representation can be used to encode either the semantics of entity names
-   or entity attributes, or a combination of both (Section~\ref{sec:combine}).
+   We use a node feature matrix, $X \in \mathbb{R}^{N \times d}$ of $G$, to encode the semantic information of $N$ nodes in an input vector of $d$ elements. This representation is used to direct the \RGCN to draw attention to entity names and attributes, which are shown to be useful in entity alignment (Section~\ref{sec:motivation}). This node representation can be used to encode either the semantics of entity names or entity attributes, or a combination of both (Section~\ref{sec:combine}).
 
 
 	
 	\eparagraph{Encoding semantics}
 	\label{wordvector}
-	Intuitively, if two entities can be linked together, their names in different \KGs should be similar somehow (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
-    Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic
-    information of entity names.
+	Intuitively, if two entities can be linked together, their names in different \KGs should be similar somehow (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}). 
+	Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic information of entity names.
     %This is achieved by applying a word2vec model to generate word embeddings from training entity names.
     %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
 
 	
 	\eparagraph{Encoding attributes}
     In addition to entity names, we also consider entity attributes for node representations.
-	Our current implementation distinguishes four types of attributes, i.e., \emph{Integer}, \emph{Double}, \emph{Date} and \emph{String}
-    (as default), but the proposed method can be extended to other data types too.
+	Our current implementation distinguishes four types of attributes, i.e., \emph{Integer}, \emph{Double}, \emph{Date} and \emph{String} (as default), but the proposed method can be extended to other data types too.
 	%In this paper, we only consider the first three types, i.e., Integer, Double and Date.
 %	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 %	
-	For each entity in a \KG, we construct an attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG.
-    We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized
-    vector for each entity.
+	For each entity in a \KG, we construct an attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG. 
+	We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized 
+	vector for each entity.
 
  \subsubsection{Neighboring node relation}
  Like standard \RGCNs, we capture the relation of graph neighboring nodes using an adjacency matrix.
@@ -122,15 +113,15 @@ In our model, we use two sets of information to characterize nodes and relations
  information, we also add a self-referencing loop of a special relation type to each node. Applying these steps results in $R=2R_0+1$ relations. As shown in Figure~\ref{fig:all}, original relations, reverse relations and the self loops all participate in the updating of node features.
 
  \eparagraph{Calculate the embedding matrix}
- The input for layer $l$ of an \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where  $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
+ The input for layer $l$ of an \RGCN is a node feature matrix, $X^{(l)}$, of $N$ vectors, where $X^{(l)} =\{x^{(l)}_1,x^{(l)}_2,...,x^{(l)}_{N}
  |x^{(l)}_{i} \in \mathbb{R}^{d^{(l)}}\}$. Each node feature vector, $x_i$, is updated using forward propagation as:
 
  %, and we stack the output vector for each node, $x_i^{(l+1)}$
 % , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)}),
-	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$.
-    $N_i^r$ is computed based on the normalized adjacency
+	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$. 
+	$N_i^r$ is computed based on the normalized adjacency
 matrix $\hat A_r$ -- an approximate of spectral convolutions on the adjacency matrix $A_r$~\cite{Kipf2016Semi}:
 	\begin{equation}
 	\hat A_r=\hat D_r^{- \frac{1}{2}}(A_r+I)\hat D_r^{- \frac{1}{2}},
@@ -179,11 +170,8 @@ respectively.
 
 \subsection{Exploiting Entity Semantics and Attributes\label{sec:combine}}
     Recall that the node feature vector can be constructed from either entity name semantics or entity attributes (Section~\ref{subsection:Node
-    Representations}). There are multiple ways to exploit the semantic and attribute embeddings. One is to simply concatenate a pre-trained word vector
-    and an attribute vector as an input node feature vector. Another is to apply two stacked \HRGCNs to respectively perform a
-    semantic or an attribute embedding.  We provide a further discussion on these strategies in Section~\ref{sec:analysis}.
-
-    For stacked \HRGCNs, we define a new feature vector, $d$, to combine the semantic and attribute embeddings produced by each \HRGCN:
+    Representations}). In order to combine the semantic and attribute embeddings, we apply two stacked \HRGCNs to respectively perform a
+    semantic or an attribute embedding. For stacked \HRGCNs, we define a new feature vector, $d$, to combine the semantic and attribute embeddings produced by each \HRGCN:
 	\begin{equation}
 		d(e_1,e_2)=\frac{1}{m}[\omega d_s(e_1,e_2)+(1-\omega)d_a(e_1,e_2)]
 	\end{equation}
@@ -191,8 +179,7 @@ respectively.
 	
 	\subsection{Entity Alignment Prediction and Training\label{prediction}}
    In our work, entity alignment is based on the network output's (i.e., the graph representation), $\bar{X}$ -- an embedding matrix of $N$ vectors, $\bar{x}_1,\bar{x}_2,...,\bar{x}_N$, where
-   each vector, $\bar{x}$, corresponds to one
-    of the $N$ entity nodes within graph $G$. 	
+   each vector, $\bar{x}$, corresponds to one of the $N$ entity nodes within graph $G$. 	
 
 
 \cparagraph{Alignment} With the graph representation in place, entity alignment is as simple as measuring the similarity between two entity

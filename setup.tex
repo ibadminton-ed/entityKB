@@ -1,5 +1,5 @@
 \section{Experimental Setup}
-	Our experiments\footnote{Code and data available at: [\emph{url redacted for blind review}]} are designed to investigate (1) if \RGCN-based models can better represent an entity  compared to existing \KG
+	Our experiments\footnote{Code and data available at: [\emph{url redacted for blind review}]} are designed to investigate (1) if \RGCN-based models can better represent an entity compared to existing \KG
 embedding-based methods, and (2) whether highway gates can effectively capture discriminative neighboring information by controlling how
 much neighborhood information should be passed to a node in a \RGCN.
 
@@ -11,8 +11,7 @@ referred as Wikipedia-Baidu dataset (WBD).
 	
 	\cparagraph{DBP15K} This is a cross-lingual dataset built upon DBpedia.
 	It has a series of subsets, each of which contains data from two \KGs in different languages and provides pre-aligned entity pairs.
-	We use the French-English subset of DBP15K, because it is considered to be the most challenging subset for entity alignment~\cite{sun2017cross}.
-     Table~\ref{dbp} shows the statistics of the selected subset.
+	We use the French-English subset of DBP15K, because it is considered to be the most challenging subset for entity alignment~\cite{sun2017cross}. Table~\ref{dbp} shows the statistics of the selected subset.
 	
 		\begin{table}
 		\centering
@@ -79,17 +78,16 @@ referred as Wikipedia-Baidu dataset (WBD).
 %	These hyperparameters were found to give the best overall performance in our experiments.
 
     \cparagraph{Implementation variants}
-    	We evaluate our approach on four variant implementations: (1) a two-layered \HRGCN (S$\oplus$A) ($\oplus$ represents concatenation) which directly uses concatenated vectors
-introduced in Section~\ref{sec:combine} as input node features, (2) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
+    	We evaluate our approach on three variant implementations: (1) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
 attribute embedding, (3) a two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, (4) two-layered
-\HRGCN (w/o X) which just randomly initializes the node representations without considering the semantic or attribute information mentioned
+\HRGCN (w/o X) which just initializes each node representation with a unique one-hot vector without considering the semantic or attribute information mentioned
 in Section~\ref{subsection:Node Representations}.
 
     \cparagraph{Prior methods}
     On the $DBP15K_{FR-EN}$ dataset, we compare our \HRGCN model against three methods that have been tuned and tested on the dataset:
-    JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}. 	On our WBD dataset, we compare our \HRGCN
+    JE~\cite{hao2016joint}, MTransE~\cite{chen2016multilingual} and JAPE~\cite{sun2017cross}. On our WBD dataset, we compare our \HRGCN
     against two representative approaches: JE and ITransE~\cite{zhu2017iterative}. We note that MTransE needs aligned triples for training, while JAPE requires aligned relations and attributes (see Table~\ref{seed}). Since our WBD dataset can not provide such high-quality seed alignment data, we do not apply them on WBD datasets. We extend ITransE to allow it work on heterogeneous
-    \KGs and refer this extension as ITransE$'$.
+    \KGs and refer this extension as ITransE$'$. We also evaluate ITransE$'$ on the $DBP15K_{FR-EN}$ dataset.
 %
 %ITransE requires all relations to be shared between two \KGs, which is a too strong assumption for heterogeneous \KGs. To provide a fair
 %comparison, we build ITransE$'$, a variant of ITransE which does not require the \KGs to have the same relations. 	
