@@ -1,7 +1,7 @@
 \section{Experimental Setup}
 	Our experiments\footnote{Code and data available at: [\emph{url redacted for blind review}]} are designed to investigate (1) if \RGCN-based models can better represent an entity compared to existing \KG
 embedding-based methods, and (2) whether highway gates can effectively capture discriminative neighboring information by controlling how
-much neighborhood information should be passed to a node in a \RGCN.
+much neighborhood information should be passed to a node in an \RGCN.
 
 \subsection{Datasets}
 \label{subsection:datasets}
@@ -79,7 +79,7 @@ referred as Wikipedia-Baidu dataset (WBD).
 
     \cparagraph{Implementation variants}
     	We evaluate our approach on three variant implementations: (1) a two-layered \HRGCN (SE+AE) which combines semantic embedding and
-attribute embedding, (3) a two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, (4) two-layered
+attribute embedding, (2) a two-layered \HRGCN (SE) which only performs semantic embedding with pre-trained word vectors, (3\part{title}) two-layered
 \HRGCN (w/o X) which just initializes each node representation with a unique one-hot vector without considering the semantic or attribute information mentioned
 in Section~\ref{subsection:Node Representations}.
 
