@@ -2,6 +2,28 @@
 
 %when the available clues for alignment are sparse, we have performed comparative evaluation of our model against several baselines.
 
+
+\subsection{Overall Performance\label{overall}}
+
+
+\cparagraph{Results on $\bf DBP15K_{FR-EN}$} Table~\ref{cross} reports the results of all the compared approaches on $DBP15K_{FR-EN}$
+dataset. We apply each approach
+ to two alignment directions: French to English and vice versa. This dataset requires us to handle
+cross-lingual data through rough machine translation which is likely to introduce lots of noise. We report the performance of JAPE on the
+two implementations presented at
+ ~\cite{sun2017cross} when using structure embedding (SE), and structure and attribute joint embedding (SE+AE).
+For Hits@1, our \HRGCN (SE+AE)
+outperforms all other approaches by delivering the highest score. This is due to the capability of \HRGCN
+(SE+AE) in preventing noisy nodes from driving the \KG representations. For Hits@10, JAPE (SE+AE), with the help of aligned relations for training,
+ gives the best performance, with an improvement of 10\%$\sim$13\% over \HRGCN (SE+AE). However, our approach has the advantage for not relying on aligned
+relations and attributes, thus has lower overhead.
+
+
+\cparagraph{Results on WBD} Table~\ref{f1} reports the performance of all models on WBD dataset. While the vanilla \GCN performs worse than
+ITransE$'$, by adding highway gates to control the noise, \HGCN is able to outperform all existing approaches. By introducing highway gates and pre-defined node features to \RGCN, our \HRGCN (SE+AE) model delivers the best Hits@k score in both alignment directions,
+improving upon ITransE$'$ by 38.9\% and 41.6\% for Hits@1 and Hits@10, respectively in the direction of
+Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in entity alignment over existing approaches.
+
 \begin{table}
 	\centering
 	% \small
@@ -21,7 +43,7 @@
 		\RGCN & 30.5 & 33.7 & 29.4 & 31.8 \\
 		\rowcolor{Gray}\bf \HRGCN (w/o $X$) & 27.1 & 31.9 & 27.1 & 32.4 \\
 		\bf \HRGCN (SE) & 33.4& 35.7& 31.2& 34.6 \\
-        \rowcolor{Gray} 	\bf \HRGCN (SE+AE) & \bf 44.8 & 56.6 &\bf 41.0 & 52.9 \\
+		\rowcolor{Gray} 	\bf \HRGCN (SE+AE) & \bf 44.8 & 56.6 &\bf 41.0 & 52.9 \\
 		\bottomrule
 	\end{tabular}
 	\caption{Performance on $DBP15K_{FR-EN}$ dataset.}
@@ -50,28 +72,6 @@
 	\caption{Performance on WBD dataset.}
 	\label{f1}
 \end{table}
-\subsection{Overall Performance\label{overall}}
-
-
-\cparagraph{Results on $\bf DBP15K_{FR-EN}$} Table~\ref{cross} reports the results of all the compared approaches on $DBP15K_{FR-EN}$
-dataset. We apply each approach
- to two alignment directions: French to English and vice versa. This dataset requires us to handle
-cross-lingual data through rough machine translation which is likely to introduce lots of noise. We report the performance of JAPE on the
-two implementations presented at
- ~\cite{sun2017cross} when using structure embedding (SE), and structure and attribute joint embedding (SE+AE).
-For Hits@1, our \HRGCN (SE+AE)
-outperforms all other approaches by delivering the highest score. This is due to the capability of \HRGCN
-(SE+AE) in preventing noisy nodes from driving the \KG representations. For Hits@10, JAPE (SE+AE), with the help of aligned relations for training,
- gives the best performance, with an improvement of 10\%$\sim$13\% over \HRGCN (SE+AE). However, our approach has the advantage for not relying on aligned
-relations and attributes, thus has lower overhead.
-
-
-\cparagraph{Results on WBD} Table~\ref{f1} reports the performance of all models on WBD dataset. While the vanilla \GCN performs worse than
-ITransE$'$, by adding highway gates to control the noise, \HGCN is able to outperform all existing approaches. By introducing highway gates and pre-defined node features to \RGCN, our \HRGCN (SE+AE) model delivers the best Hits@k score in both alignment directions,
-improving upon ITransE$'$ by 38.9\% and 41.6\% for Hits@1 and Hits@10, respectively in the direction of
-Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in entity alignment over existing approaches.
-
-
 
 \subsection{Analysis\label{sec:analysis}}
 
