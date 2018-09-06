@@ -59,7 +59,7 @@ model has a distinct advantage in entity alignment over existing approaches.
 	\scriptsize
 	\begin{tabular}{lrrrr}
 		\toprule
-		\multirow{2}{*}{\bf Models} &  \multicolumn{2}{c|}{$\bf Baidu \rightarrow Wiki$} & \multicolumn{2}{c}{$\bf Wiki \rightarrow Baidu$} \\
+		\multirow{2}{*}{\bf WBD} &  \multicolumn{2}{c|}{$\bf Baidu \rightarrow Wiki$} & \multicolumn{2}{c}{$\bf Wiki \rightarrow Baidu$} \\
 		& \bf Hits@1 & \bf Hits@10 & \bf Hits@1 & \bf Hits@10 \\
 		\midrule
 		\rowcolor{Gray} JE & 14.8 & 21.6 & 13.2 & 20.3 \\
@@ -96,7 +96,7 @@ representations.
 
 
 \cparagraph{(SE+AE) vs. (SE)} When comparing \HRGCN (SE+AE) with  \HRGCN (SE), we can see that adding attribute embedding greatly improves
-the performance. This strategy leads to an increase of 11.39\%  in Hits@1 and 20.96\% in Hits@10 in the direction of FR$\rightarrow$EN in
+the performance. This strategy leads to an increase of 11.4\%  in Hits@1 and 20.9\% in Hits@10 in the direction of FR$\rightarrow$EN in
 Table~\ref{cross}. The results reinforce our claim that attribute information is crucially important for entity alignment and should not be
 ignored. When comparing our full model \HRGCN with \HRGCN (w/o $X$) in Tables~\ref{cross} and ~\ref{f1}, we observe that removing
 semantic/attribute information, $X$, from node representations leads to drops of over 20\% on the $DBP15K_{FR-EN}$ dataset and over 40\% on
@@ -121,7 +121,7 @@ information and focus on the most discriminative aspects from the target entity'
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{figures/graph4.pdf}
-	\caption{Hits@1 scores for ITransE$'$, \GCN and \HRGCN (SE+AE) on the four WBD subsets. The number range, $x~y$, on the
+	\caption{Hits@1 scores for ITransE$'$, \GCN and \HRGCN (SE+AE) on the four WBD subsets. The number range, $x\sim y$, on the
 x-axis denotes the the subset in which the number of neighbors differs from $x$ to $y$ for each entity pair.}
 	\label{subset}
 \end{figure}
