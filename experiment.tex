@@ -74,6 +74,7 @@ model has a distinct advantage in entity alignment over existing approaches.
 	\end{tabular}
 	\caption{Performance on WBD dataset.}
 	\label{f1}
+\vspace{-2mm}
 \end{table}
 
 \subsection{Comparing Different Approaches\label{sec:analysis}}
@@ -120,7 +121,7 @@ information and focus on the most discriminative aspects from the target entity'
 
 \begin{figure}
 	\centering
-	\includegraphics[width=1\linewidth]{figures/graph4.pdf}
+	\includegraphics[width=0.85\linewidth]{figures/graph4.pdf}
 	\caption{Hits@1 scores for ITransE$'$, \GCN and \HRGCN (SE+AE) on the four WBD subsets. The number range, $x\sim y$, on the
 x-axis denotes the the subset in which the number of neighbors differs from $x$ to $y$ for each entity pair.}
 	\label{subset}
@@ -144,9 +145,9 @@ correctly algin this entity.
 		\multirow{2}{*}{\bf Aligned Entities} & \bf \#Neighbors & \bf \#Similar & \bf \#Values & \bf \#Similar \\
 		&\bf  Wiki \& Baidu &\bf  Neighbors &\bf  Wiki \& Baidu &\bf  Values \\
 		\midrule
-		Deng Jiaxian & 10 \& 33 & 5 & \ 3 \& 11 & 2\\
+		\rowcolor{Gray} Deng Jiaxian & 10 \& 33 & 5 & \ 3 \& 11 & 2\\
 		Hubei Province & 21 \& 50 & 5 & 10 \& 19 & 3\\
-		European Union & 66 \& 35 & 6 & 18 \& 8\ \ \ & 2\\
+		\rowcolor{Gray} European Union & 66 \& 35 & 6 & 18 \& 8\ \ \ & 2\\
 		%Huazhong University of & \multirow{2}{*}{11 \& 32} & \multirow{2}{*}{4} & \multirow{2}{*}{8 \& 6} & \multirow{2}{*}{1}\\
 		%Science and Technology & & & & \\
 		%Huazhong University of Science and Technology & 11 \& 32 & 4 & 8 \& 6 & 1 \\
@@ -163,13 +164,14 @@ further away. However, doing so might also introduce noisy information from the 
 decline in performance. This observation is illustrated in Figure~\ref{highway}, where we compare our model with different numbers layers
 with (\emph{+highway}) and without (\emph{-highway}) highway gates. We can observe that the performance of two-layered \RGCNs with highway
 gates improves upon the one-layered \RGCN. After that point, adding more layers to the \RGCN will lead to performance depredation, but the
-performance of the highway \RGCNs decreases slower than the non-highway-gate counterparts. This confirms our claim that the highway gates
-can effectively control neighbor information pass through \RGCN layers to control the noise. 
-
-In addition, from Table~\ref{f1}, we can see that the \GCN or \RGCN-based models with highway gates consistently achieve better performance than no-highway ones, indicating that highway gates can effectively improve the performance of both multi-layered \GCN and \RGCN models.
-\begin{figure}
+performance of the highway \RGCNs decreases slower than the non-highway-gate counterparts. This confirms our claim that highway gates can
+effectively control neighbor information pass through \RGCN layers to control the noise. This obliteration can also be reinforced by
+investigating the results in Table~\ref{f1} where the \GCN or \RGCN-based models with highway gates consistently achieve better performance
+than no-highway ones.
+\begin{figure}[t!]
 	\centering
-	\includegraphics[width=0.9\linewidth]{figures/graph3.pdf}
-	\caption{The effect of adding more \RGCN layers in terms of Hits@1 over the test set of WBD with and without the highway gates.}
-	\label{highway}
+	\includegraphics[width=0.85\linewidth]{figures/graph3.pdf}
+	\caption{Experiments showing if highway gates can help the \RGCN model to better control the noise, when adding more \RGCN layers to the network. The results are
+obtained on the WBD dataset using an \RGCN with (\emph{+highway}) and without (\emph{-highway}) highway gates.}	
+\label{highway}
 \end{figure}
