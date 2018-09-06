@@ -1,8 +1,7 @@
 	\begin{abstract} Entity alignment is the task of establishing the link between entities across different knowledge graphs (\KGs),
 	% - is an important task for natural language processing.
-	which is typically performed on the \KGs by using graph embedding methods to represent the entities and their context. However,
-existing approaches often fail to identify the sparse but discriminative evidence from heterogenous \KGs that usually have different
-structures and properties. As a result, exiting entity alignment methods  have to either rely on heavily annotated training data which
+	which is recently performed on the \KGs by using graph embedding methods to represent the entities and their context. However, existing embedding-based approaches often fail to identify the sparse but discriminative evidence from heterogenous \KGs that usually have different
+structures and properties. As a result, existing entity alignment methods have to either rely on heavily annotated training data which
 are difficult to construct or compromise on the alignment accuracy. Our work introduces a better way for entity alignment. We employ the
 relational graph convolutional network to better characterize entities by incorporating the neighboring relational structures and the
 entity semantic and attribute information. Further, we show that by introducing layer-wise highway network gates to the model, our
