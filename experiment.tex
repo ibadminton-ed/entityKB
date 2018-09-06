@@ -12,17 +12,21 @@ dataset. We apply each approach
 cross-lingual data through rough machine translation which is likely to introduce lots of noise. We report the performance of JAPE on the
 two implementations presented at
  ~\cite{sun2017cross} when using structure embedding (SE), and structure and attribute joint embedding (SE+AE).
-For Hits@1, our \HRGCN (SE+AE)
-outperforms all other approaches by delivering the highest score. This is due to the capability of \HRGCN
-(SE+AE) in preventing noisy nodes from driving the \KG representations. For Hits@10, JAPE (SE+AE), with the help of aligned relations for training,
- gives the best performance, with an improvement of 10\%$\sim$13\% over \HRGCN (SE+AE). However, our approach has the advantage for not relying on aligned
-relations and attributes, thus has lower overhead.
+Because JAPE uses the largest amount of annotated data (see Table~\ref {seed}), we expect it to give the best performance. As such, it
+comes as no surprise that JAPE gives the highest Hits@10 scores. Our approach, \HRGCN (SE+AE), gives the second-best performance albeit it
+uses significantly less annotated data. If we consider  Hit@1, a more important metric in practice, \HRGCN (SE+AE) outperforms all
+alternative schemes with the highest Hit@1 score, which translates to an improvement of 38\% over JAPE (SE+AE). This is due to the
+capability of \HRGCN (SE+AE) in preventing noisy nodes from driving the \KG representations. This experiment shows that our approach can
+deliver comparable or even better performance compared to the best-performing prior method, but it achieves this using much less annotated
+information and thus has a lower cost.
+
 
 
 \cparagraph{Results on WBD} Table~\ref{f1} reports the performance of all models on WBD dataset. While the vanilla \GCN performs worse than
-ITransE$'$, by adding highway gates to control the noise, \HGCN is able to outperform all existing approaches. By introducing highway gates and pre-defined node features to \RGCN, our \HRGCN (SE+AE) model delivers the best Hits@k score in both alignment directions,
-improving upon ITransE$'$ by 38.9\% and 41.6\% for Hits@1 and Hits@10, respectively in the direction of
-Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in entity alignment over existing approaches.
+ITransE$'$, by adding highway gates to control the noise, \HGCN is able to outperform all existing approaches. By introducing highway gates
+and pre-defined node features to the \RGCN, our \HRGCN (SE+AE) model delivers the best Hits@k score in both alignment directions, improving
+upon ITransE$'$ by 38.9\% and 41.6\% for Hits@1 and Hits@10, respectively in the direction of Baidu$\rightarrow$Wiki. This shows that our
+model has a distinct advantage in entity alignment over existing approaches.
 
 \begin{table}
 	\centering
@@ -73,17 +77,22 @@ Baidu$\rightarrow$Wiki. This shows that our model has a distinct advantage in en
 	\label{f1}
 \end{table}
 
-\subsection{Analysis\label{sec:analysis}}
+\subsection{Comparing Different Approaches\label{sec:analysis}}
 
 
 %An extra advantage of GCN is that we can stack multiple convolution layers to capture more global and larger contextual and neighboring characteristics
 
-We now provide a detailed analysis to compare different approaches.
+%We now provide a detailed analysis to compare different approaches.
 
-\cparagraph{\GCN vs. prior methods}
-On WBD dataset, the vanilla \GCN model outperforms JE regarding all Hits@k and performs better than ITransE$'$ in Hits@10 for both alignment directions. on $DBP15K_{FR-EN}$ dataset, \GCN achieves better results than ITransE$'$ in both directions. As aforementioned, \GCNs leverage convolutional layers to characterize an entity through careful investigations about its neighbors, including both neighboring entities and attribute values, which can provide more accurate modeling and representation for the target entity.
+\cparagraph{\GCNs vs. prior methods} Both the \GCN and JE only relies on aligned entities but not aligned relations or triples.  On WBD
+dataset, the vanilla \GCN model outperforms JE regarding all Hits@k and performs better than ITransE$'$ in Hits@10 for both alignment
+directions. on $DBP15K_{FR-EN}$ dataset, \GCN achieves better results than ITransE$'$ in both directions. As aforementioned, \GCNs leverage
+convolutional layers to characterize an entity through careful investigations about its neighbors, including both neighboring entities and
+attribute values, which can provide more accurate modeling and representation for the target entity.
 
-\cparagraph{\GCN vs. \RGCN} As shown in both Table~\ref{f1} and Table~\ref{cross}, comparing with \GCN, \RGCN further boosts the performance on both datasets, showing that introducing highly multi-relational information to the \GCN framework can achieve significant improvements on KG representations.
+\cparagraph{\GCN vs. \RGCN} As shown in both Table~\ref{f1} and Table~\ref{cross}, comparing with \GCN, \RGCN further boosts the
+performance on both datasets, showing that introducing highly multi-relational information to the \GCN framework can achieve significant
+improvements on KG representations.
 
 
 \cparagraph{(SE+AE) vs. (SE)}
@@ -92,7 +101,7 @@ When comparing our full model \HRGCN with \HRGCN (w/o $X$) in Table~\ref{cross} 
 as much semantic and attribute information as possible to better characterize entities in heterogeneous KGs.
 %initializing entity representations using pre-trained word embeddings and normalized attribute vectors is very helpful in aligning entities from different KGs.
 
-\cparagraph{When alignment clues are sparse }
+\subsection{Sparse Alignment Clues}
 To further investigate our model in more tough scenarios, %under sparse alignment clues,
 we divide the WBD test set into four subsets according to the difference between the number of neighbors of each entity pair, and compare the performance (in Hits@1) of ITransE$'$, \GCN and \HRGCN (SE+AE). %on the four subsets.
 %Figure~\ref{subset} shows the $\mathrm{F}_1$ scores of on the five subsets.
@@ -108,16 +117,15 @@ This is mainly because introducing highly multi-relational information to \GCN w
 \begin{figure}
 	\centering
 	\includegraphics[width=1\linewidth]{figures/graph4.pdf}
-	\caption{Hits@1 of ITransE$'$, \GCN and \HRGCN (SE+AE) on the four WBD subsets. 0$\sim$2 denotes the subset in which the number of neighbors differs from 0 to 2 for each entity pair, and similar for the remaining subsets.}
+	\caption{Hits@1 scores for ITransE$'$, \GCN and \HRGCN (SE+AE) on the four WBD subsets. The number range, $x~y$, on the
+x-axis denotes the the subset in which the number of neighbors differs from $x$ to $y$ for each entity pair.}
 	\label{subset}
 \end{figure}
 
-Moreover, we randomly select several examples from WBD test set in Table~\ref{example},
-%that our \HRGCN model can correctly align but ITransE$'$ fails in Table~\ref{example},
-as well as their neighbor information, i.e., number of neighbors, number of values, number of potentially overlapped neighbors or values for each pair.
-We can find that although some entities have dozens of neighbors in their own KGs, but their potentially overlapped neighbors are quite few, showing again that
-%the number of similar neighbors of these entity pairs is no more than 6 which is very small compared to the number of their neighbors. This indicates that
-the available clues for entity alignment are sparse,
+Moreover, we randomly select several examples from the WBD dataset (see Table~\ref{example}), as well as their neighbor information, i.e.,
+the number of neighbors, values, potentially overlapped neighbors or values for each pair. We can find that although some entities have
+dozens of neighbors in their own \KGs, but their potentially overlapped neighbors are quite few, showing again that the available clues for
+entity alignment are sparse,
  where ITransE$'$ fails to locate discriminative neighbors but \HRGCN (SE+AE) can still identify useful structure information from such limited clues.
 
 We can also observe that attribute values play an important role in entity alignment.
@@ -146,8 +154,12 @@ which provide crucial supporting evidence for the final prediction. Unfortunatel
 \end{table}
 
 
-\cparagraph{Highway gates}
-Adding more \HRGCN layers can help the center entities obtain information from neighbors that are multiple hops away. However, it might also introduce noisy information from the exponentially increasing neighbors, leading to significant decline in performance as shown in Figure~\ref{highway}, when no highway gates are used. We can observe that the performance of two-layered \RGCNs with highway gates improves upon one-layered \RGCN. Then by adding more layers the performance of highway \RGCNs decreased slowly, but much slower than \RGCNs without gates. This confirms that the highway gates effectively control the required balance of neighbor information transmission in \RGCNs.
+\subsection{Impact of Highway Gates} Adding more \HRGCN layers can help the center entities obtain information from neighbors that are multiple hops
+away. However, it might also introduce noisy information from the exponentially increasing neighbors, leading to significant decline in
+performance as shown in Figure~\ref{highway}, when no highway gates are used. We can observe that the performance of two-layered \RGCNs
+with highway gates improves upon one-layered \RGCN. Then by adding more layers the performance of highway \RGCNs decreased slowly, but much
+slower than \RGCNs without gates. This confirms that the highway gates effectively control the required balance of neighbor information
+transmission in \RGCNs.
 
 In addition, from Table~\ref{f1}, we can see that the \GCN or \RGCN-based models with highway gates consistently achieve better performance than no-highway ones, indicating that highway gates can effectively improve the performance of both multi-layered \GCN and \RGCN models.
 \begin{figure}
