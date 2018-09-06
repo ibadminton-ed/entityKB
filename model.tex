@@ -1,28 +1,28 @@
 \section{Our Approach}
 	\label{section:app}
-
-\subsection{Overview}
-Figure~\ref{fig:overview} gives an overview of our approach. To align entities from two \KGs, 
-%we first manually label some entity
-%pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and randomly sampled unaligned entity pairs. 
-%Next, 
-we first extract the entities' graph information (including semantic, attribute and neighboring information) from the \KGs, 
-%which is used to capture the semantics and attributes of entities as well
-%as the relation of neighboring nodes (Section~\ref{section:rgcn}). 
-and feed them to an \HRGCN model to obtain their vector representations. 
-%Then, we learn a neural network (Section~\ref{sec:model}) to take in the
-%graph information (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is
-%optimized in a way that two aligned entities in the training data are similar to each other in the feature space. 
-With these entity
-representations in place, we can calculate the distance between %any two entity representations to 
-them and determine if they should be
-aligned (Section~\ref{prediction}).
-
 \begin{figure}[t!]
   \centering
   \includegraphics[width=0.5\textwidth]{figures/overview.pdf}
   \caption{Overview of our approach}\label{fig:overview}
 \end{figure}
+\subsection{Overview}
+Figure~\ref{fig:overview} gives an overview of our approach. To align entities from two \KGs,
+%we first manually label some entity
+%pairs from the target \KGs to construct a training dataset. The training dataset contains both aligned and randomly sampled unaligned entity pairs.
+%Next,
+we first extract the entities' graph information (including semantic, attribute and neighboring information) from the \KGs,
+%which is used to capture the semantics and attributes of entities as well
+%as the relation of neighboring nodes (Section~\ref{section:rgcn}).
+and feed them to an \HRGCN model to obtain their vector representations.
+%Then, we learn a neural network (Section~\ref{sec:model}) to take in the
+%graph information (organized as matrices) and produce a representation vector for each entity of the input \KGs. The network output is
+%optimized in a way that two aligned entities in the training data are similar to each other in the feature space.
+With these entity
+representations in place, we can calculate the distance between %any two entity representations to
+them and determine if they should be
+aligned (Section~\ref{prediction}).
+
+
 
 
 	
@@ -87,7 +87,7 @@ In our model, we use two sets of information to characterize nodes and relations
 	
 	\eparagraph{Encoding semantics}
 	\label{wordvector}
-	Intuitively, if two entities can be linked together, their names in different \KGs should be similar somehow (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}). 
+	Intuitively, if two entities can be linked together, their names in different \KGs should be similar somehow (e.g., the \emph{XinJiang} entity in Section~\ref{sec:motivation}).
 	Our work exploits this observation to improve the quality of the network features by using pre-trained word embeddings to encode the semantic information of entity names.
     %This is achieved by applying a word2vec model to generate word embeddings from training entity names.
     %We use an open-source word2vec implementaion\footnote{https://code.google.com/archive/p/word2vec} to generate word embeddings.
@@ -99,8 +99,8 @@ In our model, we use two sets of information to characterize nodes and relations
 	%In this paper, we only consider the first three types, i.e., Integer, Double and Date.
 %	We overlook String type values by reason of their complexity and heterogeneity in different \KGs.
 %	
-	For each entity in a \KG, we construct an attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG. 
-	We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized 
+	For each entity in a \KG, we construct an attribute vector. The dimension of the vector equals to the number of distinct attribute values in the \KG.
+	We standardize the attribute values (e.g., distances of different units are converted to meters) and pad missing attributes to form a constant-sized
 	vector for each entity.
 
  \subsubsection{Neighboring node relation}
@@ -120,7 +120,7 @@ In our model, we use two sets of information to characterize nodes and relations
 % , to form an embedding matrix, $X^{(l+1)} \in \mathbb{R}^{N \times d^{(l+1)}}$.
 	\begin{equation}
 	x_i^{(l+1)}=\mathrm{ReLU} (\sum\limits_{r \in R}\sum\limits_{j \in N_i^r}\frac{1}{|N_i^r|}W_r^{(l)}x_j^{(l)}),
-	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$. 
+	\end{equation} where $N_i^r$ is the set of neighbor indices of node $i$ under relation $r$.
 	$N_i^r$ is computed based on the normalized adjacency
 matrix $\hat A_r$ -- an approximate of spectral convolutions on the adjacency matrix $A_r$~\cite{Kipf2016Semi}:
 	\begin{equation}
